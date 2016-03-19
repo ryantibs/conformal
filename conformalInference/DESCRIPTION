@@ -1,0 +1,13 @@
+Package: conformalInference
+Type: Package
+Title: Tools for conformal inference in regression
+Version: 1.0.0
+Date: 2016-01-20
+Author: Ryan Tibshirani, friends
+Maintainer: Ryan Tibshirani, <ryantibs@stat.cmu.edu>
+Depends:    
+Suggests: glmnet, lars, plyr, randomForest, sam, splines
+Description: A collection of tools for distribution-free inference for 
+  regression problems using the theory of conformal prediction. 
+License: GPL-2
+RoxygenNote: 5.0.1
