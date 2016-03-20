@@ -62,7 +62,7 @@
 #'
 #' @seealso \code{\link{conformal.pred}}, 
 #'   \code{\link{conformal.pred.jack}}, \code{\link{conformal.pred.roo}}
-#' @author Ryan Tibshirani, friends
+#' @author Ryan Tibshirani, and CMU Conformal Inference Team
 #' @references \url{http://www.stat.cmu.edu}
 #' @example examples/ex.conformal.pred.split.R
 #' @export conformal.pred.split

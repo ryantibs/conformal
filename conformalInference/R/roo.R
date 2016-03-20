@@ -1,7 +1,7 @@
 #' In-sample split conformal prediction intervals. 
 #'
 #' Compute prediction intervals, having valid in-sample coverage, using
-#'   rank-one-out split conformal inference. 
+#'   rank-one-out (ROO) split conformal inference. 
 #'
 #' @param x Matrix of features, of dimension (say) n x p.
 #' @param y Vector of responses, of length (say) n.
@@ -75,7 +75,7 @@
 #'
 #' @seealso \code{\link{conformal.pred}}, 
 #'   \code{\link{conformal.pred.jack}}, \code{\link{conformal.pred.split}}
-#' @author Ryan Tibshirani, friends
+#' @author Ryan Tibshirani, and CMU Conformal Inference Team
 #' @references \url{http://www.stat.cmu.edu}
 #' @example examples/ex.conformal.pred.roo.R
 #' @export conformal.pred.roo

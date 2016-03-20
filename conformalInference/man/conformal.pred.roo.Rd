@@ -69,7 +69,7 @@ A list with the following components: pred, lo, up, fit, split,
 }
 \description{
 Compute prediction intervals, having valid in-sample coverage, using
-  rank-one-out split conformal inference.
+  rank-one-out (ROO) split conformal inference.
 }
 \details{
 For concreteness, suppose that we want to use the predictions from
@@ -182,7 +182,7 @@ legend("bottomleft",col=c(1,4,2),lty=c(1,1,2),
        legend=c("ROO conformal","Split conformal","Oracle"))
 }
 \author{
-Ryan Tibshirani, friends
+Ryan Tibshirani, and CMU Conformal Inference Team
 }
 \references{
 \url{http://www.stat.cmu.edu}

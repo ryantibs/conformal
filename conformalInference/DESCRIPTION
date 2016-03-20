@@ -3,10 +3,15 @@ Type: Package
 Title: Tools for conformal inference in regression
 Version: 1.0.0
 Date: 2016-01-20
-Author: Ryan Tibshirani, friends
-Maintainer: Ryan Tibshirani, <ryantibs@stat.cmu.edu>
+Author: CMU Conformal Inference Team
+  Max G'Sell
+  Jing Lei
+  Alessandro Rinaldo
+  Ryan Tibshirani
+  Larry Wasserman
+Maintainer: Ryan Tibshirani <ryantibs@stat.cmu.edu>
 Depends:    
-Suggests: glmnet, lars, plyr, randomForest, sam, splines
+Suggests: glmnet, lars, plyr, randomForest, SAM, splines
 Description: A collection of tools for distribution-free inference for 
   regression problems using the theory of conformal prediction. 
 License: GPL-2

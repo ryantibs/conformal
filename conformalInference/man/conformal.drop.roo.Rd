@@ -23,6 +23,8 @@ responses at new feature values. Its input arguments should be out: output
 produced by train.fun, and newx: feature values at which we want to make
 predictions.}
 
+\item{varlist}{}
+
 \item{alpha}{Miscoverage level for the prediction intervals, i.e., intervals
 with coverage 1-alpha are formed. Default for alpha is 0.1.}
 
@@ -137,12 +139,9 @@ for (j in 1:length(vars)) {
   
 }
 \author{
-Ryan Tibshirani, friends
+Ryan Tibshirani, and CMU Conformal Inference Team
 }
 \references{
 \url{http://www.stat.cmu.edu}
-}
-\seealso{
-\code{conformal.drop.split}
 }
 

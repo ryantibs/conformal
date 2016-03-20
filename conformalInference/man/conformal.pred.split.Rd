@@ -220,7 +220,7 @@ legend("topleft",col=1:2,lty=1:2,
        legend=c("Split conformal","Oracle"))
 }
 \author{
-Ryan Tibshirani, friends
+Ryan Tibshirani, and CMU Conformal Inference Team
 }
 \references{
 \url{http://www.stat.cmu.edu}

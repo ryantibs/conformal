@@ -1,16 +1,21 @@
-# Conformal inference project
+# Conformal Project, by the CMU Conformal Inference Team
+Max G'Sell
+Jing Lei
+Alessandro Rinaldo
+Ryan Tibshirani
+Larry Wasserman
 
 This project contains software tools for conformal inference. The current 
-emphasis is on regression tools. Soon, we will add tools for density 
-estimation and classification.
+emphasis is on conformal prediction in regression. Soon, we will add tools
+for density estimation and classification.
 
 The folder "conformalInference" can be installed as an R package, providing
 access to the software tools, and the file "conformalInference.pdf" contains 
 documentation. 
 
-The folder "simulations" contains R code to reproduces all simulations and 
-figures in the paper "Distribution-Free Predictive Inference for Regression"
-(referenced below). This R code relies on the "conformalInference" R package.
+The folder "examples" contains R code to reproduces all examples in the paper
+"Distribution-Free Predictive Inference for Regression" (see reference below).
+This R code relies on the "conformalInference" R package.
 
 Some key references (in reverse chronological order):
 

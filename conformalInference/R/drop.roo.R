@@ -13,6 +13,7 @@
 #'   responses at new feature values. Its input arguments should be out: output
 #'   produced by train.fun, and newx: feature values at which we want to make
 #'   predictions.
+#' @param varlist 
 #' @param alpha Miscoverage level for the prediction intervals, i.e., intervals
 #'   with coverage 1-alpha are formed. Default for alpha is 0.1.
 #' @param mad.train.fun A function to perform training on the absolute residuals
@@ -64,12 +65,10 @@
 #'   functions train.fun and predict.fun, over a set of m = 5 tuning parameter
 #'   values, instead of calling the conformal function separately m = 5 times.
 #' 
-#'
-#' @seealso \code{conformal.drop.split}
-#' @author Ryan Tibshirani, friends
+#' @author Ryan Tibshirani, and CMU Conformal Inference Team
 #' @references \url{http://www.stat.cmu.edu}
 #' @example examples/ex.conformal.drop.roo.R
-#' @export conformal.drop.roo
+##' @export conformal.drop.roo
 
 conformal.drop.roo = function(x, y, train.fun, predict.fun, varlist=0,
   alpha=0.1, mad.train.fun=NULL, mad.predict.fun=NULL, split=NULL,
