@@ -53,7 +53,10 @@ should be used for the predict function, either "min" (the usual rule) or
 Default is "min".}
 }
 \value{
-A list with two components: train.fun and predict.fun.
+A list with three components: train.fun, predict.fun, active.fun.
+  The third function is designed to take the output of train.fun, and
+  reports which features are active for each fitted model contained in
+  this output.
 }
 \description{
 Construct training and prediction functions for the elastic net, the lasso,
@@ -61,10 +64,11 @@ Construct training and prediction functions for the elastic net, the lasso,
   sequence of (given or internally computed) lambda values.
 }
 \details{
-Based on the package \code{\link{glmnet}}. If this package is not
-  installed, then the function will abort. The functions lasso.funs and
-  ridge.funs are convenience functions, they simply call elastic.funs with
-  gamma = 1 and gamma = 0, respectively.
+This function is based on the packages \code{\link{glmnet}} and
+  \code{\link{plyr}}. If these packages are not installed, then the function
+  will abort. The functions lasso.funs and ridge.funs are convenience
+  functions, they simply call elastic.funs with gamma = 1 and gamma = 0,
+  respectively.
 }
 \examples{
 ## Elastic net: use a fixed sequence of 100 lambda values
@@ -236,10 +240,7 @@ rownames(tab) = c("Avg coverage","Avg length","Test error")
 tab
 }
 \author{
-Ryan Tibshirani, friends
-}
-\references{
-\url{http://www.stat.cmu.edu}
+Ryan Tibshirani
 }
 \seealso{
 \code{\link{lars.funs}} for stepwise, least angle regression, and

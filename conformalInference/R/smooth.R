@@ -34,10 +34,13 @@
 #'   both of these cases, special.fun does \emph{not} throw a warning, and it is
 #'   left up to the user to consider using this function wisely.
 #'
-#' @return A list with three components: train.fun, predict.fun, special.fun.
+#' @return A list with four components: train.fun, predict.fun, special.fun,
+#'   active.fun. The last function is designed to take the output of train.fun,
+#'   and reports which features are active for each fitted model contained in
+#'   this output. Trivially, here, there is only one feature and it is always
+#'   active.
 #'
-#' @author Ryan Tibshirani, friends
-#' @references \url{http://www.stat.cmu.edu}
+#' @author Ryan Tibshirani
 #' @example examples/ex.smooth.funs.R
 #' @export smooth.spline.funs
 
@@ -70,7 +73,11 @@ smooth.spline.funs = function(df=NULL, spar=NULL, cv=TRUE, tol.fact=1e-6) {
     else s = approx(out$x,out$lev,xout=x)$y
     return((y - predict(out,x)$y) / (1-s))
   }
+
+  active.fun = function(out) {
+    return(list(1))
+  }
   
   return(list(train.fun=train.fun, predict.fun=predict.fun,
-              special.fun=special.fun))
+              special.fun=special.fun, active.fun=active.fun))
 }

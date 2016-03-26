@@ -28,7 +28,11 @@ into bins of size tol.fact * IQR(x), and values which fall into the same
 bin are regarded as the same. Default is 1e-6.}
 }
 \value{
-A list with three components: train.fun, predict.fun, special.fun.
+A list with four components: train.fun, predict.fun, special.fun,
+  active.fun. The last function is designed to take the output of train.fun,
+  and reports which features are active for each fitted model contained in
+  this output. Trivially, here, there is only one feature and it is always
+  active.
 }
 \description{
 Construct the training and prediction functions for smoothing splines, at a
@@ -165,9 +169,6 @@ points(x, y, col="gray50")
 # half, but not necessarily overall)
 }
 \author{
-Ryan Tibshirani, friends
-}
-\references{
-\url{http://www.stat.cmu.edu}
+Ryan Tibshirani
 }
 

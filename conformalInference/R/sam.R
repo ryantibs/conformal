@@ -18,13 +18,16 @@
 #'   the smallest value of lambda at which the solution has all zero components,
 #'   and lambda.min.ratio is a small fraction (see next). Default is 30.
 #'
-#' @return A list with two components: train.fun and predict.fun. 
+#' @return A list with three components: train.fun, predict.fun, active.fun.
+#'   The third function is designed to take the output of train.fun, and
+#'   reports which features are active for each fitted model contained in
+#'   this output. 
 #'
-#' @details Based on the package \code{\link{SAM}}. If this package is not
-#'   installed, then the function will abort.
+#' @details This function is based on the packages \code{\link{SAM}} and
+#'   \code{\link{plyr}}. If these packages are not installed, then the function
+#'   will abort. 
 #'
-#' @author Ryan Tibshirani, friends
-#' @references \url{http://www.stat.cmu.edu}
+#' @author Ryan Tibshirani
 #' @example examples/ex.sam.funs.R
 #' @export sam.funs
 
@@ -32,6 +35,10 @@ sam.funs = function(m=3, lambda=NULL, nlambda=30, lambda.min.ratio=5e-3) {
   # Check for SAM
   if (!require("SAM",quietly=TRUE)) {
     stop("Package SAM not installed (required here)!")
+  }
+  # Check for plyr
+  if (!require("plyr",quietly=TRUE)) {
+    stop("Package plyr not installed (required here)!")
   }
 
   # Check arguments
@@ -55,6 +62,11 @@ sam.funs = function(m=3, lambda=NULL, nlambda=30, lambda.min.ratio=5e-3) {
   predict.fun = function(out,newx) {
     return(predict(out,newx)$values)
   }
+
+  active.fun = function(out) {
+    return(alply(out$func,2,.fun=function(v) which(v!=0)))
+  }
   
-  return(list(train.fun=train.fun, predict.fun=predict.fun))
+  return(list(train.fun=train.fun, predict.fun=predict.fun,
+              active.fun=active.fun))
 }

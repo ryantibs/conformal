@@ -15,7 +15,11 @@ is TRUE.}
 regression. Default is 0, which means ordinary linear regression.}
 }
 \value{
-A list with three components: train.fun, predict.fun, special.fun.
+A list with four components: train.fun, predict.fun, special.fun,
+  active.fun. The last function is designed to take the output of train.fun,
+  and reports which features are active for each fitted model contained in
+  this output. Trivially, here, all features are generically active in ridged
+  linear models.
 }
 \description{
 Construct the training and prediction functions for linear regression, as
@@ -88,9 +92,6 @@ legend("topleft",col=c(1,4,2),lty=c(1,1,2),
        legend=c("Conformal","Split conformal","Oracle"))
 }
 \author{
-Ryan Tibshirani, friends
-}
-\references{
-\url{http://www.stat.cmu.edu}
+Ryan Tibshirani
 }
 

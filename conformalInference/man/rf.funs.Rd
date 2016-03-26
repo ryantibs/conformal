@@ -25,22 +25,23 @@ Default is 1 when replace is TRUE, and 0.632 when replace is FALSE.}
 is 5.}
 }
 \value{
-A list with two components: train.fun and predict.fun.
+A list with three components: train.fun, predict.fun, active.fun.
+  The third function is designed to take the output of train.fun, and
+  reports which features are active for the fitted model contained in
+  this output.
 }
 \description{
 Construct training and prediction functions for random forests.
 }
 \details{
-Based on the package \code{\link{randomForest}}. If this package is
-  not installed, then the function will abort.
+This function is based on the packages \code{\link{randomForest}} 
+  and \code{\link{plyr}}. If these packages are not installed, then the 
+  function will abort.
 }
 \examples{
 ## See examples for sam.funs function
 }
 \author{
-Ryan Tibshirani, friends
-}
-\references{
-\url{http://www.stat.cmu.edu}
+Ryan Tibshirani
 }
 

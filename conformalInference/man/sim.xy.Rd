@@ -115,14 +115,21 @@ A list with the following components: x, y, and mu.
 Generate a feature matrix x, and response vector y, following a specified
 setup.
 }
+\details{
+In the case of an "additive" or "rotated" mean, this function relies
+  on the packages \code{\link{plyr}} and \code{\link{splines}}. If these
+  packages are not installed, then the function will abort.
+}
 \examples{
 ## See examples for sam.funs function
 }
 \author{
-Ryan Tibshirani, friends
+Ryan Tibshirani
 }
 \references{
-\url{http://www.stat.cmu.edu}
+"Distribution-Free Predictive Inference for Regression" by
+  Max G'Sell, Jing Lei, Alessandro Rinaldo, Ryan Tibshirani, Larry Wasserman,
+  http://arxiv.org/pdf/xxxx.pdf, 2016.
 }
 \seealso{
 \code{\link{sim.mu}}, \code{\link{sim.y}}

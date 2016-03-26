@@ -9,7 +9,11 @@
 #' @param lambda A value or sequence of lambda values to be used in ridge
 #'   regression. Default is 0, which means ordinary linear regression.
 #'
-#' @return A list with three components: train.fun, predict.fun, special.fun.
+#' @return A list with four components: train.fun, predict.fun, special.fun,
+#'   active.fun. The last function is designed to take the output of train.fun,
+#'   and reports which features are active for each fitted model contained in
+#'   this output. Trivially, here, all features are generically active in ridged
+#'   linear models.
 #'
 #' @details The train.fun function constructed here leverages an optional third
 #'   argument (in addition to the usual x,y): out, whose default is NULL. If
@@ -18,8 +22,7 @@
 #'   for efficiency, and to perform the regression, it uses the saved Cholesky
 #'   decomposition instead of computing a new one from scratch. 
 #'
-#' @author Ryan Tibshirani, friends
-#' @references \url{http://www.stat.cmu.edu}
+#' @author Ryan Tibshirani
 #' @example examples/ex.lm.funs.R
 #' @export lm.funs
 
@@ -83,9 +86,18 @@ lm.funs = function(intercept=TRUE, lambda=0) {
     }
     return(res)
   }
+
+  # Active function
+  active.fun = function(out) {
+    p = ifelse(intercept, nrow(out$beta), nrow(out$beta)-1)
+    m = ncol(out$beta)
+    act.list = vector(length=m,mode="list")
+    for (i in 1:m) act.list[[i]] = 1:p
+    return(act.list)
+  }
   
   return(list(train.fun=train.fun, predict.fun=predict.fun,
-              special.fun=special.fun))
+              special.fun=special.fun, active.fun=active.fun))
 }
 
 #' @export chol.solve

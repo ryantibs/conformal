@@ -1,4 +1,5 @@
 # Print linear model simulations, low-dimensional
+library(conformalInference)
 
 dim = "lo"
 method.nums = 1:4

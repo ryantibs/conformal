@@ -1,4 +1,4 @@
-#' Feature importance via sample splitting.
+#' Variable importance via sample splitting.
 #'
 #' Compute confidence intervals for mean (or median) excess prediction error
 #'   after leaving out one feature.
@@ -13,41 +13,60 @@
 #'   responses at new feature values. Its input arguments should be out: output
 #'   produced by train.fun, and newx: feature values at which we want to make
 #'   predictions.
-#' @param active.fun A function to extract the active features for a 
-#'   
+#' @param active.fun A function which takes the output of train.fun, and reports
+#'   which features are active for each fitted model contained in this output.
+#'   Its only input argument should be out: output produced by train.fun.
 #' @param alpha Miscoverage level for the confidence intervals, i.e., intervals
 #'   with coverage 1-alpha are formed. Default for alpha is 0.1.
 #' @param split Indices that define the data-split to be used (i.e., the indices
 #'   define the first half of the data-split, on which the model is trained).
 #'   Default is NULL, in which case the split is chosen randomly.
 #' @param seed Integer to be passed to set.seed before defining the random 
-#'   data-split to be used. Default is NULL. If both split and seed are passed,
-#'    the former takes priority and the latter is ignored.
+#'   data-split to be used. Default is NULL, which effectively sets no seed.
+#'   If both split and seed are passed, the former takes priority and the latter
+#'   is ignored.
 #' @param verbose Should intermediate progress be printed out? Default is FALSE.
 #'
-#' @return A list with the following components: pred, lo, up, fit, split. The
-#'   first three are matrices of dimension n0 x m, and the fourth is a matrix of
-#'   dimension n x m. Recall that n0 is the number of rows of x0, and m is the
-#'   number of tuning parameter values internal to predict.fun. In a sense, each
-#'   of the m columns really corresponds to a different prediction function;
-#'   see details below. Hence, the rows of the matrices pred, lo, up give
-#'   the predicted value, and lower and upper confidence limits (from split
-#'   conformal inference), respectively, for the response at the n0 points
-#'   given in x0. The rows of fit give the fitted values for the n points given
-#'   in x. Finally, split contains the indices used for the first half of the
-#'   data-split.
+#' @return A list with the following components: inf.z, inf.sign, inf.wilcox,
+#'   active, master. The first three are lists, containing the results of LOCO
+#'   inference with the Z-test, sign text, and Wilcoxon signed rank test,
+#'   respectively. More
+#'   details on these tests are given below. These lists have one element per
+#'   tuning step inherent to the training and prediction functions, train.fun
+#'   and predict.fun. The fourth returned component active is a list, with one
+#'   element per tuning step, that reports which features are active in the
+#'   corresponding fitted model. The last returned component master collects
+#'   all active features across all tuning steps, for easy reference.
 #'
-#' @details For concreteness, suppose that we want to use the predictions from
-#'   forward stepwise regression at steps 1 through 5 in the path. In this case,
-#'   there are m = 5 internal tuning parameter values to predict.fun, in the
-#'   notation used above, and each of the returned matrices pred, lo, up, fit
-#'   will have 5 columns (one for each step of the forward stepwise path).
-#'   The code is structured in this way so that we may defined a single pair of
-#'   functions train.fun and predict.fun, over a set of m = 5 tuning parameter
-#'   values, instead of calling the conformal function separately m = 5 times.
+#' @details In leave-one-covariate-out or LOCO inference, the training data is
+#'   split in two parts, and the first part is used to train a model, or some
+#'   number of models across multiple tuning steps (e.g., indexed by different 
+#'   tuning parameter values lambda in the lasso, or different steps along the
+#'   forward stepwise path). In each model, each variable is left out one at
+#'   time from the first part of the data, and the entire training procedure is
+#'   repeated without this variable in consideration. Residuals are computed on
+#'   both from the original fitted model, and the re-fitted model without the
+#'   variable in consideration. A pairwise difference between the latter and
+#'   former residuals is computed, and either a Z-test, sign test, or Wilcoxon
+#'   signed rank test is performed to test either the mean or median difference
+#'   here being zero. The Z-test is of course approximately valid under the
+#'   conditions needed for the CLT; the sign test is distribution-free and exact
+#'   in finite samples (only assumes continuity of the underlying distribution);
+#'   the Wilcoxon signed rank test is also distribution-free and exact in finite
+#'   samples, but may offer more power (it assumes both continuity and symmetry
+#'   of the underlying distribution).
 #'
-#' @author Ryan Tibshirani, Larry Wasserman, and CMU Conformal Inference Team
-#' @references \url{http://www.stat.cmu.edu}
+#'   A few other important notes: p-values here are from a one-sided test of the
+#'   target parameter (mean or median excess test error) being equal to zero
+#'   versus greater than zero. Confidence intervals are from inverting the
+#'   two-sided version of this test. 
+#'   Furthermore, all p-values and confidence intervals have been Bonferroni",
+#'   corrected for multiplicity.
+#'
+#' @author Ryan Tibshirani, Larry Wasserman
+#' @references "Distribution-Free Predictive Inference for Regression" by
+#'   Max G'Sell, Jing Lei, Alessandro Rinaldo, Ryan Tibshirani, Larry Wasserman,
+#'   http://arxiv.org/pdf/xxxx.pdf, 2016.
 #' @example examples/ex.loco.R
 #' @export loco
 
@@ -81,7 +100,10 @@ loco = function(x, y, train.fun, predict.fun, active.fun, alpha=0.1,
   # If the user passed indices for the split, use them
   if (!is.null(split)) i1 = split
   # Otherwise make a random split
-  else { set.seed(seed); i1 = sample(1:n,floor(n/2)) }
+  else {
+    if (!is.null(seed)) set.seed(seed)
+    i1 = sample(1:n,floor(n/2))
+  }
   i2 = (1:n)[-i1]
   n1 = length(i1)
   n2 = length(i2)
@@ -100,7 +122,7 @@ loco = function(x, y, train.fun, predict.fun, active.fun, alpha=0.1,
   J = length(master)
   
   if (verbose) {
-    cat(sprintf("%Initial residuals on second part ...\n",txt))
+    cat(sprintf("%sInitial residuals on second part ...\n",txt))
   }
   
   # Get residuals on second
@@ -110,51 +132,135 @@ loco = function(x, y, train.fun, predict.fun, active.fun, alpha=0.1,
   # Re-fit after dropping each feature in the master list
   for (j in 1:J) {
     if (verbose) {
-      cat(sprintf(paste("%s\tRe-fitting after dropping feature %i (%i of %i",
-                        "considered) ...\n"),txt,master[j],j,J))
+      cat(sprintf(paste("\r%sRe-fitting after dropping feature %i (%i of %i",
+                        "considered) ..."),txt,master[j],j,J))
       flush.console()
     }
 
     # Train on the first part, without variable 
-    out.j = train.fun(x[i1,-active[j],drop=F],y[i1])
+    out.j = train.fun(x[i1,-master[j],drop=F],y[i1])
 
     # Get predictions on the other, without variable
-    res.drop[[j]] = abs(y[i2] - matrix(predict.fun(out.j,x[i2,-active[j],
+    res.drop[[j]] = abs(y[i2] - matrix(predict.fun(out.j,x[i2,-master[j],
               drop=F]),nrow=n2))  
   }
   if (verbose) cat("\n")
 
   # Compute p-values and confidence intervals at each tuning step
-  inf.mean = inf.sign = inf.wilcox = vector(mode="list",length=m)
+  inf.z = inf.sign = inf.wilcox = vector(mode="list",length=m)
   
   for (l in 1:m) {
     if (verbose) {
-      cat(sprintf("%s\tPerforming LOCO inference at tuning step %i (of %i)",
-                  txt,l,m))
-      flush.console()
+      if (m>1) {
+        cat(sprintf(paste("\r%sPerforming LOCO analysis at tuning step %i",
+                          "(of %i) ...",txt,l,m)))
+        flush.console()
+      }
+      else cat(sprintf("%sPerforming LOCO analysis ...",txt))
     }
 
     k = length(active[[l]])
-    inf.mean[[l]] = inf.sign[[l]] = inf.wilcox[[l]] = matrix(0,k,3)
+    inf.z[[l]] = inf.sign[[l]] = inf.wilcox[[l]] = matrix(0,k,3)
     for (j in 1:k) {
-      j.master = which(master == active[j])
+      j.master = which(master == active[[l]][j])
       z = res.drop[[j.master]][,l] - res[,l]
-      inf.mean[[l]][j,] = my.z.test(z,alpha)
-      inf.sign[[l]][j,] = my.sign.test(z,alpha)
-      inf.wilcox[[l]][j,] = my.wilcox.test(z,alpha)
+      inf.z[[l]][j,] = my.z.test(z,alpha,k)
+      inf.sign[[l]][j,] = my.sign.test(z,alpha,k)
+      inf.wilcox[[l]][j,] = my.wilcox.test(z,alpha,k)
+      
+      rownames(inf.z[[l]]) = rownames(inf.sign[[l]]) =
+        rownames(inf.wilcox[[l]]) = active[[l]]
+      colnames(inf.z[[l]]) = colnames(inf.sign[[l]]) =
+        colnames(inf.wilcox[[l]]) = c("P-value", "LowConfPt", "UpConfPt")
     }
   }
   if (verbose) cat("\n")
 
-  return(list(inf.mean=inf.mean,inf.sign=inf.sign,inf.wilcox=inf.wilcox))
+  out = list(inf.z=inf.z,inf.sign=inf.sign,inf.wilcox=inf.wilcox,
+    active=active, master=master)
+  class(out) = "loco"
+  return(out)
+}
+
+#' Print function for loco object.
+#'
+#' Summary and print the results of a set of simulations, stored an object
+#' of class sim (produced by sim.master).
+#'
+#' @param x The loco object.
+#' @param test One of "z", "sign", "wilcox", or "all", describing which test 
+#'   results to show. If "z", then the results from only Z-tests are displayed;
+#'   if "sign", then only sign tests; if "wilcox", then only Wilcoxon tests. If
+#'   "all", then the results from all tests are displayed. Default is "wilcox".
+#' @param digits Number of digits to display. Default is 3. 
+#' @param ... Other arguments (currently not used).
+#'
+#' @export 
+
+print.loco = function(x, test=c("wilcox","sign","z","all"), digits=3, ...) {
+  test = match.arg(test)
+
+  cat(paste("\nDisplaying results of LOCO analysis. Notes:\n",
+            "\n- P-values are from a one-sided test of the target parameter",
+            "\n  (mean or median excess test error) being equal to zero versus",
+            "\n  greater than zero.",
+            "\n- Confidence intervals are from inverting the two-sided version",
+            "\n  of this test.",
+            "\n- All p-values and confidence intervals have been Bonferroni",
+            "\n  corrected for multiplicity.\n"))
+  
+  m = length(x$inf.z)
+  for (i in 1:m) {
+    if (m>1) cat(sprintf("\n------- Tuning step %i -------\n",i))
+    
+    if (test=="z" || test=="all") {
+      cat("\nZ-test results:\n\n")
+      tab = round(x$inf.z[[i]],digits=digits)
+      code = get.signif.code(x$inf.z[[i]][,1])
+      tab = cbind(rownames(tab),tab,code)
+      colnames(tab)[1] = "Var"
+      colnames(tab)[5] = ""
+      rownames(tab) = rep("",nrow(tab))
+      print(tab,quote=FALSE)
+    }
+    
+    if (test=="sign" || test=="all") {
+      cat("\nSign test results:\n\n")
+      tab = round(x$inf.sign[[i]],digits=digits)
+      code = get.signif.code(x$inf.sign[[i]][,1])
+      tab = cbind(rownames(tab),tab,code)
+      colnames(tab)[1] = "Var"
+      colnames(tab)[5] = ""
+      rownames(tab) = rep("",nrow(tab))
+      print(tab,quote=FALSE)
+    }
+    
+    if (test=="wilcox" || test=="all") {
+      cat("\nWilcoxon test results:\n\n")
+       tab = round(x$inf.wilcox[[i]],digits=digits)
+      code = get.signif.code(x$inf.wilcox[[i]][,1])
+      tab = cbind(rownames(tab),tab,code)
+      colnames(tab)[1] = "Var"
+      colnames(tab)[5] = ""
+      rownames(tab) = rep("",nrow(tab))
+      print(tab,quote=FALSE)
+    }
+
+    cat("\nSignificance codes: 0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1\n")
+  }
 }
 
 # Mean inference: One-sided p-value but a two-sided confidence interval
-my.z.test = function(z, alpha){
+my.z.test = function(z, alpha, k){
   n = length(z)
   s = sd(z)
   m = mean(z)
   pval = 1-pnorm(m/s*sqrt(n))
+
+  # Apply Bonferroni correction for k tests
+  pval = min(k*pval,1)
+  alpha = alpha/k
+  
   q = qnorm(1-alpha/2)
   left  = m - q*s/sqrt(n)
   right = m + q*s/sqrt(n)
@@ -162,26 +268,44 @@ my.z.test = function(z, alpha){
 }
 
 # Median inference: one-sided p-value but a two-sided confidence interval
-my.sign.test = function(z, alpha){
+my.sign.test = function(z, alpha, k){
   n = length(z)
   s = sum(z>0)
   pval = 1-pbinom(s-1,n,0.5)
-  k = n - qbinom(1-alpha/2,n,0.5) # Want P(B <= k) <= alpha/2
+
+  # Apply Bonferroni correction for k tests
+  pval = min(k*pval,1)
+  alpha = alpha/k
+  
+  j = n - qbinom(1-alpha/2,n,0.5) # Want P(B <= j) <= alpha/2
   zz  = sort(z)
-  left  = zz[k]
-  right = zz[n-k+1]
+  left  = zz[j]
+  right = zz[n-j+1]
   return(c(pval,left,right))
 }
 
 # Median inference: one-sided p-value but a two-sided confidence interval
-my.wilcox.test = function(z, alpha){
+my.wilcox.test = function(z, alpha, k){
   pval = wilcox.test(z, alternative="greater")$p.value
+
+  # Apply Bonferroni correction for k tests
+  pval = min(k*pval,1)
+  alpha = alpha/k
+  
   out = wilcox.test(z, conf.int=TRUE, conf.level=1-alpha)
   left = out$conf.int[1]
   right = out$conf.int[2]
   return(c(pval,left,right))
 }
 
-
+# Significance code function
+get.signif.code = function(v) {
+  code = rep("",length(v))
+  code[v < 0.1] = "."
+  code[v < 0.05] = "*"
+  code[v < 0.01] = "**"
+  code[v < 0.001] = "***"
+  return(code)
+}
 
 

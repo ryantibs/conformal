@@ -36,7 +36,10 @@ p (number of colums of feature matrix) is large, say, large compared to n
 FALSE.}
 }
 \value{
-A list with two components: train.fun and predict.fun.
+A list with three components: train.fun, predict.fun, active.fun.
+  The third function is designed to take the output of train.fun, and
+  reports which features are active for each fitted model contained in
+  this output.
 }
 \description{
 Construct training and prediction functions for forward stepwise, least angle
@@ -44,8 +47,9 @@ Construct training and prediction functions for forward stepwise, least angle
   over a given number of steps.
 }
 \details{
-Based on the package \code{\link{lars}}. If this package is not
-  installed, then the function will abort.
+This function is based on the packages \code{\link{lars}} and
+  \code{\link{plyr}}. If these packages are not installed, then the function
+  will abort.
 }
 \examples{
 ## Forward stepwise: use 30 path steps
@@ -148,10 +152,7 @@ tab
 
 }
 \author{
-Ryan Tibshirani, friends
-}
-\references{
-\url{http://www.stat.cmu.edu}
+Ryan Tibshirani
 }
 \seealso{
 \code{\link{glmnet.funs}} for elastic net, lasso, and ridge

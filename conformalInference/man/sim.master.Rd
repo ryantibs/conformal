@@ -220,10 +220,12 @@ simC = sim.master(n, p, conformal.pred.funs, n0=n0, nrep=nrep, verb=TRUE,
 }
 }
 \author{
-Ryan Tibshirani, friends
+Ryan Tibshirani
 }
 \references{
-\url{http://www.stat.cmu.edu}
+"Distribution-Free Predictive Inference for Regression" by
+  Max G'Sell, Jing Lei, Alessandro Rinaldo, Ryan Tibshirani, Larry Wasserman,
+  http://arxiv.org/pdf/xxxx.pdf, 2016.
 }
 \seealso{
 \code{\link{sim.x}}, \code{\link{sim.mu}}, \code{\link{sim.y}}

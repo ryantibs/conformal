@@ -32,17 +32,20 @@
 #'   "1se" (the one-standard-error rule). See the glmnet help files for details.
 #'   Default is "min".
 #'
-#' @return A list with two components: train.fun and predict.fun. 
+#' @return A list with three components: train.fun, predict.fun, active.fun.
+#'   The third function is designed to take the output of train.fun, and
+#'   reports which features are active for each fitted model contained in
+#'   this output.
 #'
-#' @details Based on the package \code{\link{glmnet}}. If this package is not
-#'   installed, then the function will abort. The functions lasso.funs and
-#'   ridge.funs are convenience functions, they simply call elastic.funs with
-#'   gamma = 1 and gamma = 0, respectively.
+#' @details This function is based on the packages \code{\link{glmnet}} and
+#'   \code{\link{plyr}}. If these packages are not installed, then the function
+#'   will abort. The functions lasso.funs and ridge.funs are convenience
+#'   functions, they simply call elastic.funs with gamma = 1 and gamma = 0,
+#'   respectively. 
 #'
 #' @seealso \code{\link{lars.funs}} for stepwise, least angle regression, and
 #'   lasso path training and prediction functions.
-#' @author Ryan Tibshirani, friends
-#' @references \url{http://www.stat.cmu.edu}
+#' @author Ryan Tibshirani
 #' @example examples/ex.glmnet.funs.R
 NULL
 #> NULL
@@ -56,6 +59,10 @@ elastic.funs = function(gamma=0.5, standardize=TRUE, intercept=TRUE, lambda=NULL
   # Check for glmnet
   if (!require("glmnet",quietly=TRUE)) {
     stop("Package glmnet not installed (required here)!")
+  }
+  # Check for plyr
+  if (!require("plyr",quietly=TRUE)) {
+    stop("Package plyr not installed (required here)!")
   }
 
   # Check arguments
@@ -83,10 +90,18 @@ elastic.funs = function(gamma=0.5, standardize=TRUE, intercept=TRUE, lambda=NULL
                        lambda.min.ratio=lambda.min.ratio,lambda=lambda,
                        standardize=standardize,intercept=intercept))
     }
+    
     predict.fun = function(out,newx) {
       return(predict(out$glmnet.fit,newx,s=ifelse(cv.rule=="min",
                                            out$lambda.min,out$lambda.1se)))
-    }            
+    }
+    
+    active.fun = function(out) {
+      b = coef(out$glmnet.fit,s=ifelse(cv.rule=="min",
+                                out$lambda.min,out$lambda.1se))
+      if (intercept) b = b[-1]
+      return(list(which(b!=0)))
+    }
   }
 
   # They want training to be done over a sequence of lambdas, and prediction
@@ -97,7 +112,7 @@ elastic.funs = function(gamma=0.5, standardize=TRUE, intercept=TRUE, lambda=NULL
                     lambda.min.ratio=lambda.min.ratio,lambda=lambda,
                     standardize=standardize,intercept=intercept))
     }
-
+    
     predict.fun = function(out,newx) {
       # Subtlety: if lambda is NULL, then pick nlambda values in between
       # the extremes of the glmnet sequence, to ensure that the sequence
@@ -108,9 +123,21 @@ elastic.funs = function(gamma=0.5, standardize=TRUE, intercept=TRUE, lambda=NULL
       }  
       return(predict(out,newx,s=lambda))
     }
+    
+    active.fun = function(out) {
+      # Subtlety: lambda here must match what predict.fun would give us
+      if (is.null(lambda)) {
+        lambda = log(seq(exp(max(out$lambda)),exp(min(out$lambda)),
+          length=nlambda))
+      }  
+      b = coef(out$glmnet.fit,s=lambda)
+      if (intercept) b = b[-1,]
+      return(alply(b,2,.fun=function(v) which(v!=0)))
+    }
   }
 
-  return(list(train.fun=train.fun, predict.fun=predict.fun))
+  return(list(train.fun=train.fun, predict.fun=predict.fun,
+              active.fun=active.fun))
 }
 
 #' @rdname glmnet.funs

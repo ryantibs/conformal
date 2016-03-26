@@ -1,5 +1,6 @@
 # Plot all comparisons of conformal methods, across settings A through E,
 # low- and high-dimensional
+library(conformalInference)
 
 method.nums = c(1,2,5,3,4)
 method.names = c("Lasso","Elastic net","Stepwise","Spam","Random forest")

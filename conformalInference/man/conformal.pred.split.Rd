@@ -51,8 +51,9 @@ define the first half of the data-split, on which the model is trained).
 Default is NULL, in which case the split is chosen randomly.}
 
 \item{seed}{Integer to be passed to set.seed before defining the random 
-data-split to be used. Default is NULL. If both split and seed are passed,
- the former takes priority and the latter is ignored.}
+data-split to be used. Default is NULL, which effectively sets no seed.
+If both split and seed are passed, the former takes priority and the latter
+is ignored.}
 
 \item{verbose}{Should intermediate progress be printed out? Default is FALSE.}
 }
@@ -220,10 +221,12 @@ legend("topleft",col=1:2,lty=1:2,
        legend=c("Split conformal","Oracle"))
 }
 \author{
-Ryan Tibshirani, and CMU Conformal Inference Team
+Ryan Tibshirani
 }
 \references{
-\url{http://www.stat.cmu.edu}
+"Distribution-Free Predictive Inference for Regression" by
+  Max G'Sell, Jing Lei, Alessandro Rinaldo, Ryan Tibshirani, Larry Wasserman,
+  http://arxiv.org/pdf/xxxx.pdf, 2016.
 }
 \seealso{
 \code{\link{conformal.pred}}, 

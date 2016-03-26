@@ -79,12 +79,18 @@
 #'   right-skewed and alpha < 0 means left-skewed. Default is 5.
 #' @param omitted.vars Should important (active) variables be omitted from x?
 #'   Induces correlation between the x and the error terms.
+#' 
+#' @details In the case of an "additive" or "rotated" mean, this function relies
+#'   on the packages \code{\link{plyr}} and \code{\link{splines}}. If these
+#'   packages are not installed, then the function will abort.
 #'
 #' @return A list with the following components: x, y, and mu.
 #'
 #' @seealso \code{\link{sim.mu}}, \code{\link{sim.y}}
-#' @author Ryan Tibshirani, friends
-#' @references \url{http://www.stat.cmu.edu}
+#' @author Ryan Tibshirani
+#' @references "Distribution-Free Predictive Inference for Regression" by
+#'   Max G'Sell, Jing Lei, Alessandro Rinaldo, Ryan Tibshirani, Larry Wasserman,
+#'   http://arxiv.org/pdf/xxxx.pdf, 2016.
 #' @examples ## See examples for sam.funs function
 #' @export sim.xy
 
@@ -194,7 +200,7 @@ sim.xy = function(n, p, x.dist=c("normal","binom","sn","mix"),
 
   ####################
   # Generate mu vector, set mu-specific seed
-  set.seed(mu.seed)
+  if (!is.null(mu.seed)) set.seed(mu.seed)
   
   # Linear mean function
   if (mean.fun=="linear") {
@@ -210,9 +216,11 @@ sim.xy = function(n, p, x.dist=c("normal","binom","sn","mix"),
 
   # Additive or rotated mean function
   else {
+    # Check for plyr
     if (!require(plyr)) {
       stop("Package plyr not installed (required here)!") 
     }
+    # Check for splines
     if (!require(splines)) {
       stop("Package splines not installed (required here)!")
     }
@@ -336,8 +344,10 @@ rsnorm = function(n, alpha=5) {
 #'   }
 #'
 #' @seealso \code{\link{sim.x}}, \code{\link{sim.mu}}, \code{\link{sim.y}}
-#' @author Ryan Tibshirani, friends
-#' @references \url{http://www.stat.cmu.edu}
+#' @author Ryan Tibshirani
+#' @references "Distribution-Free Predictive Inference for Regression" by
+#'   Max G'Sell, Jing Lei, Alessandro Rinaldo, Ryan Tibshirani, Larry Wasserman,
+#'   http://arxiv.org/pdf/xxxx.pdf, 2016.
 #' @example examples/ex.sim.master.R
 #' @export sim.master
 
@@ -367,7 +377,7 @@ sim.master = function(n, p, conformal.pred.funs, n0=n, in.sample=FALSE, nrep=20,
   check.pos.int(nrep)
   check.int(file.rep)
   check.bool(omitted.vars)
-  set.seed(seed)
+  if (!is.null(seed)) set.seed(seed)
   
   N = length(conformal.pred.funs)
   nms = names(conformal.pred.funs)

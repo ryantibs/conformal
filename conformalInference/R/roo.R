@@ -34,8 +34,9 @@
 #'   define the first half of the data-split). Default is NULL, in which case
 #'   the split is chosen randomly.
 #' @param seed Integer to be passed to set.seed before defining the random 
-#'   data-split to be used. Default is NULL. If both split and seed are passed,
-#'    the former takes priority and the latter is ignored.
+#'   data-split to be used. Default is NULL, which effectively sets no seed.
+#'   If both split and seed are passed, the former takes priority and the latter
+#'   is ignored.
 #' @param verbose Should intermediate progress be printed out? Default is FALSE.
 #'
 #' @return A list with the following components: pred, lo, up, fit, split,
@@ -75,8 +76,10 @@
 #'
 #' @seealso \code{\link{conformal.pred}}, 
 #'   \code{\link{conformal.pred.jack}}, \code{\link{conformal.pred.split}}
-#' @author Ryan Tibshirani, and CMU Conformal Inference Team
-#' @references \url{http://www.stat.cmu.edu}
+#' @author Ryan Tibshirani
+#' @references "Distribution-Free Predictive Inference for Regression" by
+#'   Max G'Sell, Jing Lei, Alessandro Rinaldo, Ryan Tibshirani, Larry Wasserman,
+#'   http://arxiv.org/pdf/xxxx.pdf, 2016.
 #' @example examples/ex.conformal.pred.roo.R
 #' @export conformal.pred.roo
 
@@ -114,7 +117,10 @@ conformal.pred.roo = function(x, y, train.fun, predict.fun, alpha=0.1,
   inds = vector(mode="list",length=2)
   if (!is.null(split)) inds[[1]] = split
   # Otherwise make a random split
-  else inds[[1]] = sample(1:n,floor(n/2))
+  else {
+    if (!is.null(seed)) set.seed(seed)
+    inds[[1]] = sample(1:n,floor(n/2))
+  }
   inds[[2]] = (1:n)[-inds[[1]]]
   
   if (verbose) {

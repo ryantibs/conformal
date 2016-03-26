@@ -94,7 +94,7 @@ For concreteness, suppose that we want to use the predictions from
   notation used above, and each of the returned matrices pred, lo, and up will
   have 5 rows (one corresponding to each step of the forward stepwise path).
   The code is structured in this way so that we may defined a single pair of
-  functions train.fun and predict.fun, over a set of m = 5 tuning parameter`<
+  functions train.fun and predict.fun, over a set of m = 5 tuning parameter
   values, instead of calling the conformal function separately m = 5 times.
 
   The third arugment to train.fun, as explained above, is the output produced
@@ -220,10 +220,12 @@ legend("topleft",col=c(1,3,4,2),lty=c(1,1,1,2),
 
 }
 \author{
-Ryan Tibshirani, friends
+Ryan Tibshirani
 }
 \references{
-\url{http://www.stat.cmu.edu}
+"Distribution-Free Predictive Inference for Regression" by
+  Max G'Sell, Jing Lei, Alessandro Rinaldo, Ryan Tibshirani, Larry Wasserman,
+  http://arxiv.org/pdf/xxxx.pdf, 2016.
 }
 \seealso{
 \code{\link{conformal.pred.jack}},

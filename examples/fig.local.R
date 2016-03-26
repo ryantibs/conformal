@@ -1,4 +1,5 @@
 # Plot an example comparison of usual to locally-weighted conformal
+library(conformalInference)
 
 # Generate some example training data, clearly heteroskedastic
 set.seed(33)

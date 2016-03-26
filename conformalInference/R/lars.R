@@ -26,16 +26,19 @@
 #'   (number rows of feature matrix), so in this case, you may want to choose
 #'   FALSE.
 #' 
-#' @return A list with two components: train.fun and predict.fun. 
+#' @return A list with three components: train.fun, predict.fun, active.fun.
+#'   The third function is designed to take the output of train.fun, and
+#'   reports which features are active for each fitted model contained in
+#'   this output.
 #'
-#' @details Based on the package \code{\link{lars}}. If this package is not
-#'   installed, then the function will abort. 
+#' @details This function is based on the packages \code{\link{lars}} and
+#'   \code{\link{plyr}}. If these packages are not installed, then the function
+#'   will abort. 
 #'
 #' @seealso \code{\link{glmnet.funs}} for elastic net, lasso, and ridge
 #'   regression training and prediction functions, defined over a sequence
 #'   of lambda values.
-#' @author Ryan Tibshirani, friends
-#' @references \url{http://www.stat.cmu.edu}
+#' @author Ryan Tibshirani
 #' @example examples/ex.lars.funs.R
 #' @export lars.funs
 
@@ -46,6 +49,10 @@ lars.funs = function(type=c("stepwise","lar","lasso"), normalize=TRUE,
   # Check for lars
   if (!require("lars",quietly=TRUE)) {
     stop("Package lars not installed (required here)!") 
+  }
+  # Check for plyr
+  if (!require("plyr",quietly=TRUE)) {
+    stop("Package plyr not installed (required here)!")
   }
 
   # Check arguments
@@ -83,7 +90,12 @@ lars.funs = function(type=c("stepwise","lar","lasso"), normalize=TRUE,
     predict.fun = function(out,newx) {
       return(predict(out,newx,type="fit",mode="step",
                      s=ifelse(cv.rule=="min",out$k.min,out$k.1se))$fit)
-    }            
+    }
+
+    active.fun = function(out) {
+      b = coef(out,mode="step",s=ifelse(cv.rule=="min",out$k.min,out$k.1se))
+      return(list(which(b!=0)))
+    }
   }
 
   # They want training to be done over a bunch of steps, and prediction at the
@@ -99,7 +111,13 @@ lars.funs = function(type=c("stepwise","lar","lasso"), normalize=TRUE,
     predict.fun = function(out,newx) {
       return(predict(out,newx,type="fit",mode="step")$fit)
     }
+
+    active.fun = function(out) {
+      b = coef(out,mode="step")
+      return(alply(b,1,.fun=function(v) which(v!=0)))
+    }
   }
   
-  return(list(train.fun=train.fun, predict.fun=predict.fun))
+  return(list(train.fun=train.fun, predict.fun=predict.fun,
+              active.fun=active.fun))
 }

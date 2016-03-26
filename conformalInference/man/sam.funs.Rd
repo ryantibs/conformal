@@ -24,7 +24,10 @@ the smallest value of lambda at which the solution has all zero components,
 and lambda.min.ratio is a small fraction (see next). Default is 30.}
 }
 \value{
-A list with two components: train.fun and predict.fun.
+A list with three components: train.fun, predict.fun, active.fun.
+  The third function is designed to take the output of train.fun, and
+  reports which features are active for each fitted model contained in
+  this output.
 }
 \description{
 Construct training and prediction functions for sparse additive models,
@@ -32,8 +35,9 @@ Construct training and prediction functions for sparse additive models,
   internally computed) lambda values.
 }
 \details{
-Based on the package \code{\link{SAM}}. If this package is not
-  installed, then the function will abort.
+This function is based on the packages \code{\link{SAM}} and
+  \code{\link{plyr}}. If these packages are not installed, then the function
+  will abort.
 }
 \examples{
 ## Sparse additive models: high-dimensional example
@@ -108,9 +112,6 @@ legend("topleft",col=c(1,4),lty=1:2,
        legend=c("Spam","Random forest"))
 }
 \author{
-Ryan Tibshirani, friends
-}
-\references{
-\url{http://www.stat.cmu.edu}
+Ryan Tibshirani
 }
 

@@ -100,9 +100,13 @@ For concreteness, suppose that we want to use the predictions from
 ## See examples for conformal.pred function
 }
 \author{
-Ryan Tibshirani, friends
+Ryan Tibshirani
 }
 \references{
+"Distribution-Free Predictive Inference for Regression" by
+  Max G'Sell, Jing Lei, Alessandro Rinaldo, Ryan Tibshirani, Larry Wasserman,
+  http://arxiv.org/pdf/xxxx.pdf, 2016.
+
 \url{http://www.stat.cmu.edu}
 }
 \seealso{
