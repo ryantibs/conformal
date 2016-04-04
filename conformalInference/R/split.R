@@ -64,9 +64,9 @@
 #' @seealso \code{\link{conformal.pred}}, 
 #'   \code{\link{conformal.pred.jack}}, \code{\link{conformal.pred.roo}}
 #' @author Ryan Tibshirani
-#' @references "Distribution-Free Predictive Inference for Regression" by
-#'   Max G'Sell, Jing Lei, Alessandro Rinaldo, Ryan Tibshirani, Larry Wasserman,
-#'   http://arxiv.org/pdf/xxxx.pdf, 2016.
+#' @references "Distribution-Free Predictive Inference for Regression" by 
+#'   Jing Lei, Max G'Sell, Alessandro Rinaldo, Ryan Tibshirani, and Larry
+#'   Wasserman, http://arxiv.org/pdf/xxxx.pdf, 2016.
 #' @example examples/ex.conformal.pred.split.R
 #' @export conformal.pred.split
 

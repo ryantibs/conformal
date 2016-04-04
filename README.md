@@ -16,8 +16,8 @@ This R code relies on the "conformalInference" R package.
 
 Some key references (in reverse chronological order):
 
-- "Distribution-Free Predictive Inference for Regression" by Max G'Sell,
-  Jing Lei, Alessandro Rinaldo, Ryan Tibshirani, and Larry Wasserman,
+- "Distribution-Free Predictive Inference for Regression" by Jing Lei, 
+  Max G'Sell, Alessandro Rinaldo, Ryan Tibshirani, and Larry Wasserman,
   http://arxiv.org/pdf/xxxx.pdf, 2016.
 - "Classification with Confidence" by Jing Lei, Biometrika, 101(4), 755-769,
   2014.

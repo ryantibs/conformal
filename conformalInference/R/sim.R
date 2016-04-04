@@ -88,9 +88,9 @@
 #'
 #' @seealso \code{\link{sim.mu}}, \code{\link{sim.y}}
 #' @author Ryan Tibshirani
-#' @references "Distribution-Free Predictive Inference for Regression" by
-#'   Max G'Sell, Jing Lei, Alessandro Rinaldo, Ryan Tibshirani, Larry Wasserman,
-#'   http://arxiv.org/pdf/xxxx.pdf, 2016.
+#' @references "Distribution-Free Predictive Inference for Regression" by 
+#'   Jing Lei, Max G'Sell, Alessandro Rinaldo, Ryan Tibshirani, and Larry
+#'   Wasserman, http://arxiv.org/pdf/xxxx.pdf, 2016.
 #' @examples ## See examples for sam.funs function
 #' @export sim.xy
 
@@ -345,9 +345,9 @@ rsnorm = function(n, alpha=5) {
 #'
 #' @seealso \code{\link{sim.x}}, \code{\link{sim.mu}}, \code{\link{sim.y}}
 #' @author Ryan Tibshirani
-#' @references "Distribution-Free Predictive Inference for Regression" by
-#'   Max G'Sell, Jing Lei, Alessandro Rinaldo, Ryan Tibshirani, Larry Wasserman,
-#'   http://arxiv.org/pdf/xxxx.pdf, 2016.
+#' @references "Distribution-Free Predictive Inference for Regression" by 
+#'   Jing Lei, Max G'Sell, Alessandro Rinaldo, Ryan Tibshirani, and Larry
+#'   Wasserman, http://arxiv.org/pdf/xxxx.pdf, 2016.
 #' @example examples/ex.sim.master.R
 #' @export sim.master
 
