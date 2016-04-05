@@ -111,7 +111,7 @@ loco.roo = function(x, y, train.fun, predict.fun, vars=0,
                         "prediction intervals ...\n"),txt))
     }
 
-    roo = conformal.pred.roo(x,y,train.fun,predict.fun,alpha=alpha,
+    out.roo = conformal.pred.roo(x,y,train.fun,predict.fun,alpha=alpha,
       mad.train.fun=mad.train.fun,mad.predict.fun=mad.predict.fun,
       split=inds[[1]],verbose=ifelse(verbose,paste0(txt,"\t"),FALSE))
   }

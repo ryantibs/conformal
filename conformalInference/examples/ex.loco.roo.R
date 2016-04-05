@@ -22,13 +22,12 @@ out.all = out.roo$out.all
 vars = which(coef(out.all$glmnet.fit, s=out.all$lambda.1se) != 0)
 
 # Look at error inflation due to variable dropping, among vars
-out.drop = loco.roo(x, y, alpha=0.1, varlist=vars,
-  train.fun=funs$train, predict.fun=funs$predict,
-  out.roo=out.roo, verb=TRUE)
+out.loco = loco.roo(x, y, alpha=0.1, vars=vars,
+  train.fun=funs$train, predict.fun=funs$predict, verbose=TRUE)
 
 # Compute "c-values", the proportion of intervals that have a left endpoint
 # less than or equal to 0
-cvals = colMeans(out.drop$lo[,,1] <= 0)
+cvals = colMeans(out.loco$lo[,,1] <= 0)
 names(cvals) = vars
 cvals
 
@@ -36,13 +35,11 @@ xlab = "Sample number"
 ylab = "Interval"
 
 # For each dropped variable in consideration, plot the intervals
-
 for (j in 1:length(vars)) {
-  plot(c(),c(),xlim=c(1,n),ylim=range(c(out.drop$lo[,j,1],out.drop$up[,j,1])),
+  plot(c(),c(),xlim=c(1,n),ylim=range(c(out.loco$lo[,j,1],out.loco$up[,j,1])),
        xlab=xlab,ylab=ylab,main=sprintf("Variable %i, c-value = %0.3f",
                              vars[j], cvals[j]))
-  cols = ifelse(out.drop$lo[,j,1] <= 0, 1, 3)
-  segments(1:n,out.drop$lo[,j,1],1:n,out.drop$up[,j,1],col=cols)
+  cols = ifelse(out.loco$lo[,j,1] <= 0, 1, 3)
+  segments(1:n,out.loco$lo[,j,1],1:n,out.loco$up[,j,1],col=cols)
   abline(h=0, lty=2, lwd=2, col=2)
 }
-  
