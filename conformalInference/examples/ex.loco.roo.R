@@ -22,8 +22,8 @@ out.all = out.roo$out.all
 vars = which(coef(out.all$glmnet.fit, s=out.all$lambda.1se) != 0)
 
 # Look at error inflation due to variable dropping, among vars
-out.drop = conformal.drop.roo(x, y, alpha=0.1, 
-  varlist=vars, train.fun=funs$train, predict.fun=funs$predict,
+out.drop = loco.roo(x, y, alpha=0.1, varlist=vars,
+  train.fun=funs$train, predict.fun=funs$predict,
   out.roo=out.roo, verb=TRUE)
 
 # Compute "c-values", the proportion of intervals that have a left endpoint

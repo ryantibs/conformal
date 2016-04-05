@@ -103,9 +103,9 @@ For concreteness, suppose that we want to use the predictions from
 Ryan Tibshirani
 }
 \references{
-"Distribution-Free Predictive Inference for Regression" by
-  Max G'Sell, Jing Lei, Alessandro Rinaldo, Ryan Tibshirani, Larry Wasserman,
-  http://arxiv.org/pdf/xxxx.pdf, 2016.
+"Distribution-Free Predictive Inference for Regression" by 
+  Jing Lei, Max G'Sell, Alessandro Rinaldo, Ryan Tibshirani, and Larry
+  Wasserman, http://arxiv.org/pdf/xxxx.pdf, 2016.
 
 \url{http://www.stat.cmu.edu}
 }

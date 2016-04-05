@@ -2,7 +2,7 @@
 % Please edit documentation in R/loco.R
 \name{loco}
 \alias{loco}
-\title{Variable importance via sample splitting.}
+\title{Variable importance via mean (or median) excess test error}
 \usage{
 loco(x, y, train.fun, predict.fun, active.fun, alpha = 0.1, split = NULL,
   seed = NULL, verbose = FALSE)
@@ -53,18 +53,18 @@ A list with the following components: inf.z, inf.sign, inf.wilcox,
   all active features across all tuning steps, for easy reference.
 }
 \description{
-Compute confidence intervals for mean (or median) excess prediction error
-  after leaving out one feature.
+Compute confidence intervals for mean (or median) excess test error due to 
+  dropping a variable
 }
 \details{
 In leave-one-covariate-out or LOCO inference, the training data is
   split in two parts, and the first part is used to train a model, or some
   number of models across multiple tuning steps (e.g., indexed by different 
   tuning parameter values lambda in the lasso, or different steps along the
-  forward stepwise path). In each model, each variable is left out one at
+  forward stepwise path). For each model, each variable is left out one at
   time from the first part of the data, and the entire training procedure is
   repeated without this variable in consideration. Residuals are computed on
-  both from the original fitted model, and the re-fitted model without the
+  both from the original fitted model, and the refitted model without the
   variable in consideration. A pairwise difference between the latter and
   former residuals is computed, and either a Z-test, sign test, or Wilcoxon
   signed rank test is performed to test either the mean or median difference
@@ -78,9 +78,8 @@ In leave-one-covariate-out or LOCO inference, the training data is
   A few other important notes: p-values here are from a one-sided test of the
   target parameter (mean or median excess test error) being equal to zero
   versus greater than zero. Confidence intervals are from inverting the
-  two-sided version of this test. 
-  Furthermore, all p-values and confidence intervals have been Bonferroni",
-  corrected for multiplicity.
+  two-sided version of this test. Furthermore, all p-values and confidence
+  intervals have been Bonferroni-corrected for multiplicity.
 }
 \examples{
 ## Use lasso + CV to choose a model, then test variable importance in the
@@ -122,8 +121,8 @@ segments(1:J, out.loco$inf.wilcox[[1]][,2],
 Ryan Tibshirani, Larry Wasserman
 }
 \references{
-"Distribution-Free Predictive Inference for Regression" by
-  Max G'Sell, Jing Lei, Alessandro Rinaldo, Ryan Tibshirani, Larry Wasserman,
-  http://arxiv.org/pdf/xxxx.pdf, 2016.
+"Distribution-Free Predictive Inference for Regression" by 
+  Jing Lei, Max G'Sell, Alessandro Rinaldo, Ryan Tibshirani, and Larry
+  Wasserman, http://arxiv.org/pdf/xxxx.pdf, 2016.
 }
 

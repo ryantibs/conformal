@@ -62,23 +62,3 @@ conformal.quantile = function(res, alpha) {
   if (ceiling((n+1)*alpha) <= 1) { return(Inf) }
   return(res[ceiling((n+1)*(1-alpha))])
 }
-
-# Get the conformal interval for differences in residuals
-# at mu2 and mu1, given a valid prediction interval [lo,up]
-conformal.diff.int = function(mu1, mu2, lo, up) {
-  n = nrow(mu1)
-  m = ncol(mu1)
-  v.lo = v.up = matrix(0,n,m)
-
-  # Cases where mu1 is larger
-  oo = mu2 <= mu1
-  v.lo[oo] = trunc(lo,mu2,mu1)[oo]
-  v.up[oo] = trunc(up,mu2,mu1)[oo]
-
-  # Cases where mu2 is larger
-  oo = mu1 <= mu2
-  v.lo[oo] = -trunc(up,mu1,mu2)[oo]
-  v.up[oo] = -trunc(lo,mu1,mu2)[oo]
-  
-  return(list(lo=v.lo,up=v.up))
-}

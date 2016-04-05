@@ -21,8 +21,8 @@ Conformal inference is a framework for converting any pre-chosen estimator of
 
 Some key references (in reverse chronological order):
 \itemize{
-\item "Distribution-Free Predictive Inference for Regression" by Max G'Sell,
-  Jing Lei, Alessandro Rinaldo, Ryan Tibshirani, and Larry Wasserman,
+\item "Distribution-Free Predictive Inference for Regression" by Jing Lei,
+  Max G'Sell, Alessandro Rinaldo, Ryan Tibshirani, and Larry Wasserman,
   http://arxiv.org/pdf/xxxx.pdf, 2016. 
 \item "Classification with Confidence" by Jing Lei, Biometrika, 101(4), 
   755-769, 2014. 
