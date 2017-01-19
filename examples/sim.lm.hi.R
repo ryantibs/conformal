@@ -9,7 +9,7 @@ n0 = 100 # Number of points at which to make predictions
 nrep = 50 # Number of repetitions for a given setting
 sigma = 1 # Marginal error standard deviation
 snr = 1 # Signal-to-noise ratio
-lambda = c(0,0.1) # Lambda values to try in ridge regression
+lambda = c(0,1,10,50) # Lambda values to try in ridge regression
 alpha = 0.1 # Miscoverage level
 
 # Define conformal inference functions: these are basically just wrappers
@@ -77,30 +77,30 @@ source("sim.setting.a.R")
 source("sim.setting.b.R")
 source("sim.setting.c.R")
 
-## # What values of lambda did split+CV choose?
-## lambda.a = lambda.b = lambda.c = c()
-## for (r in 1:nrep) {
-##   xy.a = sim.xy(n, p, x.dist="normal", cor="none",
-##     mean.fun="linear", s=s, error.dist="normal", sigma=sigma,
-##     snr=snr, sigma.type="const")
-##   i = sample(n,floor(n/2))
-##   lambda.a = c(lambda.b, cv.glmnet(xy.a$x[i,],xy.a$y[i])$lambda.min)
+# What values of lambda did split+CV choose?
+lambda.a = lambda.b = lambda.c = c()
+for (r in 1:nrep) {
+  xy.a = sim.xy(n, p, x.dist="normal", cor="none",
+    mean.fun="linear", s=s, error.dist="normal", sigma=sigma,
+    snr=snr, sigma.type="const")
+  i = sample(n,floor(n/2))
+  lambda.a = c(lambda.a, n/2*cv.glmnet(xy.a$x[i,],xy.a$y[i])$lambda.min)
 
-##   xy.b = sim.xy(n, p, x.dist="normal", cor="none",
-##     mean.fun="additive", m=4, s=s, error.dist="t", df=2,
-##     sigma=sigma, snr=snr, sigma.type="const")  
-##   i = sample(n,floor(n/2))
-##   lambda.b = c(lambda.b, cv.glmnet(xy.b$x[i,],xy.b$y[i])$lambda.min)
+  xy.b = sim.xy(n, p, x.dist="normal", cor="none",
+    mean.fun="additive", m=4, s=s, error.dist="t", df=2,
+    sigma=sigma, snr=snr, sigma.type="const")  
+  i = sample(n,floor(n/2))
+  lambda.b = c(lambda.b, n/2*cv.glmnet(xy.b$x[i,],xy.b$y[i])$lambda.min)
 
-##   xy.c = sim.xy(n, p, x.dist="mix", cor="auto", k=5,
-##   mean.fun="linear", error.dist="t", df=2, sigma=sigma, snr=snr,
-##   sigma.type="var")
-##   i = sample(n,floor(n/2))
-##   lambda.c = c(lambda.c, cv.glmnet(xy.c$x[i,],xy.c$y[i])$lambda.min)
+  xy.c = sim.xy(n, p, x.dist="mix", cor="auto", k=5,
+  mean.fun="linear", error.dist="t", df=2, sigma=sigma, snr=snr,
+  sigma.type="var")
+  i = sample(n,floor(n/2))
+  lambda.c = c(lambda.c, n/2*cv.glmnet(xy.c$x[i,],xy.c$y[i])$lambda.min)
 
-##   cat(paste0(r,"."))
-## }
-## cat("\n")
-## cat(mean(lambda.a),"\n")
-## cat(mean(lambda.b),"\n")
-## cat(mean(lambda.c),"\n")
+  cat(paste0(r,"."))
+}
+cat("\n")
+cat(mean(lambda.a),"\n")
+cat(mean(lambda.b),"\n")
+cat(mean(lambda.c),"\n")
