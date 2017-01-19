@@ -24,7 +24,7 @@
 #'   Default is 0.5.
 #' @param k If cor is "auto" or "rand", then this specifies the number of other
 #'   columns that are used in the lagged or random convex combinations (see
-#'   above).
+#'   above). Default is 5.
 #' @param standardize Should the columns of x be standardized (i.e., centered,
 #'   and scaled to have variance 1)? Default is TRUE.
 #' @param mean.fun One of "linear", "additive", or "rotated", indicating the
@@ -59,22 +59,23 @@
 #'   requires the \code{\link{sn}} package. Default is "normal".
 #' @param sigma Standard deviation of errors. When the error distribution does
 #'   not have a second moment (i.e., t-distribution with 1 or 2 df), then sigma
-#'   represents the MAD. Default is 1; when an snr argument is given (see next),
-#'   the sigma argument is ignored, and the latter is used to specify the error
-#'   variance.
-#' @param snr Number controlling the signal-to-noise ratio. Specifically, the
-#'   coefficients in the model for mu as linear function of x (or as a linear
-#'   function of B-splines of x in the "additive" and "rotated" cases for
-#'   mean.fun) are assigned to be +/- snr, with equal probability. Default is 1.
+#'   represents the MAD. Default is 1.
+#' @param bval Magnitude of nonzero coefficients in the model for mu as a linear
+#'   function of x (or as a linear function of B-splines of x in the "additive"
+#'   and "rotated" cases for mean.fun). Default is 3. This is overriden if the
+#'   snr parameter is specified (see next).
+#' @param snr The signal-to-noise ratio, specifically var(mu)/sigma^2, where
+#'   sigma^2 is the variance of the errors (see previous). The mean will be
+#'   scaled to meet the desired signal-to-noise ratio. 
 #' @param sigma.type Either "const" or "var", indicating constant or varying
 #'   error variance. In the latter case, the error standard deviation sigma is
 #'   multiplied by 1 + abs(mu)/mean(abs(mu)) (this gives a vector of the same
 #'   length as mu, i.e., a different standard deviation per component).
 #' @param df If error.dist is "t", then this specifies the degrees of freedom of
 #'   the t-distribution for the errors. Default is 3.
-#' @param alpha If error.dist is "sn", then this specifies the skewness parameter
-#'   (i.e., shape parameter) of the skewed normal distribution for the errors.
-#'   The location and scale parameters are set so that the resulting
+#' @param alpha If error.dist is "sn", then this specifies the skewness
+#'   parameter (i.e., shape parameter) of the skewed normal distribution for the
+#'   errors. The location and scale parameters are set so that the resulting
 #'   distribution always has mean zero and variance 1. Note that alpha > 0 means
 #'   right-skewed and alpha < 0 means left-skewed. Default is 5.
 #' @param omitted.vars Should important (active) variables be omitted from x?
@@ -98,7 +99,7 @@ sim.xy = function(n, p, x.dist=c("normal","binom","sn","mix"),
   cor=c("none","pair","auto","rand"), rho=0.5, k=5, standardize=TRUE,
   mean.fun=c("linear","additive","rotated"), m=4, sparsity=c("strong","weak"),
   s=round(log(p)), weak.decay=0.5, mu.seed=NULL,
-  error.dist=c("normal","unif","t","sn"), sigma=1, snr=1,
+  error.dist=c("normal","unif","t","sn"), sigma=1, bval=3, snr=NULL,
   sigma.type=c("const","var"), df=3, alpha=5, omitted.vars=FALSE) {
 
   # Check arguments
@@ -120,7 +121,8 @@ sim.xy = function(n, p, x.dist=c("normal","binom","sn","mix"),
   check.num.01(weak.decay)
   error.dist = match.arg(error.dist)
   check.pos.num(sigma)
-  check.pos.num(snr)
+  check.pos.num(bval)
+  if (!is.null(snr)) check.pos.num(snr)
   sigma.type = match.arg(sigma.type)
   check.pos.int(df)
   check.num(alpha)
@@ -197,7 +199,7 @@ sim.xy = function(n, p, x.dist=c("normal","binom","sn","mix"),
     }
     e = rsnorm(n,alpha)
   }
-
+    
   ####################
   # Generate mu vector, set mu-specific seed
   if (!is.null(mu.seed)) set.seed(mu.seed)
@@ -207,13 +209,13 @@ sim.xy = function(n, p, x.dist=c("normal","binom","sn","mix"),
     # Sample s variables uniformly at random, define true coefficients
     vars = sample(p,s)
     beta = rep(0,p)
-    beta[vars] = sample(c(-1,1)*snr,s,replace=T)
+    beta[vars] = sample(c(-1,1)*bval,s,replace=T)
     if (sparsity=="weak") {
-      beta[-vars] = sample(c(-1,1)*snr,p-s,replace=T)*weak.decay^(1:(p-s)) 
+      beta[-vars] = sample(c(-1,1)*bval,p-s,replace=T)*weak.decay^(1:(p-s)) 
     }
     mu = x %*% beta
   }
-
+  
   # Additive or rotated mean function
   else {
     # Check for plyr
@@ -236,9 +238,9 @@ sim.xy = function(n, p, x.dist=c("normal","binom","sn","mix"),
     vars = sample(p,s)
     vars.mat = (rep(vars,each=m)-1)*m + 1:m
     beta = rep(0,p*m)
-    beta[vars.mat] = sample(c(-1,1)*snr,s*m,replace=T)
+    beta[vars.mat] = sample(c(-1,1)*bval,s*m,replace=T)
     if (sparsity=="weak") {
-      beta[-vars.mat] = sample(c(-1,1)*snr,(p-s)*m,replace=T) *
+      beta[-vars.mat] = sample(c(-1,1)*bval,(p-s)*m,replace=T) *
         weak.decay^(1:((p-s)*m))
     }
     mu = mat %*% beta
@@ -246,16 +248,18 @@ sim.xy = function(n, p, x.dist=c("normal","binom","sn","mix"),
     # Rotate, if neccessary
     if (mean.fun=="rotated") mu = t(qr.Q(qr(matrix(rnorm(n^2),n,n)))) %*% mu
   }
-  
-  ####################
-  # Finally, construct y
-  
+
   # Constant or varying error variance?
   if (sigma.type=="const") sx = rep(1,n)
   else sx = 1 + 2*abs(mu)^3/mean(abs(mu)^3)
-
-  # Piece together y
-  y = mu + e*sigma*sx
+  sigma.vec = sigma*sx
+  
+  # Set the signal-to-noise ratio, if necessary
+  if (!is.null(snr)) mu = mu * sqrt(snr) * sqrt(mean(sigma.vec^2))/sd(mu)
+  
+  ####################
+  # Finally, construct y
+  y = mu + e*sigma.vec
 
   # In the omitted variables setup, we must delete half of the features; but 
   # make sure to delete half of the active ones, as well
@@ -309,8 +313,8 @@ rsnorm = function(n, alpha=5) {
 #'   to mean that simulations results should be saved at the very end, i.e., no
 #'   intermediate saving. Defaults are NULL and 5, respectively.
 #' @param x.dist,cor,rho,k,standardize,mean.fun,m,sparsity,s,weak.decay,
-#'   error.dist,sigma,snr,sigma.type,df,alpha,omitted.vars Arguments to pass to
-#'   \code{\link{sim.xy}}, see the latter's help file for details.
+#'   error.dist,sigma,bval,snr,sigma.type,df,alpha,omitted.vars Arguments to 
+#'   pass to \code{\link{sim.xy}}, see the latter's help file for details.
 #'
 #' @return A list with the following components.
 #'   \itemize{
@@ -356,8 +360,8 @@ sim.master = function(n, p, conformal.pred.funs, n0=n, in.sample=FALSE, nrep=20,
   x.dist=c("normal","binom","sn","mix"), cor=c("none","pair","auto","rand"),
   rho=0.5, k=5, standardize=TRUE, mean.fun=c("linear","additive","rotated"),
   m=4, sparsity=c("strong","weak"), s=round(log(p)), weak.decay=0.5,
-  mu.seed=NULL, error.dist=c("normal","unif","t","sn"), sigma=1, snr=1,
-  sigma.type=c("const","var"), df=3, alpha=5, omitted.vars=FALSE) {
+  mu.seed=NULL, error.dist=c("normal","unif","t","sn"), sigma=1, bval=3,
+  snr=NULL, sigma.type=c("const","var"), df=3, alpha=5, omitted.vars=FALSE) {
   
   this.call = match.call()
   
@@ -403,7 +407,7 @@ sim.master = function(n, p, conformal.pred.funs, n0=n, in.sample=FALSE, nrep=20,
     obj = sim.xy(n+n0,p,x.dist=x.dist,cor=cor,rho=rho,k=k,
       standardize=standardize,mean.fun=mean.fun,m=m,sparsity=sparsity,s=s,
       weak.decay=weak.decay,mu.seed=mu.seed,error.dist=error.dist,sigma=sigma,
-      snr=snr,sigma.type=sigma.type,df=df,omitted.vars=omitted.vars)
+      bval=bval,snr=snr,sigma.type=sigma.type,df=df,omitted.vars=omitted.vars)
     x = obj$x[1:n,]
     y = obj$y[1:n]
     x0 = obj$x[(n+1):(n+n0),]

@@ -8,7 +8,7 @@ s = 10 # Number of truly relevant features
 n0 = 100 # Number of points at which to make predictions
 nrep = 50 # Number of repetitions for a given setting
 sigma = 1 # Marginal error standard deviation
-snr = 1 # Signal-to-noise ratio
+bval = 1 # Magnitude of nonzero coefficients
 lambda = 0 # Lambda values to try in ridge regression
 alpha = 0.1 # Miscoverage level
 

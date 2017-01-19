@@ -1,5 +1,5 @@
-# Conformal Project
-## Carnegie Mellon Conformal Inference Team: Max G'Sell, Jing Lei, Alessandro Rinaldo, Ryan Tibshirani, Larry Wasserman  
+# Conformal Inference Project
+## Max G'Sell, Jing Lei, Alessandro Rinaldo, Ryan Tibshirani, Larry Wasserman  
 **Maintained by Ryan Tibshirani**
 
 This project contains software tools for conformal inference. The current 
@@ -11,14 +11,17 @@ access to the software tools, and the file "conformalInference.pdf" contains
 documentation. 
 
 The folder "examples" contains R code to reproduces all examples in the paper
-"Distribution-Free Predictive Inference for Regression" (see reference below).
-This R code relies on the "conformalInference" R package.
+"Distribution-Free Predictive Inference for Regression". This R code relies on
+the "conformalInference" R package.
 
-Some key references (in reverse chronological order):
+Main reference:
 
 - "Distribution-Free Predictive Inference for Regression" by Jing Lei, 
   Max G'Sell, Alessandro Rinaldo, Ryan Tibshirani, and Larry Wasserman,
-  http://arxiv.org/pdf/xxxx.pdf, 2016.
+  https://arxiv.org/abs/1604.04173, 2016.
+
+Related references (in reverse chronological order):
+
 - "Classification with Confidence" by Jing Lei, Biometrika, 101(4), 755-769,
   2014.
 - "Distribution-Free Prediction Bands for Non-parametric Regression" by

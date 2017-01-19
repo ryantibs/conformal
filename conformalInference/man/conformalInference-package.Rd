@@ -19,11 +19,12 @@ Conformal inference is a framework for converting any pre-chosen estimator of
   \code{\link{conformal.pred.split}} (wider intervals, but much more
   efficient).
 
-Some key references (in reverse chronological order):
+Main reference: "Distribution-Free Predictive Inference for Regression" by
+  Jing Lei, Max G'Sell, Alessandro Rinaldo, Ryan Tibshirani, and Larry
+  Wasserman, http://arxiv.org/pdf/1604.04173.pdf, 2016.
+
+Related references (in reverse chronological order):
 \itemize{
-\item "Distribution-Free Predictive Inference for Regression" by Jing Lei,
-  Max G'Sell, Alessandro Rinaldo, Ryan Tibshirani, and Larry Wasserman,
-  http://arxiv.org/pdf/xxxx.pdf, 2016. 
 \item "Classification with Confidence" by Jing Lei, Biometrika, 101(4), 
   755-769, 2014. 
 \item "Distribution-Free Prediction Bands for Non-parametric Regression" by

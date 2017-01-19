@@ -8,7 +8,7 @@ s = 5 # Number of truly relevant features
 n0 = 100 # Number of points at which to make predictions
 nrep = 50 # Number of repetitions for a given setting
 sigma = 1 # Marginal error standard deviation
-snr = 8 # Signal-to-noise ratio
+bval = 8 # Magnitude of nonzero coefficients
 
 # Define split conformal inference function for the lasso
 my.lasso.funs = lasso.funs(nlambda=50)
@@ -62,4 +62,6 @@ source("sim.setting.a.R")
 source("sim.setting.b.R")
 source("sim.setting.c.R")
 source("sim.setting.d.R")
-source("sim.setting.e.R")
+#source("sim.setting.e.R")
+#source("sim.setting.f.R")
+

@@ -2,14 +2,14 @@
 ## high-dimensional settings
 library(conformalInference)
 
-# Low-dimensions first
 # Set some overall simulation parameters
 n = 200; p = 2000 # Numbers of observations and features
 s = 5 # Number of truly relevant features
+s2 = 50 # Bigger number of relevant features
 n0 = 100 # Number of points at which to make predictions
 nrep = 50 # Number of repetitions for a given setting
 sigma = 1 # Marginal error standard deviation
-snr = 8 # Signal to noise ratio
+bval = 8 # Magnitude of nonzero coefficients
 
 # Define split conformal inference function for the lasso
 my.lasso.funs = lasso.funs(nlambda=50,lambda.min.ratio=1e-6)
@@ -63,5 +63,6 @@ path = "rds/many.hi."
 source("sim.setting.a.R")
 source("sim.setting.b.R")
 source("sim.setting.c.R")
-source("sim.setting.d.R")
-source("sim.setting.e.R")
+#source("sim.setting.d.R")
+#source("sim.setting.e.R")
+#source("sim.setting.f.R")

@@ -9,8 +9,8 @@ sim.xy(n, p, x.dist = c("normal", "binom", "sn", "mix"), cor = c("none",
   mean.fun = c("linear", "additive", "rotated"), m = 4,
   sparsity = c("strong", "weak"), s = round(log(p)), weak.decay = 0.5,
   mu.seed = NULL, error.dist = c("normal", "unif", "t", "sn"), sigma = 1,
-  snr = 1, sigma.type = c("const", "var"), df = 3, alpha = 5,
-  omitted.vars = FALSE)
+  bval = 3, snr = NULL, sigma.type = c("const", "var"), df = 3,
+  alpha = 5, omitted.vars = FALSE)
 }
 \arguments{
 \item{n, p}{The dimensions, as in n x p, of the feature matrix x. Note that n
@@ -38,7 +38,7 @@ Default is 0.5.}
 
 \item{k}{If cor is "auto" or "rand", then this specifies the number of other
 columns that are used in the lagged or random convex combinations (see
-above).}
+above). Default is 5.}
 
 \item{standardize}{Should the columns of x be standardized (i.e., centered,
 and scaled to have variance 1)? Default is TRUE.}
@@ -82,14 +82,16 @@ requires the \code{\link{sn}} package. Default is "normal".}
 
 \item{sigma}{Standard deviation of errors. When the error distribution does
 not have a second moment (i.e., t-distribution with 1 or 2 df), then sigma
-represents the MAD. Default is 1; when an snr argument is given (see next),
-the sigma argument is ignored, and the latter is used to specify the error
-variance.}
+represents the MAD. Default is 1.}
 
-\item{snr}{Number controlling the signal-to-noise ratio. Specifically, the
-coefficients in the model for mu as linear function of x (or as a linear
-function of B-splines of x in the "additive" and "rotated" cases for
-mean.fun) are assigned to be +/- snr, with equal probability. Default is 1.}
+\item{bval}{Magnitude of nonzero coefficients in the model for mu as a linear
+function of x (or as a linear function of B-splines of x in the "additive"
+and "rotated" cases for mean.fun). Default is 3. This is overriden if the
+snr parameter is specified (see next).}
+
+\item{snr}{The signal-to-noise ratio, specifically var(mu)/sigma^2, where
+sigma^2 is the variance of the errors (see previous). The mean will be
+scaled to meet the desired signal-to-noise ratio.}
 
 \item{sigma.type}{Either "const" or "var", indicating constant or varying
 error variance. In the latter case, the error standard deviation sigma is
@@ -99,9 +101,9 @@ length as mu, i.e., a different standard deviation per component).}
 \item{df}{If error.dist is "t", then this specifies the degrees of freedom of
 the t-distribution for the errors. Default is 3.}
 
-\item{alpha}{If error.dist is "sn", then this specifies the skewness parameter
-(i.e., shape parameter) of the skewed normal distribution for the errors.
-The location and scale parameters are set so that the resulting
+\item{alpha}{If error.dist is "sn", then this specifies the skewness
+parameter (i.e., shape parameter) of the skewed normal distribution for the
+errors. The location and scale parameters are set so that the resulting
 distribution always has mean zero and variance 1. Note that alpha > 0 means
 right-skewed and alpha < 0 means left-skewed. Default is 5.}
 

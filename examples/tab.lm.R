@@ -66,17 +66,17 @@ for (j in 1:length(lets)) {
 # Print linear model simulations, high-dimensional, ridge
 
 dim = "hi"
-method.nums = c(1,2,5,4)
+method.nums = c(1,2,3,4)
 metric.nums = c(1,2,3,5)
-method.names = c("Conformal","Jackknife","Split+CV","Parametric")
+method.names = c("Conformal","Jackknife","Split","Parametric")
 metric.names = c("Coverage","Length","Test error","Time")
 lets = c("A","B","C")
-tun = c(2,2,1,2) # Which tuning parameter value for each method?
+tun = c(3,3,2,3) # Which tuning parameter value for each method?
 
 for (j in 1:length(lets)) {
   name = paste0("lm.",dim,".sim",lets[j])
   x = readRDS(paste0("rds/",name,".rds"))
-
+  
   tab = tab.se = matrix(0,5,length(method.nums)) 
   colnames(tab) = method.names
   for (i in 1:length(method.nums)) {
@@ -91,5 +91,5 @@ for (j in 1:length(lets)) {
   tab = tab[metric.nums,]; tab.se = tab.se[metric.nums,]
   rownames(tab) = metric.names
   print.tex(tab, tab.se, file=paste0("tab/ridge.",name,".tex"))
-  cat(paste0("tab/",name,".tex\n"))
+  cat(paste0("tab/ridge.",name,".tex\n"))
 }
