@@ -37,4 +37,14 @@ Related references (in reverse chronological order):
   and Alex Gammerman, Annals of Statistics, 37(3), 1566-1590, 2009.
 - "Algorithmic Learning in a Random World" by Vladimir Vovk, Alex Gammerman,
   and Glenn Shafer, Springer, 2005.
+  
+### Install R Package
+
+To install the **conformalInference** R package from GitHub:
+
+```{r}
+library(devtools)
+install_github(repo = "ryantibs/conformal", subdir = "conformalInference")
+```  
+  
 
