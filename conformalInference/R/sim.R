@@ -523,7 +523,7 @@ sim.master = function(n, p, conformal.pred.funs, n0=n, in.sample=FALSE, nrep=20,
 
 #' Print function for sim object.
 #'
-#' Summary and print the results of a set of simulations, stored an object
+#' Summarize and print the results of a set of simulations, stored an object
 #' of class sim (produced by sim.master).
 #'
 #' @param x The sim object.
