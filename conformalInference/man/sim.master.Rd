@@ -2,7 +2,7 @@
 % Please edit documentation in R/sim.R
 \name{sim.master}
 \alias{sim.master}
-\title{Master function for simulations.}
+\title{Master function for running simulations.}
 \usage{
 sim.master(n, p, conformal.pred.funs, n0 = n, in.sample = FALSE,
   nrep = 20, seed = NULL, verbose = FALSE, file = NULL, file.rep = 5,
@@ -164,9 +164,9 @@ Ryan Tibshirani
 \references{
 "Distribution-Free Predictive Inference for Regression" by 
   Jing Lei, Max G'Sell, Alessandro Rinaldo, Ryan Tibshirani, and Larry
-  Wasserman, http://arxiv.org/pdf/xxxx.pdf, 2016.
+  Wasserman, https://arxiv.org/pdf/1604.04173.pdf, 2016.
 }
 \seealso{
-\code{\link{sim.x}}, \code{\link{sim.mu}}, \code{\link{sim.y}}
+\code{\link{sim.xy}}
 }
 

@@ -87,11 +87,10 @@
 #'
 #' @return A list with the following components: x, y, and mu.
 #'
-#' @seealso \code{\link{sim.mu}}, \code{\link{sim.y}}
 #' @author Ryan Tibshirani
 #' @references "Distribution-Free Predictive Inference for Regression" by 
 #'   Jing Lei, Max G'Sell, Alessandro Rinaldo, Ryan Tibshirani, and Larry
-#'   Wasserman, http://arxiv.org/pdf/xxxx.pdf, 2016.
+#'   Wasserman, https://arxiv.org/pdf/1604.04173.pdf, 2016.
 #' @examples ## See examples for sam.funs function
 #' @export sim.xy
 
@@ -286,7 +285,7 @@ rsnorm = function(n, alpha=5) {
   return((rsn(n,alpha=alpha)-xi)/om)
 }
 
-#' Master function for simulations.
+#' Master function for running simulations.
 #'
 #' Run a set of simulations with the specified configuration.
 #'
@@ -347,11 +346,11 @@ rsnorm = function(n, alpha=5) {
 #'    (analogous to the construction of ave.best.err and ave.best.len).
 #'   }
 #'
-#' @seealso \code{\link{sim.x}}, \code{\link{sim.mu}}, \code{\link{sim.y}}
+#' @seealso \code{\link{sim.xy}}
 #' @author Ryan Tibshirani
 #' @references "Distribution-Free Predictive Inference for Regression" by 
 #'   Jing Lei, Max G'Sell, Alessandro Rinaldo, Ryan Tibshirani, and Larry
-#'   Wasserman, http://arxiv.org/pdf/xxxx.pdf, 2016.
+#'   Wasserman, https://arxiv.org/pdf/1604.04173.pdf, 2016.
 #' @example examples/ex.sim.master.R
 #' @export sim.master
 

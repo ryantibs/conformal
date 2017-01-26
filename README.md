@@ -1,6 +1,6 @@
 # Conformal Inference Project
 ## Max G'Sell, Jing Lei, Alessandro Rinaldo, Ryan Tibshirani, Larry Wasserman  
-**Maintained by Ryan Tibshirani**
+### Maintained by Ryan Tibshirani
 
 This project contains software tools for conformal inference. The current 
 emphasis is on conformal prediction in regression. Soon, we will add tools
@@ -38,13 +38,12 @@ Related references (in reverse chronological order):
 - "Algorithmic Learning in a Random World" by Vladimir Vovk, Alex Gammerman,
   and Glenn Shafer, Springer, 2005.
   
-### Install R Package
+### Install the R package
 
-To install the **conformalInference** R package from GitHub:
+To install the conformalInference R package directly from github, run the
+following in R:
 
 ```{r}
 library(devtools)
-install_github(repo = "ryantibs/conformal", subdir = "conformalInference")
+install_github(repo="ryantibs/conformal", subdir="conformalInference")
 ```  
-  
-

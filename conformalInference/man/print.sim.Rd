@@ -28,7 +28,7 @@ root of the number of simulation repetitions. Default is TRUE.}
 \item{...}{Other arguments (currently not used).}
 }
 \description{
-Summary and print the results of a set of simulations, stored an object
+Summarize and print the results of a set of simulations, stored an object
 of class sim (produced by sim.master).
 }
 

@@ -71,7 +71,7 @@
 #' @author Ryan Tibshirani
 #' @references "Distribution-Free Predictive Inference for Regression" by 
 #'   Jing Lei, Max G'Sell, Alessandro Rinaldo, Ryan Tibshirani, and Larry
-#'   Wasserman, http://arxiv.org/pdf/xxxx.pdf, 2016.
+#'   Wasserman, https://arxiv.org/pdf/1604.04173.pdf, 2016.
 #' @example examples/ex.loco.roo.R
 #' @export loco.roo
 
