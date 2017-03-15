@@ -89,7 +89,7 @@ lm.funs = function(intercept=TRUE, lambda=0) {
 
   # Active function
   active.fun = function(out) {
-    p = ifelse(intercept, nrow(out$beta), nrow(out$beta)-1)
+    p = ifelse(intercept, nrow(out$beta)-1, nrow(out$beta))
     m = ncol(out$beta)
     act.list = vector(length=m,mode="list")
     for (i in 1:m) act.list[[i]] = 1:p

@@ -89,13 +89,6 @@ loco = function(x, y, train.fun, predict.fun, active.fun, alpha=0.1,
     verbose = TRUE
   }
   
-  # Users may pass in a string for the verbose argument
-  if (verbose == TRUE) txt = ""
-  if (verbose != TRUE && verbose != FALSE) {
-    txt = verbose
-    verbose = TRUE
-  }
-  
   # If the user passed indices for the split, use them
   if (!is.null(split)) i1 = split
   # Otherwise make a random split
