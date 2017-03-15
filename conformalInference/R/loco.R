@@ -250,8 +250,8 @@ my.z.test = function(z, alpha, k){
   pval = 1-pnorm(m/s*sqrt(n))
 
   # Apply Bonferroni correction for k tests
-  pval = k*pval
-  alpha = alpha/k
+  #pval = min(k*pval, 1)
+  #alpha = alpha/k
   
   q = qnorm(1-alpha/2)
   left  = m - q*s/sqrt(n)
@@ -266,8 +266,8 @@ my.sign.test = function(z, alpha, k){
   pval = 1-pbinom(s-1,n,0.5)
 
   # Apply Bonferroni correction for k tests
-  pval = k*pval
-  alpha = alpha/k
+  #pval = min(k*pval, 1)
+  #alpha = alpha/k
   
   j = n - qbinom(1-alpha/2,n,0.5) # Want P(B <= j) <= alpha/2
   zz  = sort(z)
@@ -281,8 +281,8 @@ my.wilcox.test = function(z, alpha, k){
   pval = wilcox.test(z, alternative="greater")$p.value
 
   # Apply Bonferroni correction for k tests
-  pval = k*pval
-  alpha = alpha/k
+  #pval = min(k*pval, 1)
+  #alpha = alpha/k
   
   out = wilcox.test(z, conf.int=TRUE, conf.level=1-alpha)
   left = out$conf.int[1]
