@@ -118,7 +118,7 @@ elastic.funs = function(gamma=0.5, standardize=TRUE, intercept=TRUE, lambda=NULL
       # the extremes of the glmnet sequence, to ensure that the sequence
       # actually has nlambda elements
       if (is.null(lambda)) {
-        lambda = log(seq(exp(max(out$lambda)),exp(min(out$lambda)),
+        lambda = exp(seq(log(max(out$lambda)),log(min(out$lambda)),
           length=nlambda))
       }  
       return(predict(out,newx,s=lambda))
@@ -127,7 +127,7 @@ elastic.funs = function(gamma=0.5, standardize=TRUE, intercept=TRUE, lambda=NULL
     active.fun = function(out) {
       # Subtlety: lambda here must match what predict.fun would give us
       if (is.null(lambda)) {
-        lambda = log(seq(exp(max(out$lambda)),exp(min(out$lambda)),
+        lambda = exp(seq(log(max(out$lambda)),log(min(out$lambda)),
           length=nlambda))
       }  
       b = coef(out$glmnet.fit,s=lambda)
