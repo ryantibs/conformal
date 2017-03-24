@@ -60,7 +60,7 @@ names(conformal.pred.funs) = c("Lasso","Elastic net","Spam",
        "Random forest", "Stepwise")
 
 path = "rds/many.hi."
-#source("sim.setting.a.R")
+source("sim.setting.a.R")
 source("sim.setting.b.R")
 source("sim.setting.c.R")
-#source("sim.setting.d.R")
+source("sim.setting.d.R")
