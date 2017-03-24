@@ -61,7 +61,4 @@ path = "rds/many.lo."
 source("sim.setting.a.R")
 source("sim.setting.b.R")
 source("sim.setting.c.R")
-source("sim.setting.d.R")
-#source("sim.setting.e.R")
-#source("sim.setting.f.R")
 
