@@ -132,7 +132,7 @@ conformal.pred.split = function(x, y, x0, train.fun, predict.fun, alpha=0.1,
       mad.out = mad.train.fun(x[i1,,drop=F],res.train)
       mad.x2 = mad.predict.fun(mad.out,x[i2,,drop=F])
       mad.x0 = mad.predict.fun(mad.out,x0)
-      res = res[,l] / mad.x2
+      res[,l] = res[,l] / mad.x2
     }
     else {
       mad.x0 = rep(1,n0)
