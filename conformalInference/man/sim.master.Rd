@@ -69,6 +69,8 @@ A list with the following components.
   \item cov, len, err, opt, tim: lists of length m, reporting the full set
     of metrics across repetitions (rather than averages or standard
     deviations).
+  \item lev: a matrix of dimension nrep x n0, reporting the leverage scores
+    of the test points, across the repetitions.
   \item ave.best.err, ave.best.len: matrices of dimension 5 x m, providing a
    summary of the average coverage, length, error, optimism, and time
    metrics (see description above), but at only one particular tuning

@@ -41,9 +41,10 @@
 #'   intervals (each grid point is a trial value for the interval). Default is
 #'   100.
 #' @param grid.factor Expansion factor used to define the grid for the conformal
-#'   intervals. Default is 0.25, which means that the grid extends 25% beyond 
-#'   the range of observed y's, on either side (to the left of the min, to the
-#'   right of max). 
+#'   intervals, i.e., the grid points are taken to be equally spaced in between
+#'   -grid.factor*max(abs(y)) and grid.factor*max(abs(y)). Default is 1.25. In
+#'   this case, the restriction of the trial values to this range costs at most
+#'   1/(n+1) in coverage. See details below.
 #' @param grid.method One of "linear", "floor", "ceiling". Default is "linear"
 #'   representing the method used to interpolate the endpoints of the conformal
 #'   conformal prediction interval from the grid of query values. The first
@@ -89,9 +90,20 @@
 #'   successive time it is asked to train by regressing onto the same matrix x,
 #'   it simply uses this Cholesky factorization (rather than recomputing one).
 ##   TODO implement and mention this for other functions too?
-#'   Finally, the analogous explanation and discussion here applies to the out
-#'   argument used by mad.train.fun.
-#'   
+#'   The analogous explanation and discussion here applies to the out argument
+#'   used by mad.train.fun.
+#'
+#'   If the data (training and test) are assumed to be exchangeable, the basic
+#'   assumption underlying conformal prediction, then the probability that a new
+#'   response value will lie outside of [-max(abs(y)), max(abs(y))], where y is
+#'   the vector of training responses, is 1/(n+1).  Thus the restriction of the
+#'   trials values to [-grid.factor*max(abs(y)), grid.factor*max(abs(y))], for
+#'   all choices grid.factor >= 1, will lead to a loss in coverage of at most
+#'   1/(n+1). This was also noted in "Trimmed Conformal Prediction for
+#'   High-Dimensional Models" by Wenyu Chen, Zhaokai Wang, Wooseok Ha, and Rina
+#'   Foygel Barber, https://arxiv.org/abs/1611.09933.pdf, 2016 (who use this
+#'   basic fact as motivation for proposing more refined trimming methods).
+#' 
 #' @seealso \code{\link{conformal.pred.jack}},
 #'   \code{\link{conformal.pred.split}}, \code{\link{conformal.pred.roo}}
 #' @author Ryan Tibshirani
@@ -102,7 +114,7 @@
 #' @export conformal.pred
 
 conformal.pred = function(x, y, x0, train.fun, predict.fun, alpha=0.1,
-  mad.train.fun=NULL, mad.predict.fun=NULL, num.grid.pts=100, grid.factor=0.25,
+  mad.train.fun=NULL, mad.predict.fun=NULL, num.grid.pts=100, grid.factor=1.25,
   grid.method=c("linear","floor","ceiling"), verbose=FALSE) {
 
   # Set up data
@@ -141,12 +153,12 @@ conformal.pred = function(x, y, x0, train.fun, predict.fun, alpha=0.1,
   m = ncol(pred)
   
   # Trial values for y, empty lo, up matrices to fill
-  rg = max(y)-min(y)
-  yvals = seq(min(y)-grid.factor*rg, max(y)+grid.factor*rg,length=num.grid.pts)
+  ymax = max(abs(y))
+  yvals = seq(-grid.factor*ymax, grid.factor*ymax,length=num.grid.pts)
   lo = up = matrix(0,n0,m)
   pvals = matrix(0,num.grid.pts,m)
   xx = rbind(x,rep(0,p))
-  
+    
   for (i in 1:n0) {
     if (verbose) {
       cat(sprintf("\r%sProcessing prediction point %i (of %i) ...",txt,i,n0))
@@ -154,7 +166,8 @@ conformal.pred = function(x, y, x0, train.fun, predict.fun, alpha=0.1,
     }
     
     xx[n+1,] = x0[i,]
-  
+
+    # Refit for each point in yvals, compute conformal p-value
     for (j in 1:num.grid.pts) {
       yy = c(y,yvals[j])
       if (j==1) out = train.fun(xx,yy)

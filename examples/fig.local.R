@@ -22,7 +22,7 @@ funs = smooth.spline.funs(cv=TRUE)
 out.split = conformal.pred.split(x, y, x0, alpha=0.1, seed=10,
   train.fun=funs$train, predict.fun=funs$predict)
 out.split.cov = out.split$lo <= y0 & y0 <= out.split$up
-out.split.len = out.split$up-out.split$lo
+out.split.len = out.split$up - out.split$lo
 
 pcol = "gray50"
 mar = c(4.25,4.25,3.25,1)
@@ -45,14 +45,11 @@ cat("fig/sin.split.pdf\n")
 
 # Split conformal, using smooth splines for both mean and residual
 # estimation
-out.split.cov = out.split$lo <= y0 & y0 <= out.split$up
-out.split.len = out.split$up-out.split$lo
-     
 out.split.local = conformal.pred.split(x, y, x0, alpha=0.1, seed=10,
   train.fun=funs$train, predict.fun=funs$predict,
   mad.train.fun=funs$train, mad.predict.fun=funs$predict)
 out.split.local.cov = out.split.local$lo <= y0 & y0 <= out.split.local$up
-out.split.local.len = out.split.local$up-out.split.local$lo
+out.split.local.len = out.split.local$up - out.split.local$lo
 
 pdf(file="fig/sin.split.local.pdf",w=w,h=h)
 par(mar=mar)

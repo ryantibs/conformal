@@ -19,7 +19,7 @@
 #'   with coverage 1-alpha are formed. Default for alpha is 0.1.
 #' @param special.fun A function to compute leave-one-out fitted values in an
 #'   an efficient manner. For example, for many linear smoothers (e.g., linear
-#'   regression smoothing splines, kernel smoothing --- essentially, anything
+#'   regression, smoothing splines, kernel smoothing --- essentially, anything
 #'   for which the fast leave-one-out cross-validation formula holds), we have
 #'   the "magic" property:
 #'   \deqn{ y_i - \hat{f}^{(-i)}(x_i) = \frac{y_i - \hat{f}(x_i)}{1-S_{ii}}, }

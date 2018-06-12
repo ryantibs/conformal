@@ -1,8 +1,8 @@
 #' Linear regression training and prediction functions, and special
 #'   leave-one-out fitting function.
 #'
-#' Construct the training and prediction functions for linear regression, as
-#'   as a special function for computing leave-one-out fitted values.
+#' Construct the training and prediction functions for linear regression, and 
+#'   a special function to quickly compute leave-one-out fitted values.
 #'
 #' @param intercept Should an intercept be included in the linear model? Default
 #'   is TRUE.
@@ -37,28 +37,30 @@ lm.funs = function(intercept=TRUE, lambda=0) {
   m = length(lambda)
   for (j in 1:m) check.pos.num(lambda[j])
 
-  # Training function, computes Cholesky, if we need to
+  # Training function
   train.fun = function(x,y,out=NULL) {
     n = nrow(x); p = ncol(x)
-    chol.R = vector(mode="list",length=m)
+    v = rep(1,p)
     
     if (intercept) {
-      xx = cbind(rep(1,n),x)
-      beta = matrix(0,p+1,m)
+      x = cbind(rep(1,n),x)
+      v = c(0,v)
+    }
+
+    # Compute Cholesky factorization, only if we need to
+    if (!is.null(out)) {
+      chol.R = out$chol.R
+    }
+    else {
+      chol.R = vector(mode="list",length=m)
       for (j in 1:m) {
-        if (!is.null(out)) chol.R[[j]] = out$chol.R[[j]]
-        else chol.R[[j]] = chol(crossprod(xx) + lambda[j]*diag(c(0,rep(1,p))))
-        beta[,j] = chol.solve(chol.R[[j]], t(xx) %*% y)
+        chol.R[[j]] = chol(crossprod(x) + lambda[j]*diag(v))
       }
     }
-    
-    else {
-      beta = matrix(0,p,m)
-      for (j in 1:m) {
-        if (!is.null(out)) chol.R[[j]] = out$chol.R[[j]]
-        else chol.R[[j]] = chol(crossprod(x) + lambda[j]*diag(1,p))
-        beta[,j] = chol.solve(chol.R[[j]], t(x) %*% y)
-      }
+
+    beta = matrix(0,p+intercept,m)
+    for (j in 1:m) {
+      beta[,j] = chol.solve(chol.R[[j]], t(x) %*% y)
     }
     
     return(list(beta=beta,chol.R=chol.R))

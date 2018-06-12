@@ -1,4 +1,3 @@
-
 ## Lasso: use a fixed sequence of 100 lambda values
 
 # Generate some example training data

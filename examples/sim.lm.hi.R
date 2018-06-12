@@ -27,7 +27,7 @@ my.jack.fun = function(x, y, x0) {
                      predict.fun=my.lm.funs$predict,
                      special.fun=my.lm.funs$special)
 }
-my.lm.funs.2 = lm.funs(lambda=lambda[-1])
+my.lm.funs.2 = lm.funs(lambda=c(1e-8,lambda[-1]))
 my.split.fun = function(x, y, x0) {
   conformal.pred.split(x,y,x0,alpha=alpha,
                       train.fun=my.lm.funs.2$train,
@@ -44,14 +44,14 @@ my.param.fun = function(x, y, x0) {
   m = ncol(pred)
   
   x1 = cbind(rep(1,n0),x0)
-  z = qnorm(1-alpha/2)
+  q = qt(1-alpha/2, n-p-1)
   lo = up = matrix(0,n0,m)
   
   for (j in 1:m) {
     sig.hat = sqrt(sum((y - fit[,j])^2)/(n-ncol(x1)))
     g = diag(x1 %*% chol.solve(out$chol.R[[j]], t(x1)))
-    lo[,j] = pred[,j] - sqrt(1+g)*sig.hat*z
-    up[,j] = pred[,j] + sqrt(1+g)*sig.hat*z
+    lo[,j] = pred[,j] - sqrt(1+g)*sig.hat*q
+    up[,j] = pred[,j] + sqrt(1+g)*sig.hat*q
   }
   
   # Return proper outputs in proper formatting
@@ -66,15 +66,15 @@ my.split.cv.fun = function(x, y, x0) {
                              predict.fun=my.ridge.funs$predict))
 }
 
-Now put together a list with all of our conformal inference functions
+# Now put together a list with all of our conformal inference functions
 conformal.pred.funs = list(my.conf.fun, my.jack.fun, my.split.fun, my.param.fun,
   my.split.cv.fun)
 names(conformal.pred.funs) = c("Conformal","Jackknife","Split conformal",
        "Parametric","Split + CV")
 
-path = "rds/lm.hi."
-source("sim.setting.a.R")
-source("sim.setting.b.R")
+path = "rds/lm.hi2."
+#source("sim.setting.a.R")
+#source("sim.setting.b.R")
 source("sim.setting.c.R")
 
 ## # What values of lambda did split+CV choose?

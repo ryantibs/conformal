@@ -84,7 +84,6 @@ For concreteness, suppose that we want to use the predictions from
   values, instead of calling the conformal function separately m = 5 times.
 }
 \examples{
-b
 ## Lasso: use a fixed sequence of 100 lambda values
 
 # Generate some example training data

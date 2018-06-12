@@ -22,8 +22,8 @@ A list with four components: train.fun, predict.fun, special.fun,
   linear models.
 }
 \description{
-Construct the training and prediction functions for linear regression, as
-  as a special function for computing leave-one-out fitted values.
+Construct the training and prediction functions for linear regression, and 
+  a special function to quickly compute leave-one-out fitted values.
 }
 \details{
 The train.fun function constructed here leverages an optional third

@@ -22,7 +22,7 @@ for (j in 1:length(lets)) {
          x$ave.tim[[num]])
     tab.se[,i] = c(x$sd.cov[[num]][tun[i]],x$sd.len[[num]][tun[i]],
             x$sd.err[[num]][tun[i]],x$sd.opt[[num]][tun[i]],
-            x$sd.tim[[num]])/sqrt(nrow(x$cov[[num]]))
+            x$sd.tim[[num]])/sqrt(nrow(x$err[[num]]))
   }
   tab = tab[metric.nums,]; tab.se = tab.se[metric.nums,]
   rownames(tab) = metric.names
@@ -54,7 +54,7 @@ for (j in 1:length(lets)) {
          x$ave.tim[[num]])
     tab.se[,i] = c(x$sd.cov[[num]][tun[i]],x$sd.len[[num]][tun[i]],
             x$sd.err[[num]][tun[i]],x$sd.opt[[num]][tun[i]],
-            x$sd.tim[[num]])/sqrt(nrow(x$cov[[num]]))
+            x$sd.tim[[num]])/sqrt(nrow(x$err[[num]]))
   }
   tab = tab[metric.nums,]; tab.se = tab.se[metric.nums,]
   rownames(tab) = metric.names
@@ -71,7 +71,7 @@ metric.nums = c(1,2,3,5)
 method.names = c("Conformal","Jackknife","Split","Parametric")
 metric.names = c("Coverage","Length","Test error","Time")
 lets = c("A","B","C")
-tun = c(3,3,2,3) # Which tuning parameter value for each method?
+tun = rep(3,4) # Which tuning parameter value for each method?
 
 for (j in 1:length(lets)) {
   name = paste0("lm.",dim,".sim",lets[j])
@@ -86,7 +86,7 @@ for (j in 1:length(lets)) {
          x$ave.tim[[num]])
     tab.se[,i] = c(x$sd.cov[[num]][tun[i]],x$sd.len[[num]][tun[i]],
             x$sd.err[[num]][tun[i]],x$sd.opt[[num]][tun[i]],
-            x$sd.tim[[num]])/sqrt(nrow(x$cov[[num]]))
+            x$sd.tim[[num]])/sqrt(nrow(x$err[[num]]))
   }
   tab = tab[metric.nums,]; tab.se = tab.se[metric.nums,]
   rownames(tab) = metric.names

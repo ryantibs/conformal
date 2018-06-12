@@ -335,6 +335,8 @@ rsnorm = function(n, alpha=5) {
 #'   \item cov, len, err, opt, tim: lists of length m, reporting the full set
 #'     of metrics across repetitions (rather than averages or standard
 #'     deviations).
+#'   \item lev: a matrix of dimension nrep x n0, reporting the leverage scores
+#'     of the test points, across the repetitions.
 #'   \item ave.best.err, ave.best.len: matrices of dimension 5 x m, providing a
 #'    summary of the average coverage, length, error, optimism, and time
 #'    metrics (see description above), but at only one particular tuning
@@ -386,10 +388,13 @@ sim.master = function(n, p, conformal.pred.funs, n0=n, in.sample=FALSE, nrep=20,
   nms = names(conformal.pred.funs)
   if (is.null(nms)) nms = paste("Method",1:N)
   
-  cov = len = err = opt = tim = vector(mode="list",length=N)
-  names(cov) = names(len) = names(err) = names(opt) = names(tim) = nms
+  cov = lo = up = pred = err = opt = tim = vector(mode="list",length=N)
+  names(cov) = names(lo) = names(up) = names(err) = names(opt) = names(tim) =
+    nms
+  lev = matrix(NA,nrep,n0)
   for (j in 1:N) {
-    cov[[j]] = len[[j]] = err[[j]] = opt[[j]] = matrix(NA,nrep,1)
+    cov[[j]] = lo[[j]] = up[[j]] = pred[[j]] = array(NA,dim=c(nrep,n0,1))
+    err[[j]] = opt[[j]] = matrix(NA,nrep,1)
     tim[[j]] = rep(NA,nrep)
   }
   filled = rep(FALSE,N)
@@ -411,6 +416,7 @@ sim.master = function(n, p, conformal.pred.funs, n0=n, in.sample=FALSE, nrep=20,
     y = obj$y[1:n]
     x0 = obj$x[(n+1):(n+n0),]
     y0 = obj$y[(n+1):(n+n0)]
+    lev[i,] = diag(x0 %*% solve(t(x)%*%x) %*% t(x0))
     
     # Loop through the conformal methods
     for (j in 1:N) {
@@ -428,8 +434,9 @@ sim.master = function(n, p, conformal.pred.funs, n0=n, in.sample=FALSE, nrep=20,
    
           # Populate empty matrices for our metrics, of appropriate dimension
           if (!filled[j]) {
-            cov[[j]] = len[[j]] = err[[j]] = opt[[j]] =
-              matrix(NA,nrep,ncol(out$lo))
+            cov[[j]] = lo[[j]] = up[[j]] = pred[[j]] =
+              array(NA,dim=c(nrep,n0,ncol(out$lo)))
+            err[[j]] = opt[[j]] = matrix(NA,nrep,ncol(out$lo))
             filled[j] = TRUE
             # N.B. Filling with NAs is important, because the filled flag could
             # be false for two reasons: i) we are at the first iteration, or ii)
@@ -437,8 +444,10 @@ sim.master = function(n, p, conformal.pred.funs, n0=n, in.sample=FALSE, nrep=20,
           }
 
           # Record all of our metrics
-          cov[[j]][i,] = colMeans(out$lo <= y0.mat & y0.mat <= out$up)
-          len[[j]][i,] = colMeans(out$up - out$lo)
+          cov[[j]][i,,] = out$lo <= y0.mat & y0.mat <= out$up
+          lo[[j]][i,,] = out$lo
+          up[[j]][i,,] = out$up
+          pred[[j]][i,,] = out$pred
           train.err = colMeans((out$fit - y.mat)^2)
           test.err = colMeans((out$pred - y0.mat)^2)
           err[[j]][i,] = test.err
@@ -460,7 +469,7 @@ sim.master = function(n, p, conformal.pred.funs, n0=n, in.sample=FALSE, nrep=20,
 
     # Save intermediate results?
     if (!is.null(file) && file.rep > 0 && i %% file.rep == 0) {
-      saveRDS(list(cov,len,err,opt,tim), file)
+      saveRDS(list(cov,lo,up,pred,err,opt,tim,lev), file)
     }
   }
 
@@ -471,13 +480,15 @@ sim.master = function(n, p, conformal.pred.funs, n0=n, in.sample=FALSE, nrep=20,
   names(sd.cov) = names(sd.len) = names(sd.err) = nms
   names(ave.opt) = names(ave.tim) = names(sd.opt) = names(sd.tim) = nms
   for (j in 1:N) {
-    ave.cov[[j]] = colMeans(cov[[j]],na.rm=T)
-    ave.len[[j]] = colMeans(len[[j]],na.rm=T)
-    ave.err[[j]] = colMeans(err[[j]],na.rm=T)
-    ave.opt[[j]] = colMeans(opt[[j]],na.rm=T)
+    ave.cov.mat = apply(cov[[j]],c(1,3),mean,na.rm=T)
+    ave.len.mat = apply(up[[j]]-lo[[j]],c(1,3),mean,na.rm=T)
+    ave.cov[[j]] = apply(ave.cov.mat,2,mean,na.rm=T)
+    ave.len[[j]] = apply(ave.len.mat,2,mean,na.rm=T)
+    ave.err[[j]] = apply(err[[j]],2,mean,na.rm=T)
+    ave.opt[[j]] = apply(opt[[j]],2,mean,na.rm=T)
     ave.tim[[j]] = mean(tim[[j]],na.rm=T)
-    sd.cov[[j]] = apply(cov[[j]],2,sd,na.rm=T)
-    sd.len[[j]] = apply(len[[j]],2,sd,na.rm=T)
+    sd.cov[[j]] = apply(ave.cov.mat,2,sd,na.rm=T)
+    sd.len[[j]] = apply(ave.len.mat,2,sd,na.rm=T)
     sd.err[[j]] = apply(err[[j]],2,sd,na.rm=T)
     sd.opt[[j]] = apply(opt[[j]],2,sd,na.rm=T)
     sd.tim[[j]] = sd(tim[[j]],na.rm=T)
@@ -508,10 +519,10 @@ sim.master = function(n, p, conformal.pred.funs, n0=n, in.sample=FALSE, nrep=20,
     ave.opt=ave.opt,ave.tim=ave.tim,
     sd.cov=sd.cov,sd.len=sd.len,sd.err=sd.err,
     sd.opt=sd.opt,sd.tim=sd.tim,
-    cov=cov,len=len,err=err,opt=opt,tim=tim,
+    cov=cov,lo=lo,up=up,pred=pred,err=err,opt=opt,tim=tim,
     ave.best.err=ave.best.err,ave.best.len=ave.best.len,
     sd.best.err=sd.best.err,sd.best.len=sd.best.len,
-    call=this.call)
+    lev=lev,call=this.call)
   class(out) = "sim"
   
   # Save results?
@@ -586,7 +597,7 @@ print.sim = function(x, type=c("err","len","all"), se=TRUE, digits=3, ...) {
       if (se) {
         tab = matrix(paste0(tab," (",
           round(rbind(x$sd.cov[[j]],x$sd.len[[j]],
-                      x$sd.err[[j]]),digits=3),
+                      x$sd.err[[j]])/sqrt(nrep),digits=3),
           ")"),nrow(tab),ncol(tab))
       }
       
@@ -624,7 +635,7 @@ plot.sim = function(x, method.nums=1:length(x$ave.cov), method.names=NULL,
   main = rep(main,length=3)
   legend.pos = rep(legend.pos,length=3)
   ii = method.nums
-  nrep = nrow(x$cov[[1]])
+  nrep = nrow(x$err[[1]])
 
   # Coverage plot
   plot.one(x$ave.opt[ii], x$ave.cov[ii],
