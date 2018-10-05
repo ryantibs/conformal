@@ -4,8 +4,8 @@
 \alias{loco}
 \title{Variable importance via mean (or median) excess test error}
 \usage{
-loco(x, y, train.fun, predict.fun, active.fun, alpha = 0.1, split = NULL,
-  seed = NULL, verbose = FALSE)
+loco(x, y, train.fun, predict.fun, active.fun, alpha = 0.1,
+  bonf.correct = TRUE, split = NULL, seed = NULL, verbose = FALSE)
 }
 \arguments{
 \item{x}{Matrix of features, of dimension (say) n x p.}
@@ -29,6 +29,9 @@ Its only input argument should be out: output produced by train.fun.}
 \item{alpha}{Miscoverage level for the confidence intervals, i.e., intervals
 with coverage 1-alpha are formed. Default for alpha is 0.1.}
 
+\item{bonf.correct}{Should a Bonferroni correction be applied to the p-values
+and confidence intervals? Default is TRUE.}
+
 \item{split}{Indices that define the data-split to be used (i.e., the indices
 define the first half of the data-split, on which the model is trained).
 Default is NULL, in which case the split is chosen randomly.}
@@ -42,15 +45,16 @@ is ignored.}
 }
 \value{
 A list with the following components: inf.z, inf.sign, inf.wilcox,
-  active, master. The first three are lists, containing the results of LOCO
-  inference with the Z-test, sign text, and Wilcoxon signed rank test,
-  respectively. More
-  details on these tests are given below. These lists have one element per
-  tuning step inherent to the training and prediction functions, train.fun
-  and predict.fun. The fourth returned component active is a list, with one
-  element per tuning step, that reports which features are active in the
-  corresponding fitted model. The last returned component master collects
-  all active features across all tuning steps, for easy reference.
+  active, master, bonf.correct. The first three are lists, containing the
+  results of LOCO inference with the Z-test, sign text, and Wilcoxon signed
+  rank test, respectively. More details on these tests are given below. These
+  lists have one element per tuning step inherent to the training and
+  prediction functions, train.fun and predict.fun. The fourth returned
+  component active is a list, with one element per tuning step, that reports
+  which features are active in the corresponding fitted model. The fifth
+  returned component master collects all active features across all tuning
+  steps, for easy reference. The last component signals whether a Bonferroni
+  correction has been applied.
 }
 \description{
 Compute confidence intervals for mean (or median) excess test error due to 
@@ -75,11 +79,10 @@ In leave-one-covariate-out or LOCO inference, the training data is
   samples, but may offer more power (it assumes both continuity and symmetry
   of the underlying distribution).
 
-  A few other important notes: p-values here are from a one-sided test of the
-  target parameter (mean or median excess test error) being equal to zero
+  A couple other important notes: p-values here are from a one-sided test of
+  the target parameter (mean or median excess test error) being equal to zero
   versus greater than zero. Confidence intervals are from inverting the
-  two-sided version of this test. Furthermore, all p-values and confidence
-  intervals have been Bonferroni-corrected for multiplicity.
+  two-sided version of this test.
 }
 \examples{
 ## Use lasso + CV to choose a model, then test variable importance in the

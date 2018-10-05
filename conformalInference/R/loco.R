@@ -18,6 +18,8 @@
 #'   Its only input argument should be out: output produced by train.fun.
 #' @param alpha Miscoverage level for the confidence intervals, i.e., intervals
 #'   with coverage 1-alpha are formed. Default for alpha is 0.1.
+#' @param bonf.correct Should a Bonferroni correction be applied to the p-values
+#'   and confidence intervals? Default is TRUE.
 #' @param split Indices that define the data-split to be used (i.e., the indices
 #'   define the first half of the data-split, on which the model is trained).
 #'   Default is NULL, in which case the split is chosen randomly.
@@ -28,15 +30,16 @@
 #' @param verbose Should intermediate progress be printed out? Default is FALSE.
 #'
 #' @return A list with the following components: inf.z, inf.sign, inf.wilcox,
-#'   active, master. The first three are lists, containing the results of LOCO
-#'   inference with the Z-test, sign text, and Wilcoxon signed rank test,
-#'   respectively. More
-#'   details on these tests are given below. These lists have one element per
-#'   tuning step inherent to the training and prediction functions, train.fun
-#'   and predict.fun. The fourth returned component active is a list, with one
-#'   element per tuning step, that reports which features are active in the
-#'   corresponding fitted model. The last returned component master collects
-#'   all active features across all tuning steps, for easy reference.
+#'   active, master, bonf.correct. The first three are lists, containing the
+#'   results of LOCO inference with the Z-test, sign text, and Wilcoxon signed
+#'   rank test, respectively. More details on these tests are given below. These
+#'   lists have one element per tuning step inherent to the training and
+#'   prediction functions, train.fun and predict.fun. The fourth returned
+#'   component active is a list, with one element per tuning step, that reports
+#'   which features are active in the corresponding fitted model. The fifth
+#'   returned component master collects all active features across all tuning
+#'   steps, for easy reference. The last component signals whether a Bonferroni
+#'   correction has been applied.
 #'
 #' @details In leave-one-covariate-out or LOCO inference, the training data is
 #'   split in two parts, and the first part is used to train a model, or some
@@ -56,11 +59,10 @@
 #'   samples, but may offer more power (it assumes both continuity and symmetry
 #'   of the underlying distribution).
 #'
-#'   A few other important notes: p-values here are from a one-sided test of the
-#'   target parameter (mean or median excess test error) being equal to zero
+#'   A couple other important notes: p-values here are from a one-sided test of
+#'   the target parameter (mean or median excess test error) being equal to zero
 #'   versus greater than zero. Confidence intervals are from inverting the
-#'   two-sided version of this test. Furthermore, all p-values and confidence
-#'   intervals have been Bonferroni-corrected for multiplicity.
+#'   two-sided version of this test.
 #'
 #' @author Ryan Tibshirani, Larry Wasserman
 #' @references "Distribution-Free Predictive Inference for Regression" by 
@@ -70,7 +72,7 @@
 #' @export loco
 
 loco = function(x, y, train.fun, predict.fun, active.fun, alpha=0.1,
-  split=NULL, seed=NULL, verbose=FALSE) {
+  bonf.correct=TRUE, split=NULL, seed=NULL, verbose=FALSE) {
 
   # Set up data
   x = as.matrix(x)
@@ -116,13 +118,12 @@ loco = function(x, y, train.fun, predict.fun, active.fun, alpha=0.1,
   if (verbose) {
     cat(sprintf("%sInitial residuals on second part ...\n",txt))
   }
-  
   # Get residuals on second
   res = abs(y[i2] - matrix(predict.fun(out,x[i2,,drop=F]),nrow=n2))
   res.drop = vector(mode="list",length=J)
 
   # Re-fit after dropping each feature in the master list
-  for (j in 1:J) {
+  for (j in Seq(1,J)) {
     if (verbose) {
       cat(sprintf(paste("\r%sRe-fitting after dropping feature %i (%i of %i",
                         "considered) ..."),txt,master[j],j,J))
@@ -145,7 +146,7 @@ loco = function(x, y, train.fun, predict.fun, active.fun, alpha=0.1,
     if (verbose) {
       if (m>1) {
         cat(sprintf(paste("\r%sPerforming LOCO analysis at tuning step %i",
-                          "(of %i) ...",txt,l,m)))
+                          "(of %i) ..."),txt,l,m))
         flush.console()
       }
       else cat(sprintf("%sPerforming LOCO analysis ...",txt))
@@ -153,23 +154,23 @@ loco = function(x, y, train.fun, predict.fun, active.fun, alpha=0.1,
 
     k = length(active[[l]])
     inf.z[[l]] = inf.sign[[l]] = inf.wilcox[[l]] = matrix(0,k,3)
-    for (j in 1:k) {
+    for (j in Seq(1,k)) {
       j.master = which(master == active[[l]][j])
       z = res.drop[[j.master]][,l] - res[,l]
-      inf.z[[l]][j,] = my.z.test(z,alpha,k)
-      inf.sign[[l]][j,] = my.sign.test(z,alpha,k)
-      inf.wilcox[[l]][j,] = my.wilcox.test(z,alpha,k)
-      
-      rownames(inf.z[[l]]) = rownames(inf.sign[[l]]) =
-        rownames(inf.wilcox[[l]]) = active[[l]]
-      colnames(inf.z[[l]]) = colnames(inf.sign[[l]]) =
-        colnames(inf.wilcox[[l]]) = c("P-value", "LowConfPt", "UpConfPt")
+      inf.z[[l]][j,] = my.z.test(z,alpha,k,bonf.correct)
+      inf.sign[[l]][j,] = my.sign.test(z,alpha,k,bonf.correct)
+      inf.wilcox[[l]][j,] = my.wilcox.test(z,alpha,k,bonf.correct)
     }
+    
+    rownames(inf.z[[l]]) = rownames(inf.sign[[l]]) =
+      rownames(inf.wilcox[[l]]) = active[[l]]
+    colnames(inf.z[[l]]) = colnames(inf.sign[[l]]) =
+      colnames(inf.wilcox[[l]]) = c("P-value", "LowConfPt", "UpConfPt")
   }
   if (verbose) cat("\n")
 
   out = list(inf.z=inf.z,inf.sign=inf.sign,inf.wilcox=inf.wilcox,
-    active=active, master=master)
+    active=active, master=master, bonf.correct=bonf.correct)
   class(out) = "loco"
   return(out)
 }
@@ -198,8 +199,8 @@ print.loco = function(x, test=c("wilcox","sign","z","all"), digits=3, ...) {
             "\n  greater than zero.",
             "\n- Confidence intervals are from inverting the two-sided version",
             "\n  of this test.",
-            "\n- All p-values and confidence intervals have been Bonferroni",
-            "\n  corrected for multiplicity.\n"))
+            "\n- Bonferonni correction:",
+            ifelse(x$bonf.correct, "yes.", "no."), "\n"))
   
   m = length(x$inf.z)
   for (i in 1:m) {
@@ -243,15 +244,17 @@ print.loco = function(x, test=c("wilcox","sign","z","all"), digits=3, ...) {
 }
 
 # Mean inference: One-sided p-value but a two-sided confidence interval
-my.z.test = function(z, alpha, k){
+my.z.test = function(z, alpha, k, bonf.correct=TRUE){
   n = length(z)
   s = sd(z)
   m = mean(z)
   pval = 1-pnorm(m/s*sqrt(n))
 
   # Apply Bonferroni correction for k tests
-  pval = min(k*pval,1)
-  alpha = alpha/k
+  if (bonf.correct) {
+    pval = min(k*pval,1)
+    alpha = alpha/k
+  }
   
   q = qnorm(1-alpha/2)
   left  = m - q*s/sqrt(n)
@@ -260,14 +263,16 @@ my.z.test = function(z, alpha, k){
 }
 
 # Median inference: one-sided p-value but a two-sided confidence interval
-my.sign.test = function(z, alpha, k){
+my.sign.test = function(z, alpha, k, bonf.correct=TRUE){
   n = length(z)
   s = sum(z>0)
   pval = 1-pbinom(s-1,n,0.5)
 
   # Apply Bonferroni correction for k tests
-  pval = min(k*pval,1)
-  alpha = alpha/k
+  if (bonf.correct) {
+    pval = min(k*pval,1)
+    alpha = alpha/k
+  }
   
   j = n - qbinom(1-alpha/2,n,0.5) # Want P(B <= j) <= alpha/2
   zz  = sort(z)
@@ -277,12 +282,14 @@ my.sign.test = function(z, alpha, k){
 }
 
 # Median inference: one-sided p-value but a two-sided confidence interval
-my.wilcox.test = function(z, alpha, k){
+my.wilcox.test = function(z, alpha, k, bonf.correct=TRUE){
   pval = wilcox.test(z, alternative="greater")$p.value
 
   # Apply Bonferroni correction for k tests
-  pval = min(k*pval,1)
-  alpha = alpha/k
+  if (bonf.correct) {
+    pval = min(k*pval,1)
+    alpha = alpha/k
+  }
   
   out = wilcox.test(z, conf.int=TRUE, conf.level=1-alpha)
   left = out$conf.int[1]

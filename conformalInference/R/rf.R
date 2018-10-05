@@ -54,7 +54,7 @@ rf.funs = function(ntree=500, varfrac=0.333, replace=TRUE,
   }
 
   active.fun = function(out) {
-    return(list(which(a$importance>0)))
+    return(list(which(out$importance>0)))
   }
   
   return(list(train.fun=train.fun, predict.fun=predict.fun,
