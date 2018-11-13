@@ -118,6 +118,7 @@ loco = function(x, y, train.fun, predict.fun, active.fun, alpha=0.1,
   if (verbose) {
     cat(sprintf("%sInitial residuals on second part ...\n",txt))
   }
+  
   # Get residuals on second
   res = abs(y[i2] - matrix(predict.fun(out,x[i2,,drop=F]),nrow=n2))
   res.drop = vector(mode="list",length=J)
@@ -283,7 +284,7 @@ my.sign.test = function(z, alpha, k, bonf.correct=TRUE){
 
 # Median inference: one-sided p-value but a two-sided confidence interval
 my.wilcox.test = function(z, alpha, k, bonf.correct=TRUE){
-  pval = wilcox.test(z, alternative="greater")$p.value
+  pval = wilcox.test(z, alternative="greater", exact=TRUE)$p.value
 
   # Apply Bonferroni correction for k tests
   if (bonf.correct) {
@@ -291,7 +292,7 @@ my.wilcox.test = function(z, alpha, k, bonf.correct=TRUE){
     alpha = alpha/k
   }
   
-  out = wilcox.test(z, conf.int=TRUE, conf.level=1-alpha)
+  out = wilcox.test(z, conf.int=TRUE, conf.level=1-alpha, exact=TRUE)
   left = out$conf.int[1]
   right = out$conf.int[2]
   return(c(pval,left,right))

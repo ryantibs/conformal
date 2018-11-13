@@ -99,9 +99,6 @@ For concreteness, suppose that we want to use the predictions from
 \examples{
 ## See examples for conformal.pred function
 }
-\author{
-Ryan Tibshirani
-}
 \references{
 "Distribution-Free Predictive Inference for Regression" by 
   Jing Lei, Max G'Sell, Alessandro Rinaldo, Ryan Tibshirani, and Larry
@@ -113,4 +110,6 @@ Ryan Tibshirani
 \code{\link{conformal.pred}}, 
   \code{\link{conformal.pred.split}}, \code{\link{conformal.pred.roo}}
 }
-
+\author{
+Ryan Tibshirani
+}

@@ -4,13 +4,14 @@
 \alias{sim.xy}
 \title{Features and responses generation.}
 \usage{
-sim.xy(n, p, x.dist = c("normal", "binom", "sn", "mix"), cor = c("none",
-  "pair", "auto", "rand"), rho = 0.5, k = 5, standardize = TRUE,
-  mean.fun = c("linear", "additive", "rotated"), m = 4,
-  sparsity = c("strong", "weak"), s = round(log(p)), weak.decay = 0.5,
-  mu.seed = NULL, error.dist = c("normal", "unif", "t", "sn"), sigma = 1,
-  bval = 3, snr = NULL, sigma.type = c("const", "var"), df = 3,
-  alpha = 5, omitted.vars = FALSE)
+sim.xy(n, p, x.dist = c("normal", "binom", "sn", "mix"),
+  cor = c("none", "pair", "auto", "rand"), rho = 0.5, k = 5,
+  standardize = TRUE, mean.fun = c("linear", "additive", "rotated"),
+  m = 4, sparsity = c("strong", "weak"), s = round(log(p)),
+  weak.decay = 0.5, mu.seed = NULL, error.dist = c("normal", "unif",
+  "t", "sn"), sigma = 1, bval = 3, snr = NULL,
+  sigma.type = c("const", "var"), df = 3, alpha = 5,
+  omitted.vars = FALSE)
 }
 \arguments{
 \item{n, p}{The dimensions, as in n x p, of the feature matrix x. Note that n
@@ -125,12 +126,11 @@ In the case of an "additive" or "rotated" mean, this function relies
 \examples{
 ## See examples for sam.funs function
 }
-\author{
-Ryan Tibshirani
-}
 \references{
 "Distribution-Free Predictive Inference for Regression" by 
   Jing Lei, Max G'Sell, Alessandro Rinaldo, Ryan Tibshirani, and Larry
   Wasserman, https://arxiv.org/pdf/1604.04173.pdf, 2016.
 }
-
+\author{
+Ryan Tibshirani
+}

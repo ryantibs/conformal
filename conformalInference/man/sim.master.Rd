@@ -5,14 +5,15 @@
 \title{Master function for running simulations.}
 \usage{
 sim.master(n, p, conformal.pred.funs, n0 = n, in.sample = FALSE,
-  nrep = 20, seed = NULL, verbose = FALSE, file = NULL, file.rep = 5,
-  x.dist = c("normal", "binom", "sn", "mix"), cor = c("none", "pair",
-  "auto", "rand"), rho = 0.5, k = 5, standardize = TRUE,
-  mean.fun = c("linear", "additive", "rotated"), m = 4,
-  sparsity = c("strong", "weak"), s = round(log(p)), weak.decay = 0.5,
-  mu.seed = NULL, error.dist = c("normal", "unif", "t", "sn"), sigma = 1,
-  bval = 3, snr = NULL, sigma.type = c("const", "var"), df = 3,
-  alpha = 5, omitted.vars = FALSE)
+  nrep = 20, seed = NULL, verbose = FALSE, file = NULL,
+  file.rep = 5, x.dist = c("normal", "binom", "sn", "mix"),
+  cor = c("none", "pair", "auto", "rand"), rho = 0.5, k = 5,
+  standardize = TRUE, mean.fun = c("linear", "additive", "rotated"),
+  m = 4, sparsity = c("strong", "weak"), s = round(log(p)),
+  weak.decay = 0.5, mu.seed = NULL, error.dist = c("normal", "unif",
+  "t", "sn"), sigma = 1, bval = 3, snr = NULL,
+  sigma.type = c("const", "var"), df = 3, alpha = 5,
+  omitted.vars = FALSE)
 }
 \arguments{
 \item{n, p}{Number of observations and features, respectively.}
@@ -160,9 +161,6 @@ simC = sim.master(n, p, conformal.pred.funs, n0=n0, nrep=nrep, verb=TRUE,
   sigma.type="var")
 }
 }
-\author{
-Ryan Tibshirani
-}
 \references{
 "Distribution-Free Predictive Inference for Regression" by 
   Jing Lei, Max G'Sell, Alessandro Rinaldo, Ryan Tibshirani, and Larry
@@ -171,4 +169,6 @@ Ryan Tibshirani
 \seealso{
 \code{\link{sim.xy}}
 }
-
+\author{
+Ryan Tibshirani
+}

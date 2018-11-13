@@ -4,8 +4,8 @@
 \alias{print.loco}
 \title{Print function for loco object.}
 \usage{
-\method{print}{loco}(x, test = c("wilcox", "sign", "z", "all"), digits = 3,
-  ...)
+\method{print}{loco}(x, test = c("wilcox", "sign", "z", "all"),
+  digits = 3, ...)
 }
 \arguments{
 \item{x}{The loco object.}
@@ -23,4 +23,3 @@ if "sign", then only sign tests; if "wilcox", then only Wilcoxon tests. If
 Summary and print the results of a set of simulations, stored an object
 of class sim (produced by sim.master).
 }
-

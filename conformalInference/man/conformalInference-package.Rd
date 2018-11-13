@@ -43,4 +43,3 @@ Related references (in reverse chronological order):
   Gammerman, and Glenn Shafer, Springer, 2005.
 }
 }
-

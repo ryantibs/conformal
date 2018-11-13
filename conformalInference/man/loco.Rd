@@ -120,12 +120,11 @@ segments(1:J, out.loco$inf.wilcox[[1]][,2],
          1:J, out.loco$inf.wilcox[[1]][,3],
          col="red", lwd=2)
 }
-\author{
-Ryan Tibshirani, Larry Wasserman
-}
 \references{
 "Distribution-Free Predictive Inference for Regression" by 
   Jing Lei, Max G'Sell, Alessandro Rinaldo, Ryan Tibshirani, and Larry
   Wasserman, https://arxiv.org/pdf/1604.04173.pdf, 2016.
 }
-
+\author{
+Ryan Tibshirani, Larry Wasserman
+}

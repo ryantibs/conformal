@@ -44,4 +44,3 @@ This function is based on the packages \code{\link{randomForest}}
 \author{
 Ryan Tibshirani
 }
-

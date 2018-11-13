@@ -137,12 +137,11 @@ for (j in 1:length(vars)) {
   abline(h=0, lty=2, lwd=2, col=2)
 }
 }
-\author{
-Ryan Tibshirani
-}
 \references{
 "Distribution-Free Predictive Inference for Regression" by 
   Jing Lei, Max G'Sell, Alessandro Rinaldo, Ryan Tibshirani, and Larry
   Wasserman, https://arxiv.org/pdf/1604.04173.pdf, 2016.
 }
-
+\author{
+Ryan Tibshirani
+}

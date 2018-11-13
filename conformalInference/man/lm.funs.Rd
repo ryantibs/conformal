@@ -94,4 +94,3 @@ legend("topleft",col=c(1,4,2),lty=c(1,1,2),
 \author{
 Ryan Tibshirani
 }
-

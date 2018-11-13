@@ -31,4 +31,3 @@ root of the number of simulation repetitions. Default is TRUE.}
 Summarize and print the results of a set of simulations, stored an object
 of class sim (produced by sim.master).
 }
-

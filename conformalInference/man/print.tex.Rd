@@ -10,4 +10,3 @@
 \description{
 Print a given table in format digestable by latex.
 }
-

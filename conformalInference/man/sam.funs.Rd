@@ -4,7 +4,8 @@
 \alias{sam.funs}
 \title{Sparse additive models training and prediction functions.}
 \usage{
-sam.funs(m = 3, lambda = NULL, nlambda = 30, lambda.min.ratio = 0.005)
+sam.funs(m = 3, lambda = NULL, nlambda = 30,
+  lambda.min.ratio = 0.005)
 }
 \arguments{
 \item{m}{Number of spline functions to be used in the additive expansion of 
@@ -114,4 +115,3 @@ legend("topleft",col=c(1,4),lty=1:2,
 \author{
 Ryan Tibshirani
 }
-

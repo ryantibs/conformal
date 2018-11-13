@@ -231,9 +231,6 @@ legend("topleft",col=c(1,3,4,2),lty=c(1,1,1,2),
          "Split conformal","Oracle"))
 
 }
-\author{
-Ryan Tibshirani
-}
 \references{
 "Distribution-Free Predictive Inference for Regression" by 
   Jing Lei, Max G'Sell, Alessandro Rinaldo, Ryan Tibshirani, and Larry
@@ -243,4 +240,6 @@ Ryan Tibshirani
 \code{\link{conformal.pred.jack}},
   \code{\link{conformal.pred.split}}, \code{\link{conformal.pred.roo}}
 }
-
+\author{
+Ryan Tibshirani
+}

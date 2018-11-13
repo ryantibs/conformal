@@ -5,7 +5,8 @@
 \title{Smoothing spline training and prediction functions, and special leave-one-out
   fitting function.}
 \usage{
-smooth.spline.funs(df = NULL, spar = NULL, cv = TRUE, tol.fact = 1e-06)
+smooth.spline.funs(df = NULL, spar = NULL, cv = TRUE,
+  tol.fact = 1e-06)
 }
 \arguments{
 \item{df}{Desired effective degrees of freedom of the smoothing spline fit.
@@ -171,4 +172,3 @@ points(x, y, col="gray50")
 \author{
 Ryan Tibshirani
 }
-

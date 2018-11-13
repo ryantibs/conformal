@@ -17,4 +17,5 @@ Suggests:
 Description: A collection of tools for distribution-free inference for
     regression problems using the theory of conformal prediction.
 License: GPL-2
-RoxygenNote: 5.0.1
+Encoding: UTF-8
+RoxygenNote: 6.1.1
