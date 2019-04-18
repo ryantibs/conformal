@@ -40,33 +40,30 @@ len.orac = mean(out.orac[,"upr"] - out.orac[,"lwr"])
 err.orac = mean((y0 - out.orac[,"fit"])^2)
   
 # Plot average coverage 
-plot(log(lambda),cov.split,type="l",ylim=c(0,1),
+plot(log(lambda),cov.split,type="o",pch=20,ylim=c(0,1),
      xlab="log(lambda)",ylab="Avg coverage",
      main=paste0("Split conformal + elastic net (fixed lambda sequence):",
        "\nAverage coverage"))
-points(log(lambda),cov.split,pch=20)
 abline(h=cov.orac,lty=2,col=2)
 legend("bottomleft",col=1:2,lty=1:2,
        legend=c("Split conformal","Oracle"))
 
 # Plot average length
-plot(log(lambda),len.split,type="l",
+plot(log(lambda),len.split,type="o",pch=20,
      ylim=range(len.split,len.orac),
      xlab="log(lambda)",ylab="Avg length",
      main=paste0("Split conformal + elastic net (fixed lambda sequence):",
        "\nAverage length"))
-points(log(lambda),len.split,pch=20)
 abline(h=len.orac,lty=2,col=2)
 legend("topleft",col=1:2,lty=1:2,
        legend=c("Split conformal","Oracle"))
 
 # Plot test error
-plot(log(lambda),err.split,type="l",
+plot(log(lambda),err.split,type="o",pch=20,
      ylim=range(err.split,err.orac),
      xlab="log(lambda)",ylab="Test error",
      main=paste0("Split conformal + elastic net (fixed lambda sequence):",
        "\nTest error"))
-points(log(lambda),err.split,pch=20)
 abline(h=err.orac,lty=2,col=2)
 legend("topleft",col=1:2,lty=1:2,
        legend=c("Split conformal","Oracle"))
@@ -100,35 +97,32 @@ len.orac = mean(out.orac[,"upr"] - out.orac[,"lwr"])
 err.orac = mean((y0 - out.orac[,"fit"])^2)
   
 # Plot average coverage 
-plot(log(length(cov.split):1),cov.split,type="l",ylim=c(0,1),
+plot(log(length(cov.split):1),cov.split,type="o",pch=20,,ylim=c(0,1),
      xlab="log(lambda rank) (i.e., log(1)=0 is smallest)",
      ylab="Avg coverage",
      main=paste0("Split conformal + elastic net (dynamic lambda sequence):",
        "\nAverage coverage"))
-points(log(length(cov.split):1),cov.split,pch=20)
 abline(h=cov.orac,lty=2,col=2)
 legend("bottomleft",col=1:2,lty=1:2,
        legend=c("Split conformal","Oracle"))
 
 # Plot average length
-plot(log(length(len.split):1),len.split,type="l",
+plot(log(length(len.split):1),len.split,type="o",pch=20,
      ylim=range(len.split,len.orac),
      xlab="log(lambda rank) (i.e., log(1)=0 is smallest)",
      ylab="Avg length",
      main=paste0("Split conformal + elastic net (dynamic lambda sequence):",
        "\nAverage length"))
-points(log(length(len.split):1),len.split,pch=20)
 abline(h=len.orac,lty=2,col=2)
 legend("topleft",col=1:2,lty=1:2,
        legend=c("Split conformal","Oracle"))
 
 # Plot test error
-plot(log(length(err.split):1),err.split,type="l",
+plot(log(length(err.split):1),err.split,type="o",pch=20,
      ylim=range(err.split,err.orac),
      xlab="log(lambda rank) (i.e., log(1)=0 is smallest)",ylab="Test error",
      main=paste0("Split conformal + elastic net (dynamic lambda sequence):",
        "\nTest error"))
-points(log(length(err.split):1),err.split,pch=20)
 abline(h=err.orac,lty=2,col=2)
 legend("topleft",col=1:2,lty=1:2,
        legend=c("Split conformal","Oracle"))

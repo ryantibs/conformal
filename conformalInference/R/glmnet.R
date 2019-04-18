@@ -45,7 +45,6 @@
 #'
 #' @seealso \code{\link{lars.funs}} for stepwise, least angle regression, and
 #'   lasso path training and prediction functions.
-#' @author Ryan Tibshirani
 #' @example examples/ex.glmnet.funs.R
 NULL
 #> NULL

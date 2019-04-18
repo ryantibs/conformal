@@ -38,7 +38,6 @@
 #' @seealso \code{\link{glmnet.funs}} for elastic net, lasso, and ridge
 #'   regression training and prediction functions, defined over a sequence
 #'   of lambda values.
-#' @author Ryan Tibshirani
 #' @example examples/ex.lars.funs.R
 #' @export lars.funs
 

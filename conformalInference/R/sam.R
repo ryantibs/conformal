@@ -27,7 +27,6 @@
 #'   \code{\link{plyr}}. If these packages are not installed, then the function
 #'   will abort. 
 #'
-#' @author Ryan Tibshirani
 #' @example examples/ex.sam.funs.R
 #' @export sam.funs
 

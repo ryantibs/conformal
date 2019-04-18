@@ -4,10 +4,9 @@
 \alias{conformal.pred}
 \title{Conformal prediction intervals.}
 \usage{
-conformal.pred(x, y, x0, train.fun, predict.fun, alpha = 0.1,
+conformal.pred(x, y, x0, train.fun, predict.fun, alpha = 0.1, w = NULL,
   mad.train.fun = NULL, mad.predict.fun = NULL, num.grid.pts = 100,
-  grid.factor = 1.25, grid.method = c("linear", "floor", "ceiling"),
-  verbose = FALSE)
+  grid.factor = 1.25, verbose = FALSE)
 }
 \arguments{
 \item{x}{Matrix of features, of dimension (say) n x p.}
@@ -32,6 +31,11 @@ predictions.}
 
 \item{alpha}{Miscoverage level for the prediction intervals, i.e., intervals
 with coverage 1-alpha are formed. Default for alpha is 0.1.}
+
+\item{w}{Weights, in the case of covariate shift. This should be a vector of
+length n+n0, giving the weights (i.e., ratio of test to training feature
+densities), at each of n+n0 the training and test points. Default is NULL,
+which means that we take all weights to be 1.}
 
 \item{mad.train.fun}{A function to perform training on the absolute residuals
 i.e., to produce an estimator of E(R|X) where R is the absolute residual
@@ -62,15 +66,6 @@ intervals, i.e., the grid points are taken to be equally spaced in between
 -grid.factor*max(abs(y)) and grid.factor*max(abs(y)). Default is 1.25. In
 this case, the restriction of the trial values to this range costs at most
 1/(n+1) in coverage. See details below.}
-
-\item{grid.method}{One of "linear", "floor", "ceiling". Default is "linear"
-representing the method used to interpolate the endpoints of the conformal
-conformal prediction interval from the grid of query values. The first
-"linear" corresponds to linear interpolation; the other options "floor"
-and "ceiling" choose the nearest and farthest grid endpoints, respectively,
-i.e., return the least conservative and most conservative prediction 
-intervals, respectively. When num.grid.pts is large, all three options will
-perform basically the same.}
 
 \item{verbose}{Should intermediate progress be printed out? Default is FALSE.}
 }
@@ -158,7 +153,7 @@ out.conf = conformal.pred(x, y, x0, alpha=0.1,
 out.jack = conformal.pred.jack(x, y, x0, alpha=0.1,
   train.fun=funs$train, predict.fun=funs$predict)
 
-out.split = conformal.pred.split(x, y, x0, alpha=0.1,
+out.split = conformal.pred.split(x, y, x0, alpha=0.1, seed=0,
   train.fun=funs$train, predict.fun=funs$predict)
 
 y0.mat = matrix(rep(y0,ncol(out.conf$lo)),nrow=n0)
@@ -184,47 +179,38 @@ len.orac = mean(out.orac[,"upr"] - out.orac[,"lwr"])
 err.orac = mean((y0 - out.orac[,"fit"])^2)
   
 # Plot average coverage 
-plot(log(lambda),cov.conf,type="l",ylim=c(0,1),
+plot(log(lambda),cov.conf,type="o",pch=20,ylim=c(0,1),
      xlab="log(lambda)",ylab="Avg coverage",
      main=paste0("Conformal + lasso (fixed lambda sequence):",
        "\\nAverage coverage"))
-points(log(lambda),cov.conf,pch=20)
-lines(log(lambda),cov.jack,col=3)
-points(log(lambda),cov.jack,pch=20,col=3)
-lines(log(lambda),cov.split,col=4)
-points(log(lambda),cov.split,pch=20,col=4)
+points(log(lambda),cov.jack,type="o",pch=20,col=3)
+points(log(lambda),cov.split,type="o",pch=20,col=4)
 abline(h=cov.orac,lty=2,col=2)
 legend("bottomleft",col=c(1,3,4,2),lty=c(1,1,1,2),
        legend=c("Conformal","Jackknife conformal",
          "Split conformal","Oracle"))
 
 # Plot average length
-plot(log(lambda),len.conf,type="l",
-     ylim=range(len.conf,len.orac),
+plot(log(lambda),len.conf,type="o",pch=20,
+     ylim=range(len.conf,len.jack,len.split,len.orac),
      xlab="log(lambda)",ylab="Avg length",
      main=paste0("Conformal + lasso (fixed lambda sequence):",
        "\\nAverage length"))
-points(log(lambda),len.conf,pch=20)
-lines(log(lambda),len.jack,col=3)
-points(log(lambda),len.jack,pch=20,col=3)
-lines(log(lambda),len.split,col=4)
-points(log(lambda),len.split,pch=20,col=4)
+points(log(lambda),len.jack,type="o",pch=20,col=3)
+points(log(lambda),len.split,type="o",pch=20,col=4)
 abline(h=len.orac,lty=2,col=2)
 legend("topleft",col=c(1,3,4,2),lty=c(1,1,1,2),
        legend=c("Conformal","Jackknife conformal",
          "Split conformal","Oracle"))
 
 # Plot test error
-plot(log(lambda),err.conf,type="l",
-     ylim=range(err.conf,err.orac),
+plot(log(lambda),err.conf,type="o",pch=20,
+     ylim=range(err.conf,err.jack,err.split,err.orac),
      xlab="log(lambda)",ylab="Test error",
      main=paste0("Conformal + lasso (fixed lambda sequence):",
        "\\nTest error"))
-points(log(lambda),err.conf,pch=20)
-lines(log(lambda),err.jack,col=3)
-points(log(lambda),err.jack,pch=20,col=3)
-lines(log(lambda),err.split,col=4)
-points(log(lambda),err.split,pch=20,col=4)
+points(log(lambda),err.jack,type="o",pch=20,col=3)
+points(log(lambda),err.split,type="o",pch=20,col=4)
 abline(h=err.orac,lty=2,col=2)
 legend("topleft",col=c(1,3,4,2),lty=c(1,1,1,2),
        legend=c("Conformal","Jackknife conformal",

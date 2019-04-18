@@ -145,39 +145,33 @@ len.orac = mean(out.orac[,"upr"] - out.orac[,"lwr"])
 err.orac = mean((y0 - out.orac[,"fit"])^2)
   
 # Plot average coverage 
-plot(log(lambda),cov.roo,type="l",ylim=c(0,1),
+plot(log(lambda),cov.roo,type="o",pch=20,ylim=c(0,1),
      xlab="log(lambda)",ylab="Avg coverage",
      main=paste0("ROO conformal + lasso (fixed lambda sequence):",
        "\\nAverage coverage"))
-points(log(lambda),cov.roo,pch=20)
-lines(log(lambda),cov.split,col=4)
-points(log(lambda),cov.split,pch=20,col=4)
+points(log(lambda),cov.split,type="o",pch=20,col=4)
 abline(h=cov.orac,lty=2,col=2)
 legend("bottomleft",col=c(1,4,2),lty=c(1,1,2),
        legend=c("ROO conformal","Split conformal","Oracle"))
 
 # Plot average length
-plot(log(lambda),len.roo,type="l",
+plot(log(lambda),len.roo,type="o",pch=20,
      ylim=range(len.roo,len.split,len.orac),
      xlab="log(lambda)",ylab="Avg length",
      main=paste0("Split conformal + lasso (fixed lambda sequence):",
        "\\nAverage length"))
-points(log(lambda),len.roo,pch=20)
-lines(log(lambda),len.split,col=4)
-points(log(lambda),len.split,pch=20,col=4)
+points(log(lambda),len.split,type="o",pch=20,col=4)
 abline(h=len.orac,lty=2,col=2)
 legend("bottomleft",col=c(1,4,2),lty=c(1,1,2),
        legend=c("ROO conformal","Split conformal","Oracle"))
 
 # Plot test error
-plot(log(lambda),err.roo,type="l",
+plot(log(lambda),err.roo,type="o",pch=20,
      ylim=range(err.roo,err.split,err.orac),
      xlab="log(lambda)",ylab="Test error",
      main=paste0("Split conformal + lasso (fixed lambda sequence):",
        "\\nTest error"))
-points(log(lambda),err.roo,pch=20)
-lines(log(lambda),err.split,col=4)
-points(log(lambda),err.split,pch=20,col=4)
+points(log(lambda),err.split,type="o",pch=20,col=4)
 abline(h=err.orac,lty=2,col=2)
 legend("bottomleft",col=c(1,4,2),lty=c(1,1,2),
        legend=c("ROO conformal","Split conformal","Oracle"))

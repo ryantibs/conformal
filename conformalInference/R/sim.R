@@ -9,7 +9,7 @@
 #'   distribution for the entries of x. In the first three cases, the columns
 #'   of x are filled out with i.i.d. normal, standard binomial, or skewed normal
 #'   (with skewness parameter alpha = 5) draws, respectively. The third option
-#'   requiring the \code{\link{sn}} package.In the last case, "mix", each column
+#'   requires the \code{\link{sn}} package. In the last case, "mix", each column
 #'   of x is drawn with equal probability from the above three distributions.
 #'   Default is "normal".
 #' @param cor One of "none", "pair", "auto", "rand", indicating the type of
@@ -87,10 +87,8 @@
 #'
 #' @return A list with the following components: x, y, and mu.
 #'
-#' @author Ryan Tibshirani
-#' @references "Distribution-Free Predictive Inference for Regression" by 
-#'   Jing Lei, Max G'Sell, Alessandro Rinaldo, Ryan Tibshirani, and Larry
-#'   Wasserman, https://arxiv.org/pdf/1604.04173.pdf, 2016.
+#' @references "Distribution-Free Predictive Inference for Regression" by Lei,
+#'   G'Sell, Rinaldo, Tibshirani, Wasserman (2018).
 #' @examples ## See examples for sam.funs function
 #' @export sim.xy
 
@@ -349,10 +347,8 @@ rsnorm = function(n, alpha=5) {
 #'   }
 #'
 #' @seealso \code{\link{sim.xy}}
-#' @author Ryan Tibshirani
-#' @references "Distribution-Free Predictive Inference for Regression" by 
-#'   Jing Lei, Max G'Sell, Alessandro Rinaldo, Ryan Tibshirani, and Larry
-#'   Wasserman, https://arxiv.org/pdf/1604.04173.pdf, 2016.
+#' @references "Distribution-Free Predictive Inference for Regression" by Lei,
+#'   G'Sell, Rinaldo, Tibshirani, Wasserman (2018).
 #' @example examples/ex.sim.master.R
 #' @export sim.master
 

@@ -68,10 +68,8 @@
 #'   functions train.fun and predict.fun, over a set of m = 5 tuning parameter
 #'   values, instead of calling the conformal function separately m = 5 times.
 #'
-#' @author Ryan Tibshirani
-#' @references "Distribution-Free Predictive Inference for Regression" by 
-#'   Jing Lei, Max G'Sell, Alessandro Rinaldo, Ryan Tibshirani, and Larry
-#'   Wasserman, https://arxiv.org/pdf/1604.04173.pdf, 2016.
+#' @references "Distribution-Free Predictive Inference for Regression" by Lei,
+#'   G'Sell, Rinaldo, Tibshirani, Wasserman (2018).
 #' @example examples/ex.loco.roo.R
 #' @export loco.roo
 

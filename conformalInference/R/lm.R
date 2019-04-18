@@ -22,7 +22,6 @@
 #'   for efficiency, and to perform the regression, it uses the saved Cholesky
 #'   decomposition instead of computing a new one from scratch. 
 #'
-#' @author Ryan Tibshirani
 #' @example examples/ex.lm.funs.R
 #' @export lm.funs
 

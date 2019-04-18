@@ -40,7 +40,6 @@
 #'   this output. Trivially, here, there is only one feature and it is always
 #'   active.
 #'
-#' @author Ryan Tibshirani
 #' @example examples/ex.smooth.funs.R
 #' @export smooth.spline.funs
 

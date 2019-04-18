@@ -21,7 +21,7 @@ is also the length of the response vector y.}
 distribution for the entries of x. In the first three cases, the columns
 of x are filled out with i.i.d. normal, standard binomial, or skewed normal
 (with skewness parameter alpha = 5) draws, respectively. The third option
-requiring the \code{\link{sn}} package.In the last case, "mix", each column
+requires the \code{\link{sn}} package. In the last case, "mix", each column
 of x is drawn with equal probability from the above three distributions.
 Default is "normal".}
 

@@ -19,6 +19,10 @@
 #'   predictions.
 #' @param alpha Miscoverage level for the prediction intervals, i.e., intervals
 #'   with coverage 1-alpha are formed. Default for alpha is 0.1.
+#' @param w Weights, in the case of covariate shift. This should be a vector of
+#'   length n+n0, giving the weights (i.e., ratio of test to training feature
+#'   densities), at each of n+n0 the training and test points. Default is NULL,
+#'   which means that we take all weights to be 1.
 #' @param mad.train.fun A function to perform training on the absolute residuals
 #'   i.e., to produce an estimator of E(R|X) where R is the absolute residual
 #'   R = |Y - m(X)|, and m denotes the estimator produced by train.fun.
@@ -45,14 +49,6 @@
 #'   -grid.factor*max(abs(y)) and grid.factor*max(abs(y)). Default is 1.25. In
 #'   this case, the restriction of the trial values to this range costs at most
 #'   1/(n+1) in coverage. See details below.
-#' @param grid.method One of "linear", "floor", "ceiling". Default is "linear"
-#'   representing the method used to interpolate the endpoints of the conformal
-#'   conformal prediction interval from the grid of query values. The first
-#'   "linear" corresponds to linear interpolation; the other options "floor"
-#'   and "ceiling" choose the nearest and farthest grid endpoints, respectively,
-#'   i.e., return the least conservative and most conservative prediction 
-#'   intervals, respectively. When num.grid.pts is large, all three options will
-#'   perform basically the same.
 #' @param verbose Should intermediate progress be printed out? Default is FALSE.
 #'
 #' @return A list with the following components: pred, lo, up, fit. The first
@@ -100,22 +96,23 @@
 #'   trials values to [-grid.factor*max(abs(y)), grid.factor*max(abs(y))], for
 #'   all choices grid.factor >= 1, will lead to a loss in coverage of at most
 #'   1/(n+1). This was also noted in "Trimmed Conformal Prediction for
-#'   High-Dimensional Models" by Wenyu Chen, Zhaokai Wang, Wooseok Ha, and Rina
-#'   Foygel Barber, https://arxiv.org/abs/1611.09933.pdf, 2016 (who use this
+#'   High-Dimensional Models" by Chen, Wang, Ha, Barber (2016) (who use this
 #'   basic fact as motivation for proposing more refined trimming methods).
 #' 
 #' @seealso \code{\link{conformal.pred.jack}},
 #'   \code{\link{conformal.pred.split}}, \code{\link{conformal.pred.roo}}
-#' @author Ryan Tibshirani
-#' @references "Distribution-Free Predictive Inference for Regression" by 
-#'   Jing Lei, Max G'Sell, Alessandro Rinaldo, Ryan Tibshirani, and Larry
-#'   Wasserman, https://arxiv.org/pdf/1604.04173.pdf, 2016.
+#' @references See "Algorithmic Learning in a Random World" by Vovk, Gammerman,
+#'   Shafer (2005) as the definitive reference for conformal prediction; see
+#'   also "Distribution-Free Predictive Inference for Regression" by Lei,
+#'   G'Sell, Rinaldo, Tibshirani, Wasserman (2018) for another description; and
+#'   "Conformal Prediction Under Covariate Shift" by Barber, Candes, Ramdas,
+#'   Tibshirani (2019) for the weighted extension.
 #' @example examples/ex.conformal.pred.R
 #' @export conformal.pred
 
-conformal.pred = function(x, y, x0, train.fun, predict.fun, alpha=0.1,
+conformal.pred = function(x, y, x0, train.fun, predict.fun, alpha=0.1, w=NULL,
   mad.train.fun=NULL, mad.predict.fun=NULL, num.grid.pts=100, grid.factor=1.25,
-  grid.method=c("linear","floor","ceiling"), verbose=FALSE) {
+  verbose=FALSE) {
 
   # Set up data
   x = as.matrix(x)
@@ -135,7 +132,9 @@ conformal.pred = function(x, y, x0, train.fun, predict.fun, alpha=0.1,
     stop("num.grid.pts must be an integer between 1 and 1000")
   }
   check.pos.num(grid.factor)
-  grid.method = match.arg(grid.method)
+
+  # Check the weights
+  if (is.null(w)) w = rep(1,n+n0)
   
   # Users may pass in a string for the verbose argument
   if (verbose == TRUE) txt = ""
@@ -156,7 +155,7 @@ conformal.pred = function(x, y, x0, train.fun, predict.fun, alpha=0.1,
   ymax = max(abs(y))
   yvals = seq(-grid.factor*ymax, grid.factor*ymax,length=num.grid.pts)
   lo = up = matrix(0,n0,m)
-  pvals = matrix(0,num.grid.pts,m)
+  qvals = rvals = matrix(0,num.grid.pts,m)
   xx = rbind(x,rep(0,p))
     
   for (i in 1:n0) {
@@ -166,6 +165,7 @@ conformal.pred = function(x, y, x0, train.fun, predict.fun, alpha=0.1,
     }
     
     xx[n+1,] = x0[i,]
+    ww = c(w[1:n],w[n+i])
 
     # Refit for each point in yvals, compute conformal p-value
     for (j in 1:num.grid.pts) {
@@ -183,12 +183,12 @@ conformal.pred = function(x, y, x0, train.fun, predict.fun, alpha=0.1,
         }
       }
 
-      rr = matrix(rep(r[n+1,],each=n+1),nrow=n+1)
-      pvals[j,] = colMeans(rr <= r)
+      qvals[j,] = apply(r,2,weighted.quantile,prob=1-alpha,w=ww)
+      rvals[j,] = r[n+1,]
     }
 
     for (l in 1:m) {
-      int = grid.interval(yvals,pvals[,l],alpha,right=T,method=grid.method)
+      int = grid.interval(yvals,rvals[,l],qvals[,l])
       lo[i,l] = int$lo
       up[i,l] = int$up
     }

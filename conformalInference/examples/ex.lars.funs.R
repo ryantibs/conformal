@@ -34,30 +34,27 @@ len.orac = mean(out.orac[,"upr"] - out.orac[,"lwr"])
 err.orac = mean((y0 - out.orac[,"fit"])^2)
   
 # Plot average coverage 
-plot(1:length(cov.split),cov.split,type="l",ylim=c(0,1),
+plot(1:length(cov.split),cov.split,type="o",pch=20,ylim=c(0,1),
      xlab="Number of path steps",ylab="Avg coverage",
      main=paste0("Split conformal + stepwise:\nAverage coverage"))
-points(1:length(cov.split),cov.split,pch=20)
 abline(h=cov.orac,lty=2,col=2)
 legend("bottomright",col=1:2,lty=1:2,
        legend=c("Split conformal","Oracle"))
 
 # Plot average length
-plot(1:length(len.split),len.split,type="l",
+plot(1:length(len.split),len.split,type="o",pch=20,
      ylim=range(len.split,len.orac),
      xlab="Number of path steps",ylab="Avg length",
      main=paste0("Split conformal + stepwise:\nAverage length"))
-points(1:length(len.split),len.split,pch=20)
 abline(h=len.orac,lty=2,col=2)
 legend("topright",col=1:2,lty=1:2,
        legend=c("Split conformal","Oracle"))
 
 # Plot test error
-plot(1:length(err.split),err.split,type="l",
+plot(1:length(err.split),err.split,type="o",pch=20,
      ylim=range(err.split,err.orac),
      xlab="Number of path steps",ylab="Test error",
      main=paste0("Split conformal + stepwise:\nTest error"))
-points(1:length(err.split),err.split,pch=20)
 abline(h=err.orac,lty=2,col=2)
 legend("topright",col=1:2,lty=1:2,
        legend=c("Split conformal","Oracle"))

@@ -16,6 +16,10 @@
 #'   predictions.
 #' @param alpha Miscoverage level for the prediction intervals, i.e., intervals
 #'   with coverage 1-alpha are formed. Default for alpha is 0.1.
+#' @param w Weights, in the case of covariate shift. This should be a vector of
+#'   length n+n0, giving the weights (i.e., ratio of test to training feature
+#'   densities), at each of n+n0 the training and test points. Default is NULL,
+#'   which means that we take all weights to be 1.
 #' @param mad.train.fun A function to perform training on the absolute residuals
 #'   i.e., to produce an estimator of E(R|X) where R is the absolute residual
 #'   R = |Y - m(X)|, and m denotes the estimator produced by train.fun.
@@ -63,15 +67,16 @@
 #'
 #' @seealso \code{\link{conformal.pred}}, 
 #'   \code{\link{conformal.pred.jack}}, \code{\link{conformal.pred.roo}}
-#' @author Ryan Tibshirani
-#' @references "Distribution-Free Predictive Inference for Regression" by 
-#'   Jing Lei, Max G'Sell, Alessandro Rinaldo, Ryan Tibshirani, and Larry
-#'   Wasserman, https://arxiv.org/pdf/1604.04173.pdf, 2016.
-#' @example examples/ex.conformal.pred.split.R
+#' @references See "Algorithmic Learning in a Random World" by Vovk, Gammerman,
+#'   Shafer (2005) as the definitive reference for conformal prediction; see
+#'   also "Distribution-Free Predictive Inference for Regression" by Lei,
+#'   G'Sell, Rinaldo, Tibshirani, Wasserman (2018) for another description; and
+#'   "Conformal Prediction Under Covariate Shift" by Barber, Candes, Ramdas,
+#'   Tibshirani (2019) for the weighted extension.
 #' @export conformal.pred.split
 
 conformal.pred.split = function(x, y, x0, train.fun, predict.fun, alpha=0.1,
-  mad.train.fun=NULL, mad.predict.fun=NULL, split=NULL, seed=NULL,
+  w=NULL, mad.train.fun=NULL, mad.predict.fun=NULL, split=NULL, seed=NULL,
   verbose=FALSE) {
 
   # Set up data
@@ -87,6 +92,9 @@ conformal.pred.split = function(x, y, x0, train.fun, predict.fun, alpha=0.1,
              predict.fun=predict.fun,mad.train.fun=mad.train.fun,
              mad.predict.fun=mad.predict.fun)
 
+  # Check the weights
+  if (is.null(w)) w = rep(1,n+n0)
+  
   # Users may pass in a string for the verbose argument
   if (verbose == TRUE) txt = ""
   if (verbose != TRUE && verbose != FALSE) {
@@ -137,10 +145,13 @@ conformal.pred.split = function(x, y, x0, train.fun, predict.fun, alpha=0.1,
     else {
       mad.x0 = rep(1,n0)
     }
-    
-    q = conformal.quantile(sort(res[,l]),alpha)
-    lo[,l] = pred[,l] - q * mad.x0
-    up[,l] = pred[,l] + q * mad.x0
+
+    r = sort(res[,l])
+    for (i in 1:n0) {
+      q = weighted.quantile(r,1-alpha,w=c(w[i2],w[n+i]),sorted=TRUE)
+      lo[i,l] = pred[i,l] - q * mad.x0[i]
+      up[i,l] = pred[i,l] + q * mad.x0[i]
+    }
   }
  
   return(list(pred=pred,lo=lo,up=up,fit=fit,split=i1))

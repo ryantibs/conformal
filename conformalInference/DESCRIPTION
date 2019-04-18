@@ -1,11 +1,10 @@
 Package: conformalInference
 Type: Package
 Title: Tools for conformal inference in regression
-Version: 1.0.0
-Date: 2016-01-20
-Author: Carnegie Mellon Conformal Inference Team: Max G'Sell, Jing Lei,
-    Alessandro Rinaldo, Ryan Tibshirani, Larry Wasserman
-Maintainer: Ryan Tibshirani <ryantibs@stat.cmu.edu>
+Version: 1.1
+Date: 2019-04-17
+Author: Ryan Tibshirani
+Maintainer: Ryan Tibshirani <ryantibs@scmu.edu>
 Depends:
 Suggests:
     glmnet,

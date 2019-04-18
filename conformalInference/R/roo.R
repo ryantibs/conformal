@@ -76,10 +76,8 @@
 #'
 #' @seealso \code{\link{conformal.pred}}, 
 #'   \code{\link{conformal.pred.jack}}, \code{\link{conformal.pred.split}}
-#' @author Ryan Tibshirani
-#' @references "Distribution-Free Predictive Inference for Regression" by 
-#'   Jing Lei, Max G'Sell, Alessandro Rinaldo, Ryan Tibshirani, and Larry
-#'   Wasserman, https://arxiv.org/pdf/1604.04173.pdf, 2016.
+#' @references "Distribution-Free Predictive Inference for Regression" by Lei,
+#'   G'Sell, Rinaldo, Tibshirani, Wasserman (2018).
 #' @example examples/ex.conformal.pred.roo.R
 #' @export conformal.pred.roo
 
@@ -152,7 +150,6 @@ conformal.pred.roo = function(x, y, train.fun, predict.fun, alpha=0.1,
     
     # Get residuals and quantiles on second
     res = abs(y[i2] - yhat2)
-    qmat = matrix(0,n2,m)
     
     for (l in 1:m) {
       # Local scoring?
@@ -168,16 +165,14 @@ conformal.pred.roo = function(x, y, train.fun, predict.fun, alpha=0.1,
       
       # Sort once, update cleverly
       o = order(res[,l])
-      sorted.res = res[o,l]
+      r = res[o,l]
       oo = order(o)
-      
       for (i in 1:n2) {
-        qmat[i,l] = conformal.quantile(sorted.res[-oo[i]],alpha) * mad.x2[i]
+        q = weighted.quantile(c(r[-oo[i]],Inf),1-alpha,w=NULL,sorted=TRUE)
+        lo[i2[i],l] = pred[i2[i],l] - q * mad.x2[i]
+        up[i2[i],l] = pred[i2[i],l] + q * mad.x2[i]
       }
     }
-    
-    lo[i2,] = yhat2 - qmat
-    up[i2,] = yhat2 + qmat
   }
   
   return(list(pred=pred,lo=lo,up=up,fit=fit,split=inds[[1]],

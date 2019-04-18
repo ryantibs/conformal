@@ -28,7 +28,7 @@ out.conf = conformal.pred(x, y, x0, alpha=0.1,
 out.jack = conformal.pred.jack(x, y, x0, alpha=0.1,
   train.fun=funs$train, predict.fun=funs$predict)
 
-out.split = conformal.pred.split(x, y, x0, alpha=0.1,
+out.split = conformal.pred.split(x, y, x0, alpha=0.1, seed=0,
   train.fun=funs$train, predict.fun=funs$predict)
 
 y0.mat = matrix(rep(y0,ncol(out.conf$lo)),nrow=n0)
@@ -54,47 +54,38 @@ len.orac = mean(out.orac[,"upr"] - out.orac[,"lwr"])
 err.orac = mean((y0 - out.orac[,"fit"])^2)
   
 # Plot average coverage 
-plot(log(lambda),cov.conf,type="l",ylim=c(0,1),
+plot(log(lambda),cov.conf,type="o",pch=20,ylim=c(0,1),
      xlab="log(lambda)",ylab="Avg coverage",
      main=paste0("Conformal + lasso (fixed lambda sequence):",
        "\nAverage coverage"))
-points(log(lambda),cov.conf,pch=20)
-lines(log(lambda),cov.jack,col=3)
-points(log(lambda),cov.jack,pch=20,col=3)
-lines(log(lambda),cov.split,col=4)
-points(log(lambda),cov.split,pch=20,col=4)
+points(log(lambda),cov.jack,type="o",pch=20,col=3)
+points(log(lambda),cov.split,type="o",pch=20,col=4)
 abline(h=cov.orac,lty=2,col=2)
 legend("bottomleft",col=c(1,3,4,2),lty=c(1,1,1,2),
        legend=c("Conformal","Jackknife conformal",
          "Split conformal","Oracle"))
 
 # Plot average length
-plot(log(lambda),len.conf,type="l",
-     ylim=range(len.conf,len.orac),
+plot(log(lambda),len.conf,type="o",pch=20,
+     ylim=range(len.conf,len.jack,len.split,len.orac),
      xlab="log(lambda)",ylab="Avg length",
      main=paste0("Conformal + lasso (fixed lambda sequence):",
        "\nAverage length"))
-points(log(lambda),len.conf,pch=20)
-lines(log(lambda),len.jack,col=3)
-points(log(lambda),len.jack,pch=20,col=3)
-lines(log(lambda),len.split,col=4)
-points(log(lambda),len.split,pch=20,col=4)
+points(log(lambda),len.jack,type="o",pch=20,col=3)
+points(log(lambda),len.split,type="o",pch=20,col=4)
 abline(h=len.orac,lty=2,col=2)
 legend("topleft",col=c(1,3,4,2),lty=c(1,1,1,2),
        legend=c("Conformal","Jackknife conformal",
          "Split conformal","Oracle"))
 
 # Plot test error
-plot(log(lambda),err.conf,type="l",
-     ylim=range(err.conf,err.orac),
+plot(log(lambda),err.conf,type="o",pch=20,
+     ylim=range(err.conf,err.jack,err.split,err.orac),
      xlab="log(lambda)",ylab="Test error",
      main=paste0("Conformal + lasso (fixed lambda sequence):",
        "\nTest error"))
-points(log(lambda),err.conf,pch=20)
-lines(log(lambda),err.jack,col=3)
-points(log(lambda),err.jack,pch=20,col=3)
-lines(log(lambda),err.split,col=4)
-points(log(lambda),err.split,pch=20,col=4)
+points(log(lambda),err.jack,type="o",pch=20,col=3)
+points(log(lambda),err.split,type="o",pch=20,col=4)
 abline(h=err.orac,lty=2,col=2)
 legend("topleft",col=c(1,3,4,2),lty=c(1,1,1,2),
        legend=c("Conformal","Jackknife conformal",

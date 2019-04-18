@@ -64,10 +64,8 @@
 #'   versus greater than zero. Confidence intervals are from inverting the
 #'   two-sided version of this test.
 #'
-#' @author Ryan Tibshirani, Larry Wasserman
-#' @references "Distribution-Free Predictive Inference for Regression" by 
-#'   Jing Lei, Max G'Sell, Alessandro Rinaldo, Ryan Tibshirani, and Larry
-#'   Wasserman, https://arxiv.org/pdf/1604.04173.pdf, 2016.
+#' @references "Distribution-Free Predictive Inference for Regression" by Lei,
+#'   G'Sell, Rinaldo, Tibshirani, Wasserman (2018).
 #' @example examples/ex.loco.R
 #' @export loco
 
