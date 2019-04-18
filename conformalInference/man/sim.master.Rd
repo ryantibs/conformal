@@ -162,13 +162,9 @@ simC = sim.master(n, p, conformal.pred.funs, n0=n0, nrep=nrep, verb=TRUE,
 }
 }
 \references{
-"Distribution-Free Predictive Inference for Regression" by 
-  Jing Lei, Max G'Sell, Alessandro Rinaldo, Ryan Tibshirani, and Larry
-  Wasserman, https://arxiv.org/pdf/1604.04173.pdf, 2016.
+"Distribution-Free Predictive Inference for Regression" by Lei,
+  G'Sell, Rinaldo, Tibshirani, Wasserman (2018).
 }
 \seealso{
 \code{\link{sim.xy}}
-}
-\author{
-Ryan Tibshirani
 }

@@ -47,8 +47,9 @@
 #' @param grid.factor Expansion factor used to define the grid for the conformal
 #'   intervals, i.e., the grid points are taken to be equally spaced in between
 #'   -grid.factor*max(abs(y)) and grid.factor*max(abs(y)). Default is 1.25. In
-#'   this case, the restriction of the trial values to this range costs at most
-#'   1/(n+1) in coverage. See details below.
+#'   this case (and with exchangeable data, thus unity weights) the restriction
+#'   of the trial values to this range costs at most 1/(n+1) in coverage. See
+#'   details below.
 #' @param verbose Should intermediate progress be printed out? Default is FALSE.
 #'
 #' @return A list with the following components: pred, lo, up, fit. The first

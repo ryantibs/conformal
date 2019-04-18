@@ -41,6 +41,3 @@ This function is based on the packages \code{\link{randomForest}}
 \examples{
 ## See examples for sam.funs function
 }
-\author{
-Ryan Tibshirani
-}

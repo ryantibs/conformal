@@ -169,6 +169,3 @@ points(x, y, col="gray50")
 # each half of the data set (so they'd look smooth over the points within each
 # half, but not necessarily overall)
 }
-\author{
-Ryan Tibshirani
-}

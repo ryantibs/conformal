@@ -100,16 +100,10 @@ For concreteness, suppose that we want to use the predictions from
 ## See examples for conformal.pred function
 }
 \references{
-"Distribution-Free Predictive Inference for Regression" by 
-  Jing Lei, Max G'Sell, Alessandro Rinaldo, Ryan Tibshirani, and Larry
-  Wasserman, https://arxiv.org/pdf/1604.04173.pdf, 2016.
-
-\url{http://www.stat.cmu.edu}
+"Distribution-Free Predictive Inference for Regression" by Lei,
+  G'Sell, Rinaldo, Tibshirani, Wasserman (2018).
 }
 \seealso{
 \code{\link{conformal.pred}}, 
   \code{\link{conformal.pred.split}}, \code{\link{conformal.pred.roo}}
-}
-\author{
-Ryan Tibshirani
 }

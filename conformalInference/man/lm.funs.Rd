@@ -91,6 +91,3 @@ segments(1:n0-0.2, out.orac[,"lwr"], 1:n0-0.2, out.orac[,"upr"], lty=2, col=2)
 legend("topleft",col=c(1,4,2),lty=c(1,1,2),
        legend=c("Conformal","Split conformal","Oracle"))
 }
-\author{
-Ryan Tibshirani
-}

@@ -145,10 +145,10 @@ conformal.pred.split = function(x, y, x0, train.fun, predict.fun, alpha=0.1,
     else {
       mad.x0 = rep(1,n0)
     }
-
-    r = sort(res[,l])
+    
+    o = order(res[,l]); r = res[o,l]; ww = w[i2][o]
     for (i in 1:n0) {
-      q = weighted.quantile(r,1-alpha,w=c(w[i2],w[n+i]),sorted=TRUE)
+      q = weighted.quantile(c(r,Inf),1-alpha,w=c(ww,w[n+i]),sorted=TRUE)
       lo[i,l] = pred[i,l] - q * mad.x0[i]
       up[i,l] = pred[i,l] + q * mad.x0[i]
     }

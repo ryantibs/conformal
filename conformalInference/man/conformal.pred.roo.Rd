@@ -177,14 +177,10 @@ legend("bottomleft",col=c(1,4,2),lty=c(1,1,2),
        legend=c("ROO conformal","Split conformal","Oracle"))
 }
 \references{
-"Distribution-Free Predictive Inference for Regression" by 
-  Jing Lei, Max G'Sell, Alessandro Rinaldo, Ryan Tibshirani, and Larry
-  Wasserman, https://arxiv.org/pdf/1604.04173.pdf, 2016.
+"Distribution-Free Predictive Inference for Regression" by Lei,
+  G'Sell, Rinaldo, Tibshirani, Wasserman (2018).
 }
 \seealso{
 \code{\link{conformal.pred}}, 
   \code{\link{conformal.pred.jack}}, \code{\link{conformal.pred.split}}
-}
-\author{
-Ryan Tibshirani
 }

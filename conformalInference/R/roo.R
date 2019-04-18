@@ -164,9 +164,7 @@ conformal.pred.roo = function(x, y, train.fun, predict.fun, alpha=0.1,
       }
       
       # Sort once, update cleverly
-      o = order(res[,l])
-      r = res[o,l]
-      oo = order(o)
+      o = order(res[,l]); r = res[o,l]; oo = order(o)
       for (i in 1:n2) {
         q = weighted.quantile(c(r[-oo[i]],Inf),1-alpha,w=NULL,sorted=TRUE)
         lo[i2[i],l] = pred[i2[i],l] - q * mad.x2[i]

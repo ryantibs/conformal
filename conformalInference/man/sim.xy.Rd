@@ -127,10 +127,6 @@ In the case of an "additive" or "rotated" mean, this function relies
 ## See examples for sam.funs function
 }
 \references{
-"Distribution-Free Predictive Inference for Regression" by 
-  Jing Lei, Max G'Sell, Alessandro Rinaldo, Ryan Tibshirani, and Larry
-  Wasserman, https://arxiv.org/pdf/1604.04173.pdf, 2016.
-}
-\author{
-Ryan Tibshirani
+"Distribution-Free Predictive Inference for Regression" by Lei,
+  G'Sell, Rinaldo, Tibshirani, Wasserman (2018).
 }

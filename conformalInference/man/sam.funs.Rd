@@ -84,34 +84,28 @@ len.rf = mean(out.rf$up - out.rf$lo)
 err.rf = mean((y0 - out.rf$pred)^2)
 
 # Plot average coverage 
-plot(log(lambda),cov.sam,type="l",ylim=c(0,1),
+plot(log(lambda),cov.sam,type="o",pch=20,ylim=c(0,1),
      xlab="log(lambda)",ylab="Avg coverage",
      main=paste0("Split conformal + Spam, RF:\\nAverage coverage"))
-points(log(lambda),cov.sam,pch=20)
 abline(h=cov.rf,lty=2,col=4)
 legend("bottomright",col=c(1,4),lty=1:2,
        legend=c("Spam","Random forest"))
 
 # Plot average length
-plot(log(lambda),len.sam,type="l",
+plot(log(lambda),len.sam,type="o",pch=20,
      ylim=range(len.sam,len.rf),
      xlab="log(lambda)",ylab="Avg length",
      main=paste0("Split conformal + Spam, RF:\\nAverage length"))
-points(log(lambda),len.sam,pch=20)
 abline(h=len.rf,lty=2,col=4)
 legend("topleft",col=c(1,4),lty=1:2,
        legend=c("Spam","Random forest"))
 
 # Plot test error
-plot(log(lambda),err.sam,type="l",
+plot(log(lambda),err.sam,type="o",pch=20,
      ylim=range(err.sam,err.rf),
      xlab="log(lambda)",ylab="Test error",
      main=paste0("Split conformal + Spam, RF:\\nTest error"))
-points(log(lambda),err.sam,pch=20)
 abline(h=err.rf,lty=2,col=4)
 legend("topleft",col=c(1,4),lty=1:2,
        legend=c("Spam","Random forest"))
-}
-\author{
-Ryan Tibshirani
 }

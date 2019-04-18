@@ -64,8 +64,9 @@ intervals (each grid point is a trial value for the interval). Default is
 \item{grid.factor}{Expansion factor used to define the grid for the conformal
 intervals, i.e., the grid points are taken to be equally spaced in between
 -grid.factor*max(abs(y)) and grid.factor*max(abs(y)). Default is 1.25. In
-this case, the restriction of the trial values to this range costs at most
-1/(n+1) in coverage. See details below.}
+this case (and with exchangeable data, thus unity weights) the restriction
+of the trial values to this range costs at most 1/(n+1) in coverage. See
+details below.}
 
 \item{verbose}{Should intermediate progress be printed out? Default is FALSE.}
 }
@@ -118,8 +119,7 @@ For concreteness, suppose that we want to use the predictions from
   trials values to [-grid.factor*max(abs(y)), grid.factor*max(abs(y))], for
   all choices grid.factor >= 1, will lead to a loss in coverage of at most
   1/(n+1). This was also noted in "Trimmed Conformal Prediction for
-  High-Dimensional Models" by Wenyu Chen, Zhaokai Wang, Wooseok Ha, and Rina
-  Foygel Barber, https://arxiv.org/abs/1611.09933.pdf, 2016 (who use this
+  High-Dimensional Models" by Chen, Wang, Ha, Barber (2016) (who use this
   basic fact as motivation for proposing more refined trimming methods).
 }
 \examples{
@@ -218,14 +218,14 @@ legend("topleft",col=c(1,3,4,2),lty=c(1,1,1,2),
 
 }
 \references{
-"Distribution-Free Predictive Inference for Regression" by 
-  Jing Lei, Max G'Sell, Alessandro Rinaldo, Ryan Tibshirani, and Larry
-  Wasserman, https://arxiv.org/pdf/1604.04173.pdf, 2016.
+See "Algorithmic Learning in a Random World" by Vovk, Gammerman,
+  Shafer (2005) as the definitive reference for conformal prediction; see
+  also "Distribution-Free Predictive Inference for Regression" by Lei,
+  G'Sell, Rinaldo, Tibshirani, Wasserman (2018) for another description; and
+  "Conformal Prediction Under Covariate Shift" by Barber, Candes, Ramdas,
+  Tibshirani (2019) for the weighted extension.
 }
 \seealso{
 \code{\link{conformal.pred.jack}},
   \code{\link{conformal.pred.split}}, \code{\link{conformal.pred.roo}}
-}
-\author{
-Ryan Tibshirani
 }
