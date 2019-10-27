@@ -12,16 +12,16 @@ documentation.
 
 The folder "lei2018" contains R code to reproduce all examples in the paper
 [Distribution-Free Predictive Inference for Regression](http://www.stat.cmu.edu/~ryantibs/papers/conformal.pdf)
-by Lei, G'Sell, Rinaldo, Tibshirani, Wasserman (2018).  The folder "barber2019"
+by Lei, G'Sell, Rinaldo, Tibshirani, Wasserman (2018).  The folder "tibshirani2019"
 contains R code to reproduce all examples in the paper
 [Conformal Prediction Under Covariate Shift](http://www.stat.cmu.edu/~ryantibs/papers/weightedcp.pdf)
-by Barber, Candes, Ramdas, Tibshirani (2019).  This code all relies on the
+by Tibshirani, Barber, Candes, Ramdas (2019).  This code all relies on the
 "conformalInference" R package.
 
 Relevant work (in reverse chronological order):
 
 - [Conformal Prediction Under Covariate Shift](http://www.stat.cmu.edu/~ryantibs/papers/weightedcp.pdf)
-  by Rina Barber, Emmanuel Candes, Aaditya Ramdas, and Ryan Tibshirani (2019). 
+  by Ryan Tibshirani, Rina Barber, Emmanuel Candes, Aaditya Ramdas (2019). 
 - [Distribution-Free Predictive Inference for Regression](http://www.stat.cmu.edu/~ryantibs/papers/conformal.pdf) 
   by Jing Lei, Max G'Sell, Alessandro Rinaldo, Ryan Tibshirani, and Larry
   Wasserman, Journal of the American Statistical Association, 113(523),
