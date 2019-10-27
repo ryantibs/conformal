@@ -22,7 +22,7 @@ Relevant work (in reverse chronological order):
 
 - [Conformal Prediction Under Covariate Shift](http://www.stat.cmu.edu/~ryantibs/papers/weightedcp.pdf)
   by Ryan Tibshirani, Rina Barber, Emmanuel Candes, Aaditya Ramdas, Advances in
-  Neural Information Processing Systems (2019).
+  Neural Information Processing Systems, 2019.
 - [Distribution-Free Predictive Inference for Regression](http://www.stat.cmu.edu/~ryantibs/papers/conformal.pdf) 
   by Jing Lei, Max G'Sell, Alessandro Rinaldo, Ryan Tibshirani, and Larry
   Wasserman, Journal of the American Statistical Association, 113(523),
