@@ -53,8 +53,8 @@
 #' @param verbose Should intermediate progress be printed out? Default is FALSE.
 #'
 #' @return A list with the following components: pred, lo, up, fit. The first
-#'   three are matrices of dimension m x n0, and the last is a matrix of
-#'   dimension m x n. Recall that n0 is the number of rows of x0, and m is the
+#'   three are matrices of dimension n0 x m, and the last is a matrix of
+#'   dimension n x m. Recall that n0 is the number of rows of x0, and m is the
 #'   number of tuning parameter values internal to predict.fun. In a sense, each
 #'   of the m columns really corresponds to a different prediction function;
 #'   see details below. Hence, the rows of the matrices pred, lo, up give
