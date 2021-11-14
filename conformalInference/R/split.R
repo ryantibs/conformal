@@ -16,6 +16,8 @@
 #'   predictions.
 #' @param alpha Miscoverage level for the prediction intervals, i.e., intervals
 #'   with coverage 1-alpha are formed. Default for alpha is 0.1.
+#' @param rho Fraction of observation in the training set. Rounding is to the 
+#'   integer below, defaults to 0.5
 #' @param w Weights, in the case of covariate shift. This should be a vector of
 #'   length n+n0, giving the weights (i.e., ratio of test to training feature
 #'   densities), at each of n+n0 the training and test points. Default is NULL,
@@ -76,7 +78,7 @@
 #' @export conformal.pred.split
 
 conformal.pred.split = function(x, y, x0, train.fun, predict.fun, alpha=0.1,
-  w=NULL, mad.train.fun=NULL, mad.predict.fun=NULL, split=NULL, seed=NULL,
+  rho=0.5, w=NULL, mad.train.fun=NULL, mad.predict.fun=NULL, split=NULL, seed=NULL,
   verbose=FALSE) {
 
   # Set up data
@@ -91,6 +93,14 @@ conformal.pred.split = function(x, y, x0, train.fun, predict.fun, alpha=0.1,
   check.args(x=x,y=y,x0=x0,alpha=alpha,train.fun=train.fun,
              predict.fun=predict.fun,mad.train.fun=mad.train.fun,
              mad.predict.fun=mad.predict.fun)
+  
+  # Check rho
+  if (is.null(rho) || length(rho)!= 1 || !is.numeric(rho) || rho<0 || rho>1)
+    stop(paste(deparse(substitute(rho)),"must be a number between 0 and 1")
+  if (rho=0)
+    stop("training set should be non-empty")
+  if (rho=1)
+    stop("test set should be non-empty")
 
   # Check the weights
   if (is.null(w)) w = rep(1,n+n0)
@@ -107,7 +117,7 @@ conformal.pred.split = function(x, y, x0, train.fun, predict.fun, alpha=0.1,
   # Otherwise make a random split
   else {
     if (!is.null(seed)) set.seed(seed)
-    i1 = sample(1:n,floor(n/2))
+    i1 = sample(1:n,floor(n*rho))
   }
   i2 = (1:n)[-i1]
   n1 = length(i1)
