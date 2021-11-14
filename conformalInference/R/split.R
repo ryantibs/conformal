@@ -95,12 +95,8 @@ conformal.pred.split = function(x, y, x0, train.fun, predict.fun, alpha=0.1,
              mad.predict.fun=mad.predict.fun)
   
   # Check rho
-  if (is.null(rho) || length(rho)!= 1 || !is.numeric(rho) || rho<0 || rho>1)
-    stop(paste(deparse(substitute(rho)),"must be a number between 0 and 1")
-  if (rho=0)
-    stop("training set should be non-empty")
-  if (rho=1)
-    stop("test set should be non-empty")
+  if (is.null(rho) || length(rho)!= 1 || !is.numeric(rho) || rho<0 || rho>1){
+    stop(paste(deparse(substitute(rho)),"must be a number between 0 and 1"))}
 
   # Check the weights
   if (is.null(w)) w = rep(1,n+n0)
