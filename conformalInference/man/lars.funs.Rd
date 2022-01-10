@@ -5,9 +5,15 @@
 \title{Forward stepwise, least angle regression, and lasso training and prediction
   functions.}
 \usage{
-lars.funs(type = c("stepwise", "lar", "lasso"), normalize = TRUE,
-  intercept = TRUE, max.steps = 20, cv = FALSE, cv.rule = c("min",
-  "1se"), use.Gram = TRUE)
+lars.funs(
+  type = c("stepwise", "lar", "lasso"),
+  normalize = TRUE,
+  intercept = TRUE,
+  max.steps = 20,
+  cv = FALSE,
+  cv.rule = c("min", "1se"),
+  use.Gram = TRUE
+)
 }
 \arguments{
 \item{type}{One of "stepwise", "lar", or "lasso", indicating which path
@@ -90,7 +96,7 @@ err.orac = mean((y0 - out.orac[,"fit"])^2)
 # Plot average coverage 
 plot(1:length(cov.split),cov.split,type="o",pch=20,ylim=c(0,1),
      xlab="Number of path steps",ylab="Avg coverage",
-     main=paste0("Split conformal + stepwise:\\nAverage coverage"))
+     main=paste0("Split conformal + stepwise:\nAverage coverage"))
 abline(h=cov.orac,lty=2,col=2)
 legend("bottomright",col=1:2,lty=1:2,
        legend=c("Split conformal","Oracle"))
@@ -99,7 +105,7 @@ legend("bottomright",col=1:2,lty=1:2,
 plot(1:length(len.split),len.split,type="o",pch=20,
      ylim=range(len.split,len.orac),
      xlab="Number of path steps",ylab="Avg length",
-     main=paste0("Split conformal + stepwise:\\nAverage length"))
+     main=paste0("Split conformal + stepwise:\nAverage length"))
 abline(h=len.orac,lty=2,col=2)
 legend("topright",col=1:2,lty=1:2,
        legend=c("Split conformal","Oracle"))
@@ -108,14 +114,14 @@ legend("topright",col=1:2,lty=1:2,
 plot(1:length(err.split),err.split,type="o",pch=20,
      ylim=range(err.split,err.orac),
      xlab="Number of path steps",ylab="Test error",
-     main=paste0("Split conformal + stepwise:\\nTest error"))
+     main=paste0("Split conformal + stepwise:\nTest error"))
 abline(h=err.orac,lty=2,col=2)
 legend("topright",col=1:2,lty=1:2,
        legend=c("Split conformal","Oracle"))
 
 ####################
 
-cat("Type return to continue ...\\n")
+cat("Type return to continue ...\n")
 tmp = readLines(n=1)
 
 ## Forward stepwise: cross-validate over 30 path steps

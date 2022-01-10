@@ -4,9 +4,20 @@
 \alias{conformal.pred}
 \title{Conformal prediction intervals.}
 \usage{
-conformal.pred(x, y, x0, train.fun, predict.fun, alpha = 0.1, w = NULL,
-  mad.train.fun = NULL, mad.predict.fun = NULL, num.grid.pts = 100,
-  grid.factor = 1.25, verbose = FALSE)
+conformal.pred(
+  x,
+  y,
+  x0,
+  train.fun,
+  predict.fun,
+  alpha = 0.1,
+  w = NULL,
+  mad.train.fun = NULL,
+  mad.predict.fun = NULL,
+  num.grid.pts = 100,
+  grid.factor = 1.25,
+  verbose = FALSE
+)
 }
 \arguments{
 \item{x}{Matrix of features, of dimension (say) n x p.}
@@ -72,8 +83,8 @@ details below.}
 }
 \value{
 A list with the following components: pred, lo, up, fit. The first
-  three are matrices of dimension m x n0, and the last is a matrix of
-  dimension m x n. Recall that n0 is the number of rows of x0, and m is the
+  three are matrices of dimension n0 x m, and the last is a matrix of
+  dimension n x m. Recall that n0 is the number of rows of x0, and m is the
   number of tuning parameter values internal to predict.fun. In a sense, each
   of the m columns really corresponds to a different prediction function;
   see details below. Hence, the rows of the matrices pred, lo, up give
@@ -182,7 +193,7 @@ err.orac = mean((y0 - out.orac[,"fit"])^2)
 plot(log(lambda),cov.conf,type="o",pch=20,ylim=c(0,1),
      xlab="log(lambda)",ylab="Avg coverage",
      main=paste0("Conformal + lasso (fixed lambda sequence):",
-       "\\nAverage coverage"))
+       "\nAverage coverage"))
 points(log(lambda),cov.jack,type="o",pch=20,col=3)
 points(log(lambda),cov.split,type="o",pch=20,col=4)
 abline(h=cov.orac,lty=2,col=2)
@@ -195,7 +206,7 @@ plot(log(lambda),len.conf,type="o",pch=20,
      ylim=range(len.conf,len.jack,len.split,len.orac),
      xlab="log(lambda)",ylab="Avg length",
      main=paste0("Conformal + lasso (fixed lambda sequence):",
-       "\\nAverage length"))
+       "\nAverage length"))
 points(log(lambda),len.jack,type="o",pch=20,col=3)
 points(log(lambda),len.split,type="o",pch=20,col=4)
 abline(h=len.orac,lty=2,col=2)
@@ -208,7 +219,7 @@ plot(log(lambda),err.conf,type="o",pch=20,
      ylim=range(err.conf,err.jack,err.split,err.orac),
      xlab="log(lambda)",ylab="Test error",
      main=paste0("Conformal + lasso (fixed lambda sequence):",
-       "\\nTest error"))
+       "\nTest error"))
 points(log(lambda),err.jack,type="o",pch=20,col=3)
 points(log(lambda),err.split,type="o",pch=20,col=4)
 abline(h=err.orac,lty=2,col=2)

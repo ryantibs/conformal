@@ -4,8 +4,13 @@
 \alias{rf.funs}
 \title{Random forests training and prediction functions.}
 \usage{
-rf.funs(ntree = 500, varfrac = 0.333, replace = TRUE,
-  obsfrac = ifelse(replace, 1, 0.632), nodesize = 5)
+rf.funs(
+  ntree = 500,
+  varfrac = 0.333,
+  replace = TRUE,
+  obsfrac = ifelse(replace, 1, 0.632),
+  nodesize = 5
+)
 }
 \arguments{
 \item{ntree}{Number of trees to grow. Default is 500.}

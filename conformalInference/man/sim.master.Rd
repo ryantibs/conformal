@@ -4,16 +4,37 @@
 \alias{sim.master}
 \title{Master function for running simulations.}
 \usage{
-sim.master(n, p, conformal.pred.funs, n0 = n, in.sample = FALSE,
-  nrep = 20, seed = NULL, verbose = FALSE, file = NULL,
-  file.rep = 5, x.dist = c("normal", "binom", "sn", "mix"),
-  cor = c("none", "pair", "auto", "rand"), rho = 0.5, k = 5,
-  standardize = TRUE, mean.fun = c("linear", "additive", "rotated"),
-  m = 4, sparsity = c("strong", "weak"), s = round(log(p)),
-  weak.decay = 0.5, mu.seed = NULL, error.dist = c("normal", "unif",
-  "t", "sn"), sigma = 1, bval = 3, snr = NULL,
-  sigma.type = c("const", "var"), df = 3, alpha = 5,
-  omitted.vars = FALSE)
+sim.master(
+  n,
+  p,
+  conformal.pred.funs,
+  n0 = n,
+  in.sample = FALSE,
+  nrep = 20,
+  seed = NULL,
+  verbose = FALSE,
+  file = NULL,
+  file.rep = 5,
+  x.dist = c("normal", "binom", "sn", "mix"),
+  cor = c("none", "pair", "auto", "rand"),
+  rho = 0.5,
+  k = 5,
+  standardize = TRUE,
+  mean.fun = c("linear", "additive", "rotated"),
+  m = 4,
+  sparsity = c("strong", "weak"),
+  s = round(log(p)),
+  weak.decay = 0.5,
+  mu.seed = NULL,
+  error.dist = c("normal", "unif", "t", "sn"),
+  sigma = 1,
+  bval = 3,
+  snr = NULL,
+  sigma.type = c("const", "var"),
+  df = 3,
+  alpha = 5,
+  omitted.vars = FALSE
+)
 }
 \arguments{
 \item{n, p}{Number of observations and features, respectively.}
@@ -104,7 +125,7 @@ alpha = 0.1 # Miscoverage level
 # i.e., particular training and prediction functions
 my.lm.funs = lm.funs()
 my.conf.fun = function(x, y, x0) {
-  conformal.pred(x,y,x0,alpha=alpha,verb="\\t\\t",
+  conformal.pred(x,y,x0,alpha=alpha,verb="\t\t",
                 train.fun=my.lm.funs$train,
                 predict.fun=my.lm.funs$predict)
 }
@@ -133,18 +154,18 @@ path = "."
 
 # Simulation setting A: classical setup --- linear (fully supported) mean
 # function; normal, homoskedastic errors; and normal, uncorrelated features
-cat("========================================\\n")
-cat("                SETTING A               \\n")
-cat("========================================\\n")
+cat("========================================\n")
+cat("                SETTING A               \n")
+cat("========================================\n")
 simA = sim.master(n, p, conformal.pred.funs, n0=n0, nrep=nrep, verb=TRUE,
   file=paste0(path,"simA.rds"), x.dist="normal", cor="none",
   mean.fun="linear", s=s, error.dist="normal", sigma=sigma, snr=snr,
   sigma.type="const")
 
 # Simulation setting B: now, nonlinear mean, and t2 errors
-cat("========================================\\n")
-cat("                SETTING B               \\n")
-cat("========================================\\n")
+cat("========================================\n")
+cat("                SETTING B               \n")
+cat("========================================\n")
 simB = sim.master(n, p, conformal.pred.funs, n0=n0, nrep=nrep, verb=TRUE,
   file=paste0(path,"simB.rds"), x.dist="normal", cor="none",
   mean.fun="additive", m=4, s=s, error.dist="t", df=2, sigma=sigma, snr=snr,
@@ -152,9 +173,9 @@ simB = sim.master(n, p, conformal.pred.funs, n0=n0, nrep=nrep, verb=TRUE,
 
 # Simulation setting C: now, nonlinear mean, heteroskedastic t2 errors, and
 # auto-correlated mix of x variables
-cat("========================================\\n")
-cat("                SETTING C               \\n")
-cat("========================================\\n")
+cat("========================================\n")
+cat("                SETTING C               \n")
+cat("========================================\n")
 simC = sim.master(n, p, conformal.pred.funs, n0=n0, nrep=nrep, verb=TRUE,
   file=paste0(path,"simC.rds"), x.dist="mix", cor="auto", k=5,
   mean.fun="linear", s=s, error.dist="t", df=2, sigma=sigma, snr=snr,

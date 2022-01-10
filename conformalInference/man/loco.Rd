@@ -4,8 +4,18 @@
 \alias{loco}
 \title{Variable importance via mean (or median) excess test error}
 \usage{
-loco(x, y, train.fun, predict.fun, active.fun, alpha = 0.1,
-  bonf.correct = TRUE, split = NULL, seed = NULL, verbose = FALSE)
+loco(
+  x,
+  y,
+  train.fun,
+  predict.fun,
+  active.fun,
+  alpha = 0.1,
+  bonf.correct = TRUE,
+  split = NULL,
+  seed = NULL,
+  verbose = FALSE
+)
 }
 \arguments{
 \item{x}{Matrix of features, of dimension (say) n x p.}

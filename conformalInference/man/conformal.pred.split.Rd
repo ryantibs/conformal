@@ -4,9 +4,21 @@
 \alias{conformal.pred.split}
 \title{Split conformal prediction intervals.}
 \usage{
-conformal.pred.split(x, y, x0, train.fun, predict.fun, alpha = 0.1,
-  w = NULL, mad.train.fun = NULL, mad.predict.fun = NULL,
-  split = NULL, seed = NULL, verbose = FALSE)
+conformal.pred.split(
+  x,
+  y,
+  x0,
+  train.fun,
+  predict.fun,
+  alpha = 0.1,
+  rho = 0.5,
+  w = NULL,
+  mad.train.fun = NULL,
+  mad.predict.fun = NULL,
+  split = NULL,
+  seed = NULL,
+  verbose = FALSE
+)
 }
 \arguments{
 \item{x}{Matrix of features, of dimension (say) n x p.}
@@ -28,6 +40,9 @@ predictions.}
 
 \item{alpha}{Miscoverage level for the prediction intervals, i.e., intervals
 with coverage 1-alpha are formed. Default for alpha is 0.1.}
+
+\item{rho}{Fraction of observations to use in the training set. This is
+rounded to the nearest integer below, and defaults to 0.5.}
 
 \item{w}{Weights, in the case of covariate shift. This should be a vector of
 length n+n0, giving the weights (i.e., ratio of test to training feature

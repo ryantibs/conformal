@@ -4,9 +4,20 @@
 \alias{loco.roo}
 \title{Variable importance via excess test error}
 \usage{
-loco.roo(x, y, train.fun, predict.fun, vars = 0, alpha = 0.1,
-  mad.train.fun = NULL, mad.predict.fun = NULL, split = NULL,
-  seed = NULL, out.roo = NULL, verbose = FALSE)
+loco.roo(
+  x,
+  y,
+  train.fun,
+  predict.fun,
+  vars = 0,
+  alpha = 0.1,
+  mad.train.fun = NULL,
+  mad.predict.fun = NULL,
+  split = NULL,
+  seed = NULL,
+  out.roo = NULL,
+  verbose = FALSE
+)
 }
 \arguments{
 \item{x}{Matrix of variables, of dimension (say) n x p.}

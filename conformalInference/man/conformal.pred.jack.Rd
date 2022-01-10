@@ -4,9 +4,18 @@
 \alias{conformal.pred.jack}
 \title{Jackknife conformal prediction intervals.}
 \usage{
-conformal.pred.jack(x, y, x0, train.fun, predict.fun, alpha = 0.1,
-  special.fun = NULL, mad.train.fun = NULL, mad.predict.fun = NULL,
-  verbose = FALSE)
+conformal.pred.jack(
+  x,
+  y,
+  x0,
+  train.fun,
+  predict.fun,
+  alpha = 0.1,
+  special.fun = NULL,
+  mad.train.fun = NULL,
+  mad.predict.fun = NULL,
+  verbose = FALSE
+)
 }
 \arguments{
 \item{x}{Matrix of features, of dimension (say) n x p.}
@@ -65,14 +74,11 @@ means that no local scaling is done for the conformal score, i.e., the
 usual (unscaled) conformal score is used.}
 
 \item{verbose}{Should intermediate progress be printed out? Default is FALSE.}
-
-\item{alpha}{Miscoverage level for the prediction intervals, i.e., intervals
-with coverage 1-alpha are formed. Default for alpha is 0.1.}
 }
 \value{
 A list with the following components: pred, lo, up, fit. The first
-  three are matrices of dimension m x n0, and the last is a matrix of
-  dimension m x n. Recall that n0 is the number of rows of x0, and m is the
+  three are matrices of dimension n0 x m, and the last is a matrix of
+  dimension n x m. Recall that n0 is the number of rows of x0, and m is the
   number of tuning parameter values internal to predict.fun. In a sense, each
   of the m columns really corresponds to a different prediction function;
   see details below. Hence, the rows of the matrices pred, lo, up give

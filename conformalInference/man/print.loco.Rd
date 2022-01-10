@@ -4,8 +4,7 @@
 \alias{print.loco}
 \title{Print function for loco object.}
 \usage{
-\method{print}{loco}(x, test = c("wilcox", "sign", "z", "all"),
-  digits = 3, ...)
+\method{print}{loco}(x, test = c("wilcox", "sign", "z", "all"), digits = 3, ...)
 }
 \arguments{
 \item{x}{The loco object.}

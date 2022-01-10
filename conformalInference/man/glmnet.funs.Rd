@@ -7,17 +7,36 @@
 \alias{ridge.funs}
 \title{Elastic net, lasso, ridge regression training and prediction functions.}
 \usage{
-elastic.funs(gamma = 0.5, standardize = TRUE, intercept = TRUE,
-  lambda = NULL, nlambda = 50, lambda.min.ratio = 1e-04,
-  cv = FALSE, cv.rule = c("min", "1se"))
+elastic.funs(
+  gamma = 0.5,
+  standardize = TRUE,
+  intercept = TRUE,
+  lambda = NULL,
+  nlambda = 50,
+  lambda.min.ratio = 1e-04,
+  cv = FALSE,
+  cv.rule = c("min", "1se")
+)
 
-lasso.funs(standardize = TRUE, intercept = TRUE, lambda = NULL,
-  nlambda = 50, lambda.min.ratio = 1e-04, cv = FALSE,
-  cv.rule = c("min", "1se"))
+lasso.funs(
+  standardize = TRUE,
+  intercept = TRUE,
+  lambda = NULL,
+  nlambda = 50,
+  lambda.min.ratio = 1e-04,
+  cv = FALSE,
+  cv.rule = c("min", "1se")
+)
 
-ridge.funs(standardize = TRUE, intercept = TRUE, lambda = NULL,
-  nlambda = 50, lambda.min.ratio = 1e-04, cv = FALSE,
-  cv.rule = c("min", "1se"))
+ridge.funs(
+  standardize = TRUE,
+  intercept = TRUE,
+  lambda = NULL,
+  nlambda = 50,
+  lambda.min.ratio = 1e-04,
+  cv = FALSE,
+  cv.rule = c("min", "1se")
+)
 }
 \arguments{
 \item{gamma}{Mixing parameter (between 0 and 1) for the elastic net, where
@@ -116,7 +135,7 @@ err.orac = mean((y0 - out.orac[,"fit"])^2)
 plot(log(lambda),cov.split,type="o",pch=20,ylim=c(0,1),
      xlab="log(lambda)",ylab="Avg coverage",
      main=paste0("Split conformal + elastic net (fixed lambda sequence):",
-       "\\nAverage coverage"))
+       "\nAverage coverage"))
 abline(h=cov.orac,lty=2,col=2)
 legend("bottomleft",col=1:2,lty=1:2,
        legend=c("Split conformal","Oracle"))
@@ -126,7 +145,7 @@ plot(log(lambda),len.split,type="o",pch=20,
      ylim=range(len.split,len.orac),
      xlab="log(lambda)",ylab="Avg length",
      main=paste0("Split conformal + elastic net (fixed lambda sequence):",
-       "\\nAverage length"))
+       "\nAverage length"))
 abline(h=len.orac,lty=2,col=2)
 legend("topleft",col=1:2,lty=1:2,
        legend=c("Split conformal","Oracle"))
@@ -136,14 +155,14 @@ plot(log(lambda),err.split,type="o",pch=20,
      ylim=range(err.split,err.orac),
      xlab="log(lambda)",ylab="Test error",
      main=paste0("Split conformal + elastic net (fixed lambda sequence):",
-       "\\nTest error"))
+       "\nTest error"))
 abline(h=err.orac,lty=2,col=2)
 legend("topleft",col=1:2,lty=1:2,
        legend=c("Split conformal","Oracle"))
 
 ####################
 
-cat("Type return to continue ...\\n")
+cat("Type return to continue ...\n")
 tmp = readLines(n=1)
 
 ## Elastic net: alternate way, use a dynamic sequence of 100 lambda values
@@ -174,7 +193,7 @@ plot(log(length(cov.split):1),cov.split,type="o",pch=20,,ylim=c(0,1),
      xlab="log(lambda rank) (i.e., log(1)=0 is smallest)",
      ylab="Avg coverage",
      main=paste0("Split conformal + elastic net (dynamic lambda sequence):",
-       "\\nAverage coverage"))
+       "\nAverage coverage"))
 abline(h=cov.orac,lty=2,col=2)
 legend("bottomleft",col=1:2,lty=1:2,
        legend=c("Split conformal","Oracle"))
@@ -185,7 +204,7 @@ plot(log(length(len.split):1),len.split,type="o",pch=20,
      xlab="log(lambda rank) (i.e., log(1)=0 is smallest)",
      ylab="Avg length",
      main=paste0("Split conformal + elastic net (dynamic lambda sequence):",
-       "\\nAverage length"))
+       "\nAverage length"))
 abline(h=len.orac,lty=2,col=2)
 legend("topleft",col=1:2,lty=1:2,
        legend=c("Split conformal","Oracle"))
@@ -195,14 +214,14 @@ plot(log(length(err.split):1),err.split,type="o",pch=20,
      ylim=range(err.split,err.orac),
      xlab="log(lambda rank) (i.e., log(1)=0 is smallest)",ylab="Test error",
      main=paste0("Split conformal + elastic net (dynamic lambda sequence):",
-       "\\nTest error"))
+       "\nTest error"))
 abline(h=err.orac,lty=2,col=2)
 legend("topleft",col=1:2,lty=1:2,
        legend=c("Split conformal","Oracle"))
 
 ####################
 
-cat("Type return to continue ...\\n")
+cat("Type return to continue ...\n")
 tmp = readLines(n=1)
 
 ## Elastic net: cross-validate over a sequence of 100 lambda values
