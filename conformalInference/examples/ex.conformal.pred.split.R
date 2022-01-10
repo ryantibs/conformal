@@ -128,12 +128,16 @@ abline(h=err.orac,lty=2,col=2)
 legend("topleft",col=1:2,lty=1:2,
        legend=c("Split conformal","Oracle"))
 
+####################
 
-# Inspect different rho parameter
+cat("Type return to continue ...\n")
+tmp = readLines(n=1)
+
+## Lasso: inspect different split fraction, via rho parameter
 
 # Split conformal inference 
-out.split = conformal.pred.split(x, y, x0, alpha=0.1, rho=.7,
-                                 train.fun=funs$train, predict.fun=funs$predict)
+out.split = conformal.pred.split(x, y, x0, alpha=0.1, rho=0.7,
+  train.fun=funs$train, predict.fun=funs$predict)
 
 y0.mat = matrix(rep(y0,ncol(out.split$lo)),nrow=n0)
 cov.split = colMeans(out.split$lo <= y0.mat & y0.mat <= out.split$up)
@@ -153,7 +157,7 @@ err.orac = mean((y0 - out.orac[,"fit"])^2)
 plot(log(length(cov.split):1),cov.split,type="o",pch=20,ylim=c(0,1),
      xlab="log(lambda rank) (i.e., log(1)=0 is smallest)",
      ylab="Avg coverage",
-     main=paste0("Split conformal (rho=.7) + lasso (dynamic lambda sequence):",
+     main=paste0("Split conformal (rho=0.7) + lasso (dynamic lambda sequence):",
                  "\nAverage coverage"))
 abline(h=cov.orac,lty=2,col=2)
 legend("bottomleft",col=1:2,lty=1:2,
@@ -164,7 +168,7 @@ plot(log(length(len.split):1),len.split,type="o",pch=20,
      ylim=range(len.split,len.orac),
      xlab="log(lambda rank) (i.e., log(1)=0 is smallest)",
      ylab="Avg length",
-     main=paste0("Split conformal (rho=.7) + lasso (dynamic lambda sequence):",
+     main=paste0("Split conformal (rho=0.7) + lasso (dynamic lambda sequence):",
                  "\nAverage length"))
 abline(h=len.orac,lty=2,col=2)
 legend("topleft",col=1:2,lty=1:2,
@@ -174,7 +178,7 @@ legend("topleft",col=1:2,lty=1:2,
 plot(log(length(err.split):1),err.split,type="o",pch=20,
      ylim=range(err.split,err.orac),
      xlab="log(lambda rank) (i.e., log(1)=0 is smallest)",ylab="Test error",
-     main=paste0("Split conformal (rho=.7) + lasso (dynamic lambda sequence):",
+     main=paste0("Split conformal (rho=0.7) + lasso (dynamic lambda sequence):",
                  "\nTest error"))
 abline(h=err.orac,lty=2,col=2)
 legend("topleft",col=1:2,lty=1:2,
