@@ -16,8 +16,8 @@
 #'   predictions.
 #' @param alpha Miscoverage level for the prediction intervals, i.e., intervals
 #'   with coverage 1-alpha are formed. Default for alpha is 0.1.
-#' @param rho Fraction of observation in the training set. Rounding is to the 
-#'   integer below, defaults to 0.5
+#' @param rho Fraction of observations to use in the training set. This is
+#'   rounded to the nearest integer below, and defaults to 0.5.
 #' @param w Weights, in the case of covariate shift. This should be a vector of
 #'   length n+n0, giving the weights (i.e., ratio of test to training feature
 #'   densities), at each of n+n0 the training and test points. Default is NULL,
@@ -78,8 +78,8 @@
 #' @export conformal.pred.split
 
 conformal.pred.split = function(x, y, x0, train.fun, predict.fun, alpha=0.1,
-  rho=0.5, w=NULL, mad.train.fun=NULL, mad.predict.fun=NULL, split=NULL, seed=NULL,
-  verbose=FALSE) {
+  rho=0.5, w=NULL, mad.train.fun=NULL, mad.predict.fun=NULL, split=NULL,
+  seed=NULL, verbose=FALSE) {
 
   # Set up data
   x = as.matrix(x)
@@ -95,8 +95,8 @@ conformal.pred.split = function(x, y, x0, train.fun, predict.fun, alpha=0.1,
              mad.predict.fun=mad.predict.fun)
   
   # Check rho
-  if (is.null(rho) || length(rho)!= 1 || !is.numeric(rho) || rho<0 || rho>1){
-    stop(paste(deparse(substitute(rho)),"must be a number between 0 and 1"))}
+  if (is.null(rho) || length(rho)!= 1 || !is.numeric(rho) || rho<=0 || rho>=1) 
+    stop("rho must be a number in between 0 and 1")
 
   # Check the weights
   if (is.null(w)) w = rep(1,n+n0)
