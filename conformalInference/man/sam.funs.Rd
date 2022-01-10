@@ -4,8 +4,7 @@
 \alias{sam.funs}
 \title{Sparse additive models training and prediction functions.}
 \usage{
-sam.funs(m = 3, lambda = NULL, nlambda = 30,
-  lambda.min.ratio = 0.005)
+sam.funs(m = 3, lambda = NULL, nlambda = 30, lambda.min.ratio = 0.005)
 }
 \arguments{
 \item{m}{Number of spline functions to be used in the additive expansion of 
@@ -86,7 +85,7 @@ err.rf = mean((y0 - out.rf$pred)^2)
 # Plot average coverage 
 plot(log(lambda),cov.sam,type="o",pch=20,ylim=c(0,1),
      xlab="log(lambda)",ylab="Avg coverage",
-     main=paste0("Split conformal + Spam, RF:\\nAverage coverage"))
+     main=paste0("Split conformal + Spam, RF:\nAverage coverage"))
 abline(h=cov.rf,lty=2,col=4)
 legend("bottomright",col=c(1,4),lty=1:2,
        legend=c("Spam","Random forest"))
@@ -95,7 +94,7 @@ legend("bottomright",col=c(1,4),lty=1:2,
 plot(log(lambda),len.sam,type="o",pch=20,
      ylim=range(len.sam,len.rf),
      xlab="log(lambda)",ylab="Avg length",
-     main=paste0("Split conformal + Spam, RF:\\nAverage length"))
+     main=paste0("Split conformal + Spam, RF:\nAverage length"))
 abline(h=len.rf,lty=2,col=4)
 legend("topleft",col=c(1,4),lty=1:2,
        legend=c("Spam","Random forest"))
@@ -104,7 +103,7 @@ legend("topleft",col=c(1,4),lty=1:2,
 plot(log(lambda),err.sam,type="o",pch=20,
      ylim=range(err.sam,err.rf),
      xlab="log(lambda)",ylab="Test error",
-     main=paste0("Split conformal + Spam, RF:\\nTest error"))
+     main=paste0("Split conformal + Spam, RF:\nTest error"))
 abline(h=err.rf,lty=2,col=4)
 legend("topleft",col=c(1,4),lty=1:2,
        legend=c("Spam","Random forest"))

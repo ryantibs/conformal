@@ -4,8 +4,7 @@
 \alias{print.tex}
 \title{Print function for latex-style tables.}
 \usage{
-\method{print}{tex}(tab, tab.se = NULL, digits = 3, file = NULL,
-  align = "l")
+\method{print}{tex}(tab, tab.se = NULL, digits = 3, file = NULL, align = "l")
 }
 \description{
 Print a given table in format digestable by latex.

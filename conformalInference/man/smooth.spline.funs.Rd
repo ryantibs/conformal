@@ -5,8 +5,7 @@
 \title{Smoothing spline training and prediction functions, and special leave-one-out
   fitting function.}
 \usage{
-smooth.spline.funs(df = NULL, spar = NULL, cv = TRUE,
-  tol.fact = 1e-06)
+smooth.spline.funs(df = NULL, spar = NULL, cv = TRUE, tol.fact = 1e-06)
 }
 \arguments{
 \item{df}{Desired effective degrees of freedom of the smoothing spline fit.
@@ -79,7 +78,7 @@ out.jack = conformal.pred.jack(x, y, x0, alpha=0.1,
 
 plot(c(), c(), xlab="x0", ylab="y0", xlim=range(x0),
      ylim=range(c(y0,out.jack$lo,out.jack$up)), col="white",     
-     main=paste0("Jackknife (out-of-sample) prediction intervals\\n",
+     main=paste0("Jackknife (out-of-sample) prediction intervals\n",
        sprintf("Average length: \%0.3f",mean(out.jack$up-out.jack$lo))))
 o = order(x0)
 segments(x0[o], out.jack$lo[o], x0[o], out.jack$up[o], col="pink")
@@ -93,7 +92,7 @@ out.split = conformal.pred.split(x, y, x0, alpha=0.1,
 
 plot(c(), c(), xlab="x0", ylab="y0", xlim=range(x0),
      ylim=range(c(y0,out.split$lo,out.split$up)), col="white",     
-     main=paste0("Split conformal (out-of-sample) prediction intervals\\n",
+     main=paste0("Split conformal (out-of-sample) prediction intervals\n",
        sprintf("Average length: \%0.3f",mean(out.split$up-out.split$lo))))
 o = order(x0)
 segments(x0[o], out.split$lo[o], x0[o], out.split$up[o], col="lightgreen")
@@ -107,7 +106,7 @@ out.roo = conformal.pred.roo(x, y, alpha=0.1,
 
 plot(c(), c(), xlab="x", ylab="y", xlim=range(x),
      ylim=range(c(y,out.roo$lo,out.roo$up)), col="white",
-     main=paste0("ROO-conformal (in-sample) prediction intervals\\n",
+     main=paste0("ROO-conformal (in-sample) prediction intervals\n",
        sprintf("Average length: \%0.3f",mean(out.roo$up-out.roo$lo))))
 o = order(x)
 segments(x[o], out.roo$lo[o], x[o], out.roo$up[o], col="lightblue")
@@ -124,7 +123,7 @@ out.jack.local = conformal.pred.jack(x, y, x0, alpha=0.1,
 
 plot(c(), c(), xlab="x0", ylab="y0", xlim=range(x0),
      ylim=range(c(y0,out.jack.local$lo,out.jack.local$up)), col="white",     
-     main=paste0("Jackknife (out-of-sample) prediction intervals\\n",
+     main=paste0("Jackknife (out-of-sample) prediction intervals\n",
        sprintf("Average length: \%0.3f",
                mean(out.jack.local$up-out.jack.local$lo))))
 o = order(x0)
@@ -139,7 +138,7 @@ out.split.local = conformal.pred.split(x, y, x0, alpha=0.1,
 
 plot(c(), c(), xlab="x0", ylab="y0", xlim=range(x0), 
      ylim=range(c(y0,out.split.local$lo,out.split.local$up)), col="white",     
-     main=paste0("Split conformal (out-of-sample) prediction intervals\\n",
+     main=paste0("Split conformal (out-of-sample) prediction intervals\n",
        sprintf("Average length: \%0.3f",
                mean(out.split.local$up-out.split.local$lo))))
 o = order(x0)
@@ -156,7 +155,7 @@ out.roo.local = conformal.pred.roo(x, y, alpha=0.1,
 
 plot(c(), c(), xlab="x", ylab="y", xlim=range(x),
      ylim=range(c(y,out.roo.local$lo,out.roo.local$up)), col="white",
-     main=paste0("ROO-conformal (in-sample) prediction intervals\\n",
+     main=paste0("ROO-conformal (in-sample) prediction intervals\n",
        sprintf("Average length: \%0.3f",
                mean(out.roo.local$up-out.roo.local$lo))))
 o = order(x)

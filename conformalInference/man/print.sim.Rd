@@ -4,8 +4,7 @@
 \alias{print.sim}
 \title{Print function for sim object.}
 \usage{
-\method{print}{sim}(x, type = c("err", "len", "all"), se = TRUE,
-  digits = 3, ...)
+\method{print}{sim}(x, type = c("err", "len", "all"), se = TRUE, digits = 3, ...)
 }
 \arguments{
 \item{x}{The sim object.}
