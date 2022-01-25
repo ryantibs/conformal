@@ -117,10 +117,12 @@ conformal.pred.msplit = function(x, y, x0,train.fun, predict.fun, alpha=0.1,
          where n1 is the number of observation in the training set !  ")
   }
   
- if(is.matrix(seed))    
 
   loB <- upB <- matrix(NA,nrow=n0,ncol=B)
   tr <- tau*B + .001
+  
+  check.pos.num(lambda)
+  check.num.01(tau)
 
 
   #Define structures for parallelization
