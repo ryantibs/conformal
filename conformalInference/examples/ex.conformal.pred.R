@@ -21,12 +21,16 @@ out.gnet = glmnet(x,y,nlambda=100,lambda.min.ratio=1e-3)
 lambda = out.gnet$lambda
 funs = lasso.funs(lambda=lambda)
 
-# Conformal inference, and jacknife and split conformal versions
+# Conformal inference, and jacknife (also jackknife+) and split conformal versions
 out.conf = conformal.pred(x, y, x0, alpha=0.1,
   train.fun=funs$train, predict.fun=funs$predict, verb=TRUE)
 
 out.jack = conformal.pred.jack(x, y, x0, alpha=0.1,
   train.fun=funs$train, predict.fun=funs$predict)
+
+out.jack.plus = conformal.pred.jack(x, y, x0, alpha=0.1,
+                               train.fun=funs$train, predict.fun=funs$predict,
+                               plus=TRUE)
 
 out.split = conformal.pred.split(x, y, x0, alpha=0.1, seed=0,
   train.fun=funs$train, predict.fun=funs$predict)
@@ -39,6 +43,10 @@ err.conf = colMeans((y0.mat - out.conf$pred)^2)
 cov.jack = colMeans(out.jack$lo <= y0.mat & y0.mat <= out.jack$up)
 len.jack = colMeans(out.jack$up - out.jack$lo)
 err.jack = colMeans((y0.mat - out.jack$pred)^2)
+
+cov.jack.plus = colMeans(out.jack.plus$lo <= y0.mat & y0.mat <= out.jack.plus$up)
+len.jack.plus = colMeans(out.jack.plus$up - out.jack.plus$lo)
+err.jack.plus = colMeans((y0.mat - out.jack.plus$pred)^2)
 
 cov.split = colMeans(out.split$lo <= y0.mat & y0.mat <= out.split$up)
 len.split = colMeans(out.split$up - out.split$lo)
@@ -59,10 +67,11 @@ plot(log(lambda),cov.conf,type="o",pch=20,ylim=c(0,1),
      main=paste0("Conformal + lasso (fixed lambda sequence):",
        "\nAverage coverage"))
 points(log(lambda),cov.jack,type="o",pch=20,col=3)
+points(log(lambda),cov.jack.plus,type="o",pch=20,col=5)
 points(log(lambda),cov.split,type="o",pch=20,col=4)
 abline(h=cov.orac,lty=2,col=2)
 legend("bottomleft",col=c(1,3,4,2),lty=c(1,1,1,2),
-       legend=c("Conformal","Jackknife conformal",
+       legend=c("Conformal","Jackknife conformal","Jackknife + Conformal",
          "Split conformal","Oracle"))
 
 # Plot average length
@@ -72,10 +81,11 @@ plot(log(lambda),len.conf,type="o",pch=20,
      main=paste0("Conformal + lasso (fixed lambda sequence):",
        "\nAverage length"))
 points(log(lambda),len.jack,type="o",pch=20,col=3)
+points(log(lambda),len.jack.plus,type="o",pch=20,col=5)
 points(log(lambda),len.split,type="o",pch=20,col=4)
 abline(h=len.orac,lty=2,col=2)
 legend("topleft",col=c(1,3,4,2),lty=c(1,1,1,2),
-       legend=c("Conformal","Jackknife conformal",
+       legend=c("Conformal","Jackknife conformal","Jackknife + Conformal",
          "Split conformal","Oracle"))
 
 # Plot test error
@@ -85,9 +95,10 @@ plot(log(lambda),err.conf,type="o",pch=20,
      main=paste0("Conformal + lasso (fixed lambda sequence):",
        "\nTest error"))
 points(log(lambda),err.jack,type="o",pch=20,col=3)
+points(log(lambda),err.jack.plus,type="o",pch=20,col=5)
 points(log(lambda),err.split,type="o",pch=20,col=4)
 abline(h=err.orac,lty=2,col=2)
 legend("topleft",col=c(1,3,4,2),lty=c(1,1,1,2),
-       legend=c("Conformal","Jackknife conformal",
+       legend=c("Conformal","Jackknife conformal","Jackknife + Conformal",
          "Split conformal","Oracle"))
 
