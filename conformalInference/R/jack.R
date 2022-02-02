@@ -54,7 +54,7 @@
 #' @param verbose Should intermediate progress be printed out? Default is FALSE.
 #' @param plus Should the Jaccknife+ version of the algorithm be used?
 #' This provides valid (1-2alpha)% prediction intervals, but has a higher 
-#' computational load. Default is FALSE.
+#' computational load. Default is TRUE.
 #' 
 #' @return A list with the following components: pred, lo, up, fit. The first
 #'   three are matrices of dimension n0 x m, and the last is a matrix of
@@ -93,7 +93,7 @@
 
 conformal.pred.jack = function(x, y, x0, train.fun, predict.fun, alpha=0.1, 
   special.fun=NULL, mad.train.fun=NULL, mad.predict.fun=NULL, 
-  verbose=FALSE, plus=FALSE) {
+  verbose=FALSE, plus=TRUE) {
 
   # Set up data
   x = as.matrix(x)
