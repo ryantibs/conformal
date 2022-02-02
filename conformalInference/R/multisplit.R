@@ -69,7 +69,7 @@
 #'
 #' @details This function is based on the package \code{\link{future.apply}} to
 #'  perform parallelization. If this package is not installed, then the function
-#'   will abort.
+#'   will proceed serially.
 #'
 #' @seealso \code{\link{conformal.pred.split}}
 #' @references "Multi Split Conformal Prediction" by Solari, Djordjilovic (2021).
