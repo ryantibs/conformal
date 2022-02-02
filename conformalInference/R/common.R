@@ -38,3 +38,20 @@ weighted.quantile = function(v, prob, w=NULL, sorted=FALSE) {
   if (length(i)==0) return(Inf) # Can happen with infinite weights
   else return(v[min(i)])
 }
+
+
+##Automatically switch between parallel or serial computation
+one.sapply= function(index, fun){
+  if("future.apply" %in% rownames(installed.packages()))
+    return (future.apply::future_sapply(index,fun))
+  else
+    return (sapply(index,fun))
+}
+
+
+one.lapply= function(index, fun){
+  if("future.apply" %in% rownames(installed.packages()))
+    return (future.apply::future_lapply(index,fun))
+  else
+    return (lapply(index,fun))
+}
