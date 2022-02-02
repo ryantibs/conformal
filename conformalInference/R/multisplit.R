@@ -92,6 +92,10 @@ conformal.pred.msplit = function(x, y, x0,train.fun, predict.fun, alpha=0.1,
   p = ncol(x)
   x0 = matrix(x0,ncol=p)
   n0 = nrow(x0)
+  
+  ## Is the future.apply library installed?
+  paral = "future.apply" %in% rownames(installed.packages())
+  
 
   check.args(x=x,y=y,x0=x0,alpha=alpha,train.fun=train.fun,
              predict.fun=predict.fun,mad.train.fun=mad.train.fun,
@@ -124,15 +128,15 @@ conformal.pred.msplit = function(x, y, x0,train.fun, predict.fun, alpha=0.1,
   check.pos.num(lambda)
   check.num.01(tau)
 
-
-  #Define structures for parallelization
-  future::plan(future::multisession)
-  options(future.rng.onMisuse="ignore")
-
+  if(paral){
+    #Define structures for parallelization
+    future::plan(future::multisession)
+    options(future.rng.onMisuse="ignore")
+}
 
   ## Compute the B prediction intervals
 
-    lo_up<- future.apply::future_lapply(1:B, function(bbb) {
+    lo_up<- one.lapply(1:B, function(bbb) {
 
       out<-conformal.pred.split(x, y, x0, train.fun, predict.fun,
                                             alpha=alpha*(1-tau) + (alpha*lambda)/B, rho[bbb],
@@ -151,7 +155,7 @@ conformal.pred.msplit = function(x, y, x0,train.fun, predict.fun, alpha=0.1,
   Y_lo_up=do.call(rbind, lo_up)
   m=nrow(lo_up[[1]])
   index=rep(rep(1:m),B)
-  list_mat=lapply(split(seq_along(index), index),
+  list_mat=one.lapply(split(seq_along(index), index),
                   function(m, ind) m[ind,], m = Y_lo_up)[order(unique(index))]
   lo<-  up <- matrix(NA,nrow=n0,ncol=m)
 
@@ -164,18 +168,19 @@ conformal.pred.msplit = function(x, y, x0,train.fun, predict.fun, alpha=0.1,
     upB=list_mat[[ii]][,-(1:n0)]
     Y = rbind(loB,upB)
 
-    finalInt = future.apply::future_sapply(1:n0, function(kk) interval.build(Y[,kk],B,tr))
+    finalInt = one.sapply(1:n0, function(kk) interval.build(Y[,kk],B,tr))
 
     lo[,ii]<-finalInt[1,]
     up[,ii]<-finalInt[2,]
 
   }
   
-  ## To avoid CRAN check errors
-  ## R CMD check: make sure any open connections are closed afterward
-  future::plan(future::sequential)
+  if(paral){
+    ## To avoid CRAN check errors
+    ## R CMD check: make sure any open connections are closed afterward
+    future::plan(future::sequential)
 
-
+}
 
   return(list(lo=lo,up=up))
 }
