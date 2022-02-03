@@ -78,11 +78,11 @@
 
 
 conformal.pred.msplit = function(x, y, x0,train.fun, predict.fun, alpha=0.1,
-                                 rho = NULL, w=NULL, mad.train.fun=NULL, mad.predict.fun=NULL,
+                                 rho = rep(0.5,B), w=NULL, mad.train.fun=NULL, mad.predict.fun=NULL,
                                  split=NULL, seed=NULL,
                                  verbose=FALSE,
                                  B=50,
-                                 lambda = 0,
+                                 lambda = 0.5,
                                  tau = 1-(B+1)/(2*B)) {
 
 
@@ -102,19 +102,20 @@ conformal.pred.msplit = function(x, y, x0,train.fun, predict.fun, alpha=0.1,
              mad.predict.fun=mad.predict.fun)
 
 
-  if (!is.null(seed)) set.seed(seed)
+  if (!is.null(seed)) 
+    set.seed(seed)
   else{
     seed=B
   }
   
   
   if (is.null(rho) || !is.vector(rho) || length(rho)!=B){
-    print("rho value either not provided or with uncorrent format. 0.5 is set as
-          drfault value in all the B replications!")
+    #print("rho value either not provided or with uncorrect format. 0.5 is set as
+    #      default value in all the B replications!")
     rho = rep(0.5,B)
   }
   
-  split.fit = is.matrix(split) && nrow(split) = B && ncol(split) > 0 && ncol(split) < n
+  split.fit = is.matrix(split) && (nrow(split) == B) && (ncol(split) > 0 && ncol(split) < n)
   
   if(!split.fit && !is.null(split)){
     stop("The 'split' argument should either be NULL or a matrix of dimension B x n1,
@@ -137,13 +138,17 @@ conformal.pred.msplit = function(x, y, x0,train.fun, predict.fun, alpha=0.1,
   ## Compute the B prediction intervals
 
     lo_up<- one.lapply(1:B, function(bbb) {
+      
+      prop=rho[bbb]
 
-      out<-conformal.pred.split(x, y, x0, train.fun, predict.fun,
-                                            alpha=alpha*(1-tau) + (alpha*lambda)/B, rho[bbb],
-                                            w, mad.train.fun,
-                                            mad.predict.fun,
-                                            split[bbb,], seed=seed+bbb,
-                                            verbose)
+      out<-conformal.pred.split(x=x,y= y, x0=x0, train.fun=train.fun, 
+                                predict.fun=predict.fun,
+                                alpha=alpha*(1-tau) + (alpha*lambda)/B, 
+                                split=split[bbb,],rho = prop,
+                                w=w, mad.train.fun=mad.train.fun,
+                                mad.predict.fun=mad.predict.fun,
+                                seed=seed+bbb,
+                                            verbose=verbose)
 
 
       return(cbind(t(out$lo),t(out$up)))
@@ -156,7 +161,7 @@ conformal.pred.msplit = function(x, y, x0,train.fun, predict.fun, alpha=0.1,
   m=nrow(lo_up[[1]])
   index=rep(rep(1:m),B)
   list_mat=one.lapply(split(seq_along(index), index),
-                  function(m, ind) m[ind,], m = Y_lo_up)[order(unique(index))]
+                  function(ind) Y_lo_up[ind,])[order(unique(index))]
   lo<-  up <- matrix(NA,nrow=n0,ncol=m)
 
 
@@ -186,58 +191,3 @@ conformal.pred.msplit = function(x, y, x0,train.fun, predict.fun, alpha=0.1,
 }
 
 
-
-
-#' Helper function to join each B prediction intervals
-#'
-#' For each point in x0, it combines the simulated B intervals into one.
-#'
-#'
-#' @param yyy column vector of B lower bounds and B upper bounds
-#' @param B number of replications
-#' @param tr truncation threshold for the algorithm
-
-
-
-interval.build=function(yyy,B,tr){
-
-
-
-  h=rep(1:0,each=B)
-
-  o = order(yyy,2-h)
-
-  ys <- yyy[o]
-  hs <- h[o]
-
-  count <- 0
-  leftend <- 0
-  lo<-up<-0
-
-
-  for (j in 1:(2*B) ){
-    if ( hs[j]==1 ) {
-      count <- count + 1
-
-      if ( count > tr && (count - 1) <= tr) {
-        leftend <- ys[j]
-      }
-
-    }
-
-    else {
-      if ( count > tr && (count - 1) <= tr) {
-        rightend <- ys[j]
-        lo <- leftend
-        up <- rightend
-      }
-
-      count <- count - 1
-    }
-  }
-
-
-
-
-  return(c(lo,up))
-}
