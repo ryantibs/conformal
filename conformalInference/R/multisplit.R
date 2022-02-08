@@ -173,7 +173,7 @@ conformal.pred.msplit = function(x, y, x0,train.fun, predict.fun, alpha=0.1,
     upB=list_mat[[ii]][,-(1:n0)]
     Y = rbind(loB,upB)
 
-    finalInt = one.sapply(1:n0, function(kk) interval.build(Y[,kk],B,tr))
+    finalInt = sapply(1:n0, function(kk) interval.build(Y[,kk],B,tr))
 
     lo[,ii]<-finalInt[1,]
     up[,ii]<-finalInt[2,]
