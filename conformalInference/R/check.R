@@ -55,8 +55,27 @@ check.num.01 = function(a) {
 
 ##Add check for conformal.quant
 
-check.quant=function(method=method, gamma=gamma, w=w,
-            num.grid.pts=num.grid.pts, grid.factor=grid.factor,nthreads=nthreads)  {
+check.quant=function(x=x, y=y, x0=x0, alpha=alpha,
+            mad.train.fun=mad.train.fun,mad.predict.fun=mad.predict.fun,method=method, gamma=gamma, w=w,
+            num.grid.pts=num.grid.pts, grid.factor=grid.factor,
+            nthreads=nthreads)  {
+  
+  if (is.null(x) || !is.numeric(x)) stop("x must be a numeric matrix")
+  if (is.null(y) || !is.numeric(y)) stop("y must be a numeric vector")
+  if (nrow(x) != length(y)) stop("nrow(x) and length(y) must match")
+  if (is.null(x0) || !is.numeric(x0)) stop("x0 must be a numeric matrix")
+  if (ncol(x) != ncol(x0)) stop("ncol(x) and ncol(x0) must match")
+  check.num.01(alpha)
+
+  if (!is.null(mad.train.fun) && !is.function(mad.train.fun)) 
+    stop("mad.train.fun must be a function")
+  if (!is.null(mad.predict.fun) && !is.function(mad.predict.fun)) 
+    stop("mad.predict.fun must be a function")
+  if ((!is.null(mad.train.fun) && is.null(mad.predict.fun)) ||
+      (is.null(mad.train.fun) && !is.null(mad.predict.fun)))
+    stop("mad.train.fun and mad.predict.fun must both be provided")
+
+  
   
   possible_functions=c("classic","median","scaled")
   if (is.null(method) || method %in% possible_functions==FALSE) {

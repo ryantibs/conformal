@@ -102,10 +102,9 @@ conformal.quant = function(x, y, x0, method="scaled", nthreads = 8,
   what=c(gamma,1-gamma)
   
 
-  check.args(x=x, y=y, x0=x0, alpha=alpha,
-             mad.train.fun=mad.train.fun,mad.predict.fun=mad.predict.fun)
-  
-  check.quant(method=method, gamma=gamma, w=w,
+
+  check.quant(x=x, y=y, x0=x0, alpha=alpha,
+              mad.train.fun=mad.train.fun,mad.predict.fun=mad.predict.fun,method=method, gamma=gamma, w=w,
               num.grid.pts=num.grid.pts, grid.factor=grid.factor,
               nthreads=nthreads)  
   
