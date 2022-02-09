@@ -101,9 +101,13 @@ conformal.quant = function(x, y, x0, method="scaled", nthreads = 8,
   eps = 1e-6
   what=c(gamma,1-gamma)
   
-  check.quant(x=x, y=y, x0=x0, method=method, nthreads, alpha=alpha, gamma=gamma, w=w,
-              mad.train.fun=mad.train.fun,mad.predict.fun+mad.predict.fun,
-              num.grid.pts=num.grid.pts, grid.factor=grid.factor)  
+
+  check.args(x=x, y=y, x0=x0, alpha=alpha,
+             mad.train.fun=mad.train.fun,mad.predict.fun=mad.predict.fun)
+  
+  check.quant(method=method, gamma=gamma, w=w,
+              num.grid.pts=num.grid.pts, grid.factor=grid.factor,
+              nthreads=nthreads)  
   
   # Check the weights
   if (is.null(w)) w = rep(1,n+n0)
