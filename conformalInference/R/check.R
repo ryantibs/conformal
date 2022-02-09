@@ -55,34 +55,22 @@ check.num.01 = function(a) {
 
 ##Add check for conformal.quant
 
-check.quant=function(x=x, y=y, x0=x0, method=method, nthreads, alpha=alpha, gamma=gamma, w=w,
-                     mad.train.fun=mad.train.fun,mad.predict.fun=mad.predict.fun,
-                     num.grid.pts=num.grid.pts, grid.factor=grid.factor){
+check.quant=function(method=method, gamma=gamma, w=w,
+            num.grid.pts=num.grid.pts, grid.factor=grid.factor,nthreads=nthreads)  {
   
+  possible_functions=c("classic","median","scaled")
+  if (is.null(method) || method %in% possible_functions==FALSE) {
+    stop(c("The 'method' argument is not correct. 
+             Please select one of the following:",
+           paste(possible_functions,collapse=", "),"."))
+  }
   if (length(num.grid.pts) != 1 || !is.numeric(num.grid.pts)
       || num.grid.pts <= 1 || num.grid.pts >= 1000
       || round(num.grid.pts) != num.grid.pts) {
     stop("num.grid.pts must be an integer between 1 and 1000")
     
-    if (is.null(x) || !is.numeric(x)) stop("x must be a numeric matrix")
-    if (nrow(x) != length(y)) stop("nrow(x) and length(y) must match")
-    if (is.null(x0) || !is.numeric(x0)) stop("x0 must be a numeric matrix")
-    check.num.01(gamma)
-    check.num.01(alpha)
-    if (!is.null(mad.train.fun) && !is.function(mad.train.fun)) 
-      stop("mad.train.fun must be a function")
-    if (!is.null(mad.predict.fun) && !is.function(mad.predict.fun)) 
-      stop("mad.predict.fun must be a function")
-    if ((!is.null(mad.train.fun) && is.null(mad.predict.fun)) ||
-        (is.null(mad.train.fun) && !is.null(mad.predict.fun)))
-      stop("mad.train.fun and mad.predict.fun must both be provided")
-    
-    possible_functions=c("classic","median","scaled")
-    if (is.null(method) || method %in% possible_functions==FALSE) {
-      stop(c("The 'method' argument is not correct. 
-             Please select one of the following:",
-             paste(possible_functions,collapse=", "),"."))
-    }
+   check.num.01(gamma)
+   check.pos.int(nthreads)
     
     if(!is.null(w) & length(w)!=nrow(x)+nrow(x0))
       stop("w must be either a vector of length n+no or be NULL")
