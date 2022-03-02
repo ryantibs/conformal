@@ -142,7 +142,6 @@ conformal.pred.jack = function(x, y, x0, train.fun, predict.fun, alpha=0.1,
       return(mod_jj)
   })
   
-  
 
   # Compute leave-one-out residuals with special function
   if (!is.null(special.fun) &&
@@ -150,12 +149,26 @@ conformal.pred.jack = function(x, y, x0, train.fun, predict.fun, alpha=0.1,
     res = abs(special.fun(x,y,out))
   }
   
+  
+  mad.trained<-vector('list',n)
+  # Case with modulation function
+  if (!is.null(mad.train.fun) && !is.null(mad.predict.fun)) {
+    
+    mad.trained<-one.lapply(1:n, function(i){ 
+    
+    r = abs(y[-i] - matrix(predict.fun(updated_models[[i]],x[-i,,drop=F]),
+                           nrow=n-1))
+    
+    return(one.lapply(1:m, function(l)  mad.train.fun(x[-i,,drop=F],r[,l])))
+     })
+    
+  }## mad.trained is a list  n x m
+  
+  
   # Compute leave-one-out residuals by brute-force
   else {
     
-    res = matrix(0,n,m)
-    
-      res=t(one.sapply(1:n,function(i){
+      res=t(one.sapply(1:n,function(i){ 
         
         if (verbose) {
           cat(sprintf("\r%sProcessing training point %i (of %i) ...",txt,i,n))
@@ -164,15 +177,12 @@ conformal.pred.jack = function(x, y, x0, train.fun, predict.fun, alpha=0.1,
         
         test_val = matrix(x[i,],nrow=1)
         pred_values = c(predict.fun(updated_models[[i]] ,  test_val ))
-        val=abs(y[i]- pred_values)
+        val=abs(y[i]- pred_values) ## LOO residual
         
         # Local scoring?
         if (!is.null(mad.train.fun) && !is.null(mad.predict.fun)) {
-          r = abs(y[-i] - matrix(predict.fun(updated_models[[i]],x[-i,,drop=F]),
-                                 nrow=n-1))
           for (l in 1:m) {
-            out.mad.i = mad.train.fun(x[-i,,drop=F],r[,l])
-            val[i,l] = val[i,l] / mad.predict.fun(out.mad.i,x[i,,drop=F])
+            val[i,l] = val[i,l] / mad.predict.fun(mad.trained[[i]][[l]],x[i,,drop=F])
           }
         }
         
@@ -181,37 +191,53 @@ conformal.pred.jack = function(x, y, x0, train.fun, predict.fun, alpha=0.1,
         return(val)
       }))
       
+      ##res is matrix n x m
+      
 
   }
     
 
     lo = up = matrix(0,n0,m)
+  
     
-  # Compute quantiles and intervals - JACKKNIFE +
     if(plus){
-
-    
-    lo_up = t(one.sapply(1:n0, function(ii){
       
-      #Compute new responses removing one observation from models at each time
-      mu=matrix(one.sapply(1:n, function(jj){
-        return(c(predict.fun(updated_models [[jj]],matrix(x0[ii,],nrow=1))))
-      }),nrow=n)
       
-      # Get quantiles
-
-      lo_vec=mu-res
-      up_vec=mu+res
-      lo.obs <- one.sapply(1:m, function(l) quantile(lo_vec[,l],alpha))
-      up.obs <- one.sapply(1:m, function(l) quantile(up_vec[,l],1-alpha))
+      ## First compute local scaling
+      mad.x0.vec<-one.lapply (1:m, function(l) one.sapply(1:n, function(k){
+        
+        # Local scoring?
+        if (!is.null(mad.train.fun) && !is.null(mad.predict.fun)) {
+          return(mad.predict.fun(mad.trained[[k]][[l]],x0))
+        }
+        else {
+          return(rep(1,n0))
+        }
+      })) ## it is a list of m elements, each containing a matrix n x n0
       
-      return(cbind(lo.obs,up.obs))
-    }))
-    
-    #Obtain final lo and up bound
-    lo=lo_up[,1:m]
-    up=lo_up[,(m+1) : (2*m)]
-    
+      
+      # Compute bounds
+       lo_up = t(one.sapply(1:n0, function(ii){ 
+         
+        #Compute new responses removing one observation from models at each time
+        mu=matrix(one.sapply(1:n, function(jj){
+          return(c(predict.fun(updated_models [[jj]],matrix(x0[ii,],nrow=1))))
+        }),nrow=n)  ## matrix of dim n x m
+        
+        
+        # Get quantiles
+        lo_vec<-one.sapply(1:m, function(l) mu[,l]-res[,l]*mad.x0.vec[[l]][,ii])
+        up_vec<-one.sapply(1:m, function(l) mu[,l]+res[,l]*mad.x0.vec[[l]][,ii])
+        lo.obs <- one.sapply(1:m, function(l) quantile(lo_vec[,l],alpha))
+        up.obs <- one.sapply(1:m, function(l) quantile(up_vec[,l],1-alpha))
+        
+        return(cbind(lo.obs,up.obs))
+      }))
+      
+      #Obtain final lo and up bound
+      lo=lo_up[,1:m]
+      up=lo_up[,(m+1) : (2*m)]
+      
     }
     
     
