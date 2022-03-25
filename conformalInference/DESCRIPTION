@@ -3,8 +3,15 @@ Type: Package
 Title: Tools for conformal inference in regression
 Version: 1.1
 Date: 2019-04-17
-Author: Ryan Tibshirani
-Maintainer: Ryan Tibshirani <ryantibs@scmu.edu>
+Authors@R: c(
+    person(given="Ryan", family= "Tibshirani", role =c( "aut","cre"),
+    email="ryantibs@scmu.edu"),
+    person("Jacopo", "Diquigiovanni", role = "aut"),
+    person("Matteo", "Fontana", role = "aut"),
+    person("Aldo", "Solari", role = "aut"),
+    person("Simone", "Vantini", role = "aut"),
+    person("Paolo", "Vergottini",role = "aut")
+    )
 Depends:
 Suggests:
     glmnet,
