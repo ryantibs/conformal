@@ -43,7 +43,6 @@
 #'   data-split to be used. Default is NULL, which effectively sets no seed.
 #'   If both split and seed are passed, the former takes priority and the latter
 #'   is ignored.
-#' @param verbose Should intermediate progress be printed out? Default is FALSE.
 #' @param B number of replications. Default is 50.
 #' @param lambda Smoothing parameter. Default is 0.
 #' @param tau It is a smoothing parameter, whose value affects the behavior of the
@@ -51,6 +50,7 @@
 #'     tau=1-1/B  Bonferroni intersection method
 #'     tau=0 unadjusted intersection
 #' Default is 1-(B+1)/(2*B).
+#' @param verbose Should intermediate progress be printed out? Default is FALSE.
 #'
 #' @return A list with the following components: lo, up. They are matrices of
 #'  dimension n0 x m. Recall that n0 is the number of rows of x0, and m is the
@@ -67,7 +67,7 @@
 #'   functions train.fun and predict.fun, over a set of m = 5 tuning parameter
 #'   values, instead of calling the conformal function separately m = 5 times.
 #'
-#' @details This function is based on the package \code{\link{future.apply}} to
+#'  This function is based on the package \code{\link{future.apply}} to
 #'  perform parallelization. If this package is not installed, then the function
 #'   will proceed serially.
 #'
@@ -78,12 +78,10 @@
 
 
 conformal.pred.msplit = function(x, y, x0,train.fun, predict.fun, alpha=0.1,
-                                 rho = rep(0.5,B), w=NULL, mad.train.fun=NULL, mad.predict.fun=NULL,
-                                 split=NULL, seed=NULL,
-                                 verbose=FALSE,
-                                 B=50,
-                                 lambda = 0.5,
-                                 tau = 1-(B+1)/(2*B)) {
+                                 rho = rep(0.5,B), w=NULL, mad.train.fun=NULL, 
+                                 mad.predict.fun=NULL,split=NULL, seed=NULL,
+                                 B=50,lambda = 0.5,tau = 1-(B+1)/(2*B),
+                                 verbose=FALSE) {
 
 
   x = as.matrix(x)
@@ -94,7 +92,7 @@ conformal.pred.msplit = function(x, y, x0,train.fun, predict.fun, alpha=0.1,
   n0 = nrow(x0)
   
   ## Is the future.apply library installed?
-  paral = "future.apply" %in% rownames(installed.packages())
+  paral = requireNamespace("future.apply", quietly=TRUE)
   
 
   check.args(x=x,y=y,x0=x0,alpha=alpha,train.fun=train.fun,
@@ -115,7 +113,8 @@ conformal.pred.msplit = function(x, y, x0,train.fun, predict.fun, alpha=0.1,
     rho = rep(0.5,B)
   }
   
-  split.fit = is.matrix(split) && (nrow(split) == B) && (ncol(split) > 0 && ncol(split) < n)
+  split.fit = is.matrix(split) && (nrow(split) == B) && 
+    (ncol(split) > 0 && ncol(split) < n)
   
   if(!split.fit && !is.null(split)){
     stop("The 'split' argument should either be NULL or a matrix of dimension B x n1,
@@ -151,17 +150,17 @@ conformal.pred.msplit = function(x, y, x0,train.fun, predict.fun, alpha=0.1,
                                             verbose=verbose)
 
 
-      return(cbind(t(out$lo),t(out$up)))
+      return(cbind(t(out$lo),t(out$up),1:m))
     })
 
 
   # Redefine the appropriate data structures
-
+    
   Y_lo_up=do.call(rbind, lo_up)
   m=nrow(lo_up[[1]])
-  index=rep(rep(1:m),B)
+  index=Y_lo_up[,ncol(Y_lo_up)]
   list_mat=one.lapply(split(seq_along(index), index),
-                  function(ind) Y_lo_up[ind,])[order(unique(index))]
+                  function(ind) Y_lo_up[ind,-(ncol(Y_lo_up))])[order(unique(index))]
   lo<-  up <- matrix(NA,nrow=n0,ncol=m)
 
 
