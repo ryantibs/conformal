@@ -45,7 +45,7 @@ weighted.quantile = function(v, prob, w=NULL, sorted=FALSE) {
 
 
 one.sapply= function(index, fun){
-  if("future.apply" %in% rownames(installed.packages()))
+  if(requireNamespace("future.apply", quietly=TRUE))
     return (future.apply::future_sapply(index,fun))
   else
     return (sapply(index,fun))
@@ -53,7 +53,7 @@ one.sapply= function(index, fun){
 
 
 one.lapply= function(index, fun){
-  if("future.apply" %in% rownames(installed.packages()))
+  if(requireNamespace("future.apply", quietly=TRUE))
     return (future.apply::future_lapply(index,fun))
   else
     return (lapply(index,fun))
