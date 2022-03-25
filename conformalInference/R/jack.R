@@ -1,4 +1,4 @@
-#' Jackknife or Jackknife + conformal prediction intervals.
+#' Jackknife or Jackknife+ conformal prediction intervals.
 #'
 #' Compute prediction intervals using a jackknife variant of conformal
 #'   inference.
@@ -51,10 +51,10 @@
 #'   usual (unscaled) conformal score is used.
 #' @param alpha Miscoverage level for the prediction intervals, i.e., intervals
 #'   with coverage 1-alpha are formed. Default for alpha is 0.1.
-#' @param verbose Should intermediate progress be printed out? Default is FALSE.
-#' @param plus Should the Jaccknife+ version of the algorithm be used?
+#' @param plus Should the jackknife+ version of the algorithm be used?
 #' This provides valid (1-2alpha)% prediction intervals, but has a higher 
 #' computational load. Default is TRUE.
+#' @param verbose Should intermediate progress be printed out? Default is FALSE.
 #' 
 #' @return A list with the following components: pred, lo, up, fit. The first
 #'   three are matrices of dimension n0 x m, and the last is a matrix of
@@ -84,7 +84,7 @@
 #'   \code{\link{conformal.pred.split}}, \code{\link{conformal.pred.roo}}
 #' @references "Distribution-Free Predictive Inference for Regression" by Lei,
 #'   G'Sell, Rinaldo, Tibshirani, Wasserman (2018). "Predictive Inference with the 
-#'   Jacknife+" by Barber,Candès, Ramdas, Tibshirani (2021).
+#'   Jackknife+" by Barber, Candès, Ramdas, Tibshirani (2021).
 #'   
 #' @examples ## See examples for conformal.pred function
 #' @export conformal.pred.jack
@@ -92,8 +92,8 @@
 #' 
 
 conformal.pred.jack = function(x, y, x0, train.fun, predict.fun, alpha=0.1, 
-  special.fun=NULL, mad.train.fun=NULL, mad.predict.fun=NULL, 
-  verbose=FALSE, plus=TRUE) {
+  special.fun=NULL, mad.train.fun=NULL, mad.predict.fun=NULL, plus=TRUE,
+  verbose=FALSE) {
 
   # Set up data
   x = as.matrix(x)
@@ -102,7 +102,7 @@ conformal.pred.jack = function(x, y, x0, train.fun, predict.fun, alpha=0.1,
   p = ncol(x)
   x0 = matrix(x0,ncol=p)
   n0 = nrow(x0)
-  paral = "future.apply" %in% rownames(installed.packages())
+  paral = requireNamespace("future.apply", quietly=TRUE)
   
   # Check input arguments
   check.args(x=x,y=y,x0=x0,alpha=alpha,train.fun=train.fun,
@@ -110,9 +110,7 @@ conformal.pred.jack = function(x, y, x0, train.fun, predict.fun, alpha=0.1,
              mad.predict.fun=mad.predict.fun,special.fun=special.fun)
   
   #Check on plus argument
-  
-  if(!is.logical(plus))
-    stop("The argument 'plus' should be a logical \n")
+  check.bool(plus)
   
   # Users may pass in a string for the verbose argument
   if (verbose == TRUE) txt = ""
@@ -136,36 +134,24 @@ conformal.pred.jack = function(x, y, x0, train.fun, predict.fun, alpha=0.1,
   pred = matrix(predict.fun(out,x0),nrow=n0)
   m = ncol(pred)
   
+  
+  
   # Compute models removing one observation each time
-  updated_models = one.lapply(1:n,function(jj){
-      mod_jj = train.fun(x[-jj,],y[-jj])
-      return(mod_jj)
+  if(!plus & !is.null(special.fun)){
+    updated_models = one.lapply(1:n,function(jj){
+        mod_jj = train.fun(x[-jj,],y[-jj])
+        return(mod_jj)
   })
+  }
   
 
   # Compute leave-one-out residuals with special function
-  if (!is.null(special.fun) &&
-      (is.null(mad.train.fun) && is.null(mad.predict.fun))) {
+  if (!is.null(special.fun)) {
     res = abs(special.fun(x,y,out))
   }
   
   
-  mad.trained<-vector('list',n)
-  # Case with modulation function
-  if (!is.null(mad.train.fun) && !is.null(mad.predict.fun)) {
-    
-    mad.trained<-one.lapply(1:n, function(i){ 
-    
-    r = abs(y[-i] - matrix(predict.fun(updated_models[[i]],x[-i,,drop=F]),
-                           nrow=n-1))
-    
-    return(one.lapply(1:m, function(l)  mad.train.fun(x[-i,,drop=F],r[,l])))
-     })
-    
-  }## mad.trained is a list  n x m
-  
-  
-  # Compute leave-one-out residuals by brute-force
+  # Else compute leave-one-out residuals by brute-force
   else {
     
       res=t(one.sapply(1:n,function(i){ 
@@ -175,14 +161,14 @@ conformal.pred.jack = function(x, y, x0, train.fun, predict.fun, alpha=0.1,
           flush.console()
         }
         
-        test_val = matrix(x[i,],nrow=1)
-        pred_values = c(predict.fun(updated_models[[i]] ,  test_val ))
+        pred_values = c(predict.fun(updated_models[[i]] , matrix(x[i,],nrow=1)))
         val=abs(y[i]- pred_values) ## LOO residual
         
         # Local scoring?
         if (!is.null(mad.train.fun) && !is.null(mad.predict.fun)) {
           for (l in 1:m) {
-            val[i,l] = val[i,l] / mad.predict.fun(mad.trained[[i]][[l]],x[i,,drop=F])
+            mad.model<-mad.train.fun(x[-i,,drop=F],res[,l])
+            val[i,l] = val[i,l] / mad.predict.fun(mad.model,x[i,,drop=F])
           }
         }
         
@@ -190,12 +176,9 @@ conformal.pred.jack = function(x, y, x0, train.fun, predict.fun, alpha=0.1,
         
         return(val)
       }))
-      
       ##res is matrix n x m
-      
-
   }
-    
+  
 
     lo = up = matrix(0,n0,m)
   
@@ -208,7 +191,8 @@ conformal.pred.jack = function(x, y, x0, train.fun, predict.fun, alpha=0.1,
         
         # Local scoring?
         if (!is.null(mad.train.fun) && !is.null(mad.predict.fun)) {
-          return(mad.predict.fun(mad.trained[[k]][[l]],x0))
+          mad.model<-mad.train.fun(x[-k,,drop=F],res[,l])
+          return(mad.predict.fun(mad.model,x0))
         }
         else {
           return(rep(1,n0))
@@ -228,8 +212,10 @@ conformal.pred.jack = function(x, y, x0, train.fun, predict.fun, alpha=0.1,
         # Get quantiles
         lo_vec<-one.sapply(1:m, function(l) mu[,l]-res[,l]*mad.x0.vec[[l]][,ii])
         up_vec<-one.sapply(1:m, function(l) mu[,l]+res[,l]*mad.x0.vec[[l]][,ii])
-        lo.obs <- one.sapply(1:m, function(l) quantile(lo_vec[,l],alpha))
-        up.obs <- one.sapply(1:m, function(l) quantile(up_vec[,l],1-alpha))
+        lo.obs <- one.sapply(1:m, function(l) quantile(lo_vec[,l],
+                                                       floor((n+1)*alpha)/n))
+        up.obs <- one.sapply(1:m, function(l) quantile(up_vec[,l],
+                                                       ceil((n+1)*(1-alpha))/n))
         
         return(cbind(lo.obs,up.obs))
       }))
