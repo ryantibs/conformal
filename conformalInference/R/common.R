@@ -38,3 +38,11 @@ weighted.quantile = function(v, prob, w=NULL, sorted=FALSE) {
   if (length(i)==0) return(Inf) # Can happen with infinite weights
   else return(v[min(i)])
 }
+
+##Add progress bar to sapply
+pbar.sapply= function(index, fun){
+  if("pbapply" %in% rownames(installed.packages()))
+    return (pbapply::pbsapply(index,fun))
+  else
+    return (sapply(index,fun))
+}

@@ -52,3 +52,50 @@ check.num.01 = function(a) {
   if (is.null(a) || length(a)!= 1 || !is.numeric(a) || a<0 || a>1)
     stop(paste(deparse(substitute(a)),"must be a number between 0 and 1"))
 }
+
+##Add check for conformal.quant
+
+check.quant=function(x=x, y=y, x0=x0, alpha=alpha,
+            mad.train.fun=mad.train.fun,mad.predict.fun=mad.predict.fun,method=method, gamma=gamma, w=w,
+            num.grid.pts=num.grid.pts, grid.factor=grid.factor,
+            nthreads=nthreads)  {
+  
+  if (is.null(x) || !is.numeric(x)) stop("x must be a numeric matrix")
+  if (is.null(y) || !is.numeric(y)) stop("y must be a numeric vector")
+  if (nrow(x) != length(y)) stop("nrow(x) and length(y) must match")
+  if (is.null(x0) || !is.numeric(x0)) stop("x0 must be a numeric matrix")
+  if (ncol(x) != ncol(x0)) stop("ncol(x) and ncol(x0) must match")
+  check.num.01(alpha)
+
+  if (!is.null(mad.train.fun) && !is.function(mad.train.fun)) 
+    stop("mad.train.fun must be a function")
+  if (!is.null(mad.predict.fun) && !is.function(mad.predict.fun)) 
+    stop("mad.predict.fun must be a function")
+  if ((!is.null(mad.train.fun) && is.null(mad.predict.fun)) ||
+      (is.null(mad.train.fun) && !is.null(mad.predict.fun)))
+    stop("mad.train.fun and mad.predict.fun must both be provided")
+
+  
+  
+  possible_functions=c("classic","median","scaled")
+  if (is.null(method) || method %in% possible_functions==FALSE) {
+    stop(c("The 'method' argument is not correct. 
+             Please select one of the following:",
+           paste(possible_functions,collapse=", "),"."))
+  }
+  if (length(num.grid.pts) != 1 || !is.numeric(num.grid.pts)
+      || num.grid.pts <= 1 || num.grid.pts >= 1000
+      || round(num.grid.pts) != num.grid.pts) {
+    stop("num.grid.pts must be an integer between 1 and 1000")
+    
+   check.num.01(gamma)
+   check.pos.int(nthreads)
+    
+    if(!is.null(w) & length(w)!=nrow(x)+nrow(x0))
+      stop("w must be either a vector of length n+no or be NULL")
+    
+  }
+  check.pos.num(grid.factor)
+  
+  
+}
