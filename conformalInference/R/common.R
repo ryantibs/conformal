@@ -42,7 +42,7 @@ weighted.quantile = function(v, prob, w=NULL, sorted=FALSE) {
 
 ##Automatically switch between parallel or serial computation
 one.sapply= function(index, fun){
-  if("future.apply" %in% rownames(installed.packages()))
+  if(requireNamespace("future.apply", quietly=TRUE))
     return (future.apply::future_sapply(index,fun))
   else
     return (sapply(index,fun))
@@ -50,7 +50,7 @@ one.sapply= function(index, fun){
 
 
 one.lapply= function(index, fun){
-  if("future.apply" %in% rownames(installed.packages()))
+  if(requireNamespace("future.apply", quietly=TRUE))
     return (future.apply::future_lapply(index,fun))
   else
     return (lapply(index,fun))
@@ -66,19 +66,12 @@ one.lapply= function(index, fun){
 #' @param B number of replications
 #' @param tr truncation threshold for the algorithm
 
-
-
 interval.build=function(yyy,B,tr){
   
-  
-  
   h=rep(1:0,each=B)
-  
   o = order(yyy,2-h)
-  
   ys <- yyy[o]
   hs <- h[o]
-  
   count <- 0
   leftend <- 0
   lo<-up<-0
@@ -86,12 +79,12 @@ interval.build=function(yyy,B,tr){
   
   for (j in 1:(2*B) ){
     if ( hs[j]==1 ) {
+      
       count <- count + 1
       
       if ( count > tr && (count - 1) <= tr) {
         leftend <- ys[j]
       }
-      
     }
     
     else {
@@ -104,9 +97,6 @@ interval.build=function(yyy,B,tr){
       count <- count - 1
     }
   }
-  
-  
-  
   
   return(c(lo,up))
 }
