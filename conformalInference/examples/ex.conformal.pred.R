@@ -26,11 +26,10 @@ out.conf = conformal.pred(x, y, x0, alpha=0.1,
   train.fun=funs$train, predict.fun=funs$predict, verb=TRUE)
 
 out.jack = conformal.pred.jack(x, y, x0, alpha=0.1,
-  train.fun=funs$train, predict.fun=funs$predict)
+  train.fun=funs$train, predict.fun=funs$predict, plus=FALSE)
 
 out.jack.plus = conformal.pred.jack(x, y, x0, alpha=0.1,
-                               train.fun=funs$train, predict.fun=funs$predict,
-                               plus=TRUE)
+                               train.fun=funs$train, predict.fun=funs$predict)
 
 out.split = conformal.pred.split(x, y, x0, alpha=0.1, seed=0,
   train.fun=funs$train, predict.fun=funs$predict)
