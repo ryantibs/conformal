@@ -39,8 +39,8 @@ weighted.quantile = function(v, prob, w=NULL, sorted=FALSE) {
   else return(v[min(i)])
 }
 
-##Automatically switch between parallel or serial computation
 
+##Automatically switch between parallel or serial computation
 one.sapply= function(index, fun){
   if(requireNamespace("future.apply", quietly=TRUE))
     return (future.apply::future_sapply(index,fun))
@@ -55,3 +55,49 @@ one.lapply= function(index, fun){
   else
     return (lapply(index,fun))
 }
+
+
+
+#' Helper function to join each B prediction intervals in Multi Split
+#' For each point in x0, it combines the simulated B intervals into one.
+#'
+#'
+#' @param yyy column vector of B lower bounds and B upper bounds
+#' @param B number of replications
+#' @param tr truncation threshold for the algorithm
+
+interval.build=function(yyy,B,tr){
+  
+  h=rep(1:0,each=B)
+  o = order(yyy,2-h)
+  ys <- yyy[o]
+  hs <- h[o]
+  count <- 0
+  leftend <- 0
+  lo<-up<-0
+  
+  
+  for (j in 1:(2*B) ){
+    if ( hs[j]==1 ) {
+      
+      count <- count + 1
+      
+      if ( count > tr && (count - 1) <= tr) {
+        leftend <- ys[j]
+      }
+    }
+    
+    else {
+      if ( count > tr && (count - 1) <= tr) {
+        rightend <- ys[j]
+        lo <- leftend
+        up <- rightend
+      }
+      
+      count <- count - 1
+    }
+  }
+  
+  return(c(lo,up))
+}
+
