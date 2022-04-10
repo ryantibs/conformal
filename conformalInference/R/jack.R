@@ -109,8 +109,10 @@ conformal.pred.jack = function(x, y, x0, train.fun, predict.fun, alpha=0.1,
              predict.fun=predict.fun,mad.train.fun=mad.train.fun,
              mad.predict.fun=mad.predict.fun,special.fun=special.fun)
   
-  #Check on plus argument
+  # Check on plus argument
   check.bool(plus)
+  # Do i need to compute the updated models?
+  need.update = plus || is.null(special.fun) 
   
   # Users may pass in a string for the verbose argument
   if (verbose == TRUE) txt = ""
@@ -124,7 +126,6 @@ conformal.pred.jack = function(x, y, x0, train.fun, predict.fun, alpha=0.1,
     future::plan(future::multisession)
     options(future.rng.onMisuse="ignore") 
   }
-    
 
   if (verbose) cat(sprintf("%sInitial training on full data set ...\n",txt))
   
@@ -133,27 +134,34 @@ conformal.pred.jack = function(x, y, x0, train.fun, predict.fun, alpha=0.1,
   fit = matrix(predict.fun(out,x),nrow=n)
   pred = matrix(predict.fun(out,x0),nrow=n0)
   m = ncol(pred)
+  lo = up = matrix(0,n0,m)
   
-  
+  ## COMPUTATION of RESIDUALS
   
   # Compute models removing one observation each time
-  if(!plus & !is.null(special.fun)){
+  if(need.update){
     updated_models = one.lapply(1:n,function(jj){
         mod_jj = train.fun(x[-jj,],y[-jj])
         return(mod_jj)
-  })
+    })
   }
   
 
   # Compute leave-one-out residuals with special function
   if (!is.null(special.fun)) {
     res = abs(special.fun(x,y,out))
+    
+    # Local scoring?
+    if (!is.null(mad.train.fun) && !is.null(mad.predict.fun)) {
+      for (l in 1:m) {
+        mad.model<-mad.train.fun(x[-i,,drop=F],res[,l])
+        res[i,l] = res[i,l] / mad.predict.fun(mad.model,x[i,,drop=F])
+      }
+    }
   }
-  
-  
   # Else compute leave-one-out residuals by brute-force
   else {
-    
+
       res=t(one.sapply(1:n,function(i){ 
         
         if (verbose) {
@@ -167,7 +175,7 @@ conformal.pred.jack = function(x, y, x0, train.fun, predict.fun, alpha=0.1,
         # Local scoring?
         if (!is.null(mad.train.fun) && !is.null(mad.predict.fun)) {
           for (l in 1:m) {
-            mad.model<-mad.train.fun(x[-i,,drop=F],res[,l])
+            mad.model<-mad.train.fun(x[-i,,drop=F],val[,l])
             val[i,l] = val[i,l] / mad.predict.fun(mad.model,x[i,,drop=F])
           }
         }
@@ -176,16 +184,13 @@ conformal.pred.jack = function(x, y, x0, train.fun, predict.fun, alpha=0.1,
         
         return(val)
       }))
-      ##res is matrix n x m
   }
   
-
-    lo = up = matrix(0,n0,m)
   
-    
-    if(plus){
-      
-      
+   
+  # CASE JACKKNIFE+ 
+  if(plus){
+
       ## First compute local scaling
       mad.x0.vec<-one.lapply (1:m, function(l) one.sapply(1:n, function(k){
         
@@ -197,13 +202,12 @@ conformal.pred.jack = function(x, y, x0, train.fun, predict.fun, alpha=0.1,
         else {
           return(rep(1,n0))
         }
-      })) ## it is a list of m elements, each containing a matrix n x n0
+      })) ## a list of m elements, each containing a matrix n x n0
       
-      
-      # Compute bounds
+       # Compute bounds
        lo_up = t(one.sapply(1:n0, function(ii){ 
          
-        #Compute new responses removing one observation from models at each time
+        # Compute new responses removing one observation from models at each time
         mu=matrix(one.sapply(1:n, function(jj){
           return(c(predict.fun(updated_models [[jj]],matrix(x0[ii,],nrow=1))))
         }),nrow=n)  ## matrix of dim n x m
@@ -215,20 +219,18 @@ conformal.pred.jack = function(x, y, x0, train.fun, predict.fun, alpha=0.1,
         lo.obs <- one.sapply(1:m, function(l) quantile(lo_vec[,l],
                                                        floor((n+1)*alpha)/n))
         up.obs <- one.sapply(1:m, function(l) quantile(up_vec[,l],
-                                                       ceil((n+1)*(1-alpha))/n))
+                                                       ceiling((n+1)*(1-alpha))/n))
         
         return(cbind(lo.obs,up.obs))
       }))
       
-      #Obtain final lo and up bound
+      # Obtain final lo and up bound
       lo=lo_up[,1:m]
       up=lo_up[,(m+1) : (2*m)]
-      
-    }
-    
-    
-    # Compute quantiles and intervals - JACKKNIFE
-    else{
+  }
+  # CASE JACKKNIFE
+  else{
+
       for (l in 1:m) {
         # Local scoring?
         if (!is.null(mad.train.fun) && !is.null(mad.predict.fun)) {
@@ -243,15 +245,16 @@ conformal.pred.jack = function(x, y, x0, train.fun, predict.fun, alpha=0.1,
       q = quantile(res[,l],1-alpha)
       lo[,l] = pred[,l] - q * mad.x0
       up[,l] = pred[,l] + q * mad.x0
+      }
   }
-    }
     
     
-    if(paral){
+  # Remove parallel structure
+  if(paral){
       ## To avoid CRAN check errors
       ## R CMD check: make sure any open connections are closed afterward
       future::plan(future::sequential)
-    }
+  }
     
     
   
