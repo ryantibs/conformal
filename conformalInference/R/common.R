@@ -41,9 +41,6 @@ weighted.quantile = function(v, prob, w=NULL, sorted=FALSE) {
 
 ##Automatically switch between parallel or serial computation
 
-
-
-
 one.sapply= function(index, fun){
   if(requireNamespace("future.apply", quietly=TRUE))
     return (future.apply::future_sapply(index,fun))
