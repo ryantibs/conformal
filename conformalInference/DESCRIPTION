@@ -6,7 +6,7 @@ Date: 2019-04-17
 Authors@R: c(
     person(given = "Ryan", family = "Tibshirani", role = c("aut", "cre"),
            email = "ryantibs@cmu.edu"),
-    person(given = "Paolo", family = "Vergottini", role = "aut")
+    person(given = "Paolo", family = "Vergottini", role = "aut"),
     person(given = "Matteo", family = "Fontana", role = "aut",
            email = "matteo.fontana@ec.europa.eu"),
     person(given = "Jacopo", family = "Diquigiovanni", role = "aut"),
