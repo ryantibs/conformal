@@ -308,6 +308,8 @@ get.signif.code = function(v) {
 
 ###############################################################################
 
+#' Extension to right-censored data.
+#' 
 #' Variable importance via median excess test error
 #'
 #' Compute confidence intervals for median excess test error due to 

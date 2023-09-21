@@ -163,7 +163,10 @@ conformal.pred.split = function(x, y, x0, train.fun, predict.fun, alpha=0.1,
   return(list(pred=pred,lo=lo,up=up,fit=fit,split=i1))
 }
 
+###############################################################################
 
+#' Extension to right-censored data.
+#' 
 #' Split conformal prediction intervals for right-censored data.
 #' 
 #' Compute prediction intervals for predictions of the restricted time-to-event

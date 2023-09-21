@@ -177,7 +177,10 @@ conformal.pred.roo = function(x, y, train.fun, predict.fun, alpha=0.1,
               fit.all=fit.all,out.all=out.all))
 }
 
+###############################################################################
 
+#' Extension to right-censored data.
+#' 
 #' In-sample IPCW split conformal prediction intervals. 
 #'
 #' Compute prediction intervals for predictions of the restricted time-to-event, 
