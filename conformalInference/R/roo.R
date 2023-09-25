@@ -182,8 +182,8 @@ conformal.pred.roo = function(x, y, train.fun, predict.fun, alpha=0.1,
 #' In-sample split conformal prediction intervals for right-censored data.
 #'
 #' Compute prediction intervals for for restricted time-to-events based on right-
-#' censored data, having asymptotically valid in-sample coverage, using rank-
-#' one-out (ROO) split conformal inference. 
+#' censored data, having asymptotically valid in-sample coverage, using IPCW
+#' rank-one-out (ROO) split conformal inference. 
 #'
 #' @param x Matrix of features, of dimension (say) n x p.
 #' @param t Vector of responses (observed times), of length (say) n.

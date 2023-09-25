@@ -101,8 +101,8 @@ A list with the following components: pred, lo, up, fit, split,
 }
 \description{
 Compute prediction intervals for for restricted time-to-events based on right-
-censored data, having asymptotically valid in-sample coverage, using rank-
-one-out (ROO) split conformal inference.
+censored data, having asymptotically valid in-sample coverage, using IPCW
+rank-one-out (ROO) split conformal inference.
 }
 \references{
 "Distribution-Free Predictive Inference for Regression" by Lei,
