@@ -19,3 +19,19 @@ Conformal inference is a framework for converting any pre-chosen estimator of
   \code{\link{conformal.pred.split}} (wider intervals, but much more
   efficient).
 }
+\author{
+\strong{Maintainer}: Ryan Tibshirani \email{ryantibs@cmu.edu}
+
+Authors:
+\itemize{
+  \item Jacopo Diquigiovanni
+  \item Matteo Fontana
+  \item Paolo Vergottini
+}
+
+Other contributors:
+\itemize{
+  \item Aldo Solari [contributor]
+}
+
+}
