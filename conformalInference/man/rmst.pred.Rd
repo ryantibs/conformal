@@ -147,10 +147,11 @@ and evaluation of (local and global) variable importance.
 \details{
 Analysis framework of one or more restricted mean survival time
   estimation model(s). Details are given in the descriptions of functions
-  roo.surv, loco.roo.surv and loco.surv. The bias of computing residuals on 
-  observed censored times is corrected by using censoring weights. 
-  Convergence guarantees for global variable importance currently hold only 
-  if the Kaplan-Meier estimator is used to compute censoring weights.
+  conformal.pred.roo.surv, loco.roo.surv and loco.surv. The bias of 
+  computing residuals on observed censored times is corrected by using 
+  censoring weights. Convergence guarantees for global variable importance 
+  currently hold only if the Kaplan-Meier estimator is used to compute 
+  censoring weights.
 }
 \references{
 See "Distribution-Free Predictive Inference for Regression" by 
@@ -160,6 +161,6 @@ See "Distribution-Free Predictive Inference for Regression" by
   Perduca, Bouaziz (2023) for the extension to right-censored data.
 }
 \seealso{
-\code{\link{roo.surv}}, \code{\link{loco.roo.surv}}, 
+\code{\link{conformal.pred.roo.surv}}, \code{\link{loco.roo.surv}}, 
   \code{\link{loco.surv}}
 }
