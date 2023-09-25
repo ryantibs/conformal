@@ -370,7 +370,6 @@ loco.roo.surv = function(x, t, d, tau, train.fun, predict.fun, w=NULL,
       
       # Get predictions on the other, without variable
       pred.j = matrix(predict.fun(out.j,x[i2,-vars[j],drop=F],tau),nrow=n2)
-      preds[i2,j,] = pred.j
       
       # Get the conformal intervals for differences in the residuals
       a = conformal.diff.int(pred[i2,,drop=F],pred.j,
