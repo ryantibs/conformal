@@ -1,5 +1,5 @@
-#' Training Evaluating Time to 
-#'   Event Predictions using the Restricted Mean Survival Time
+#' Training Evaluating Time to Event Predictions using the Restricted Mean 
+#' Survival Time
 #'   
 #' Evaluation of a learning algorithm for the restricted mean survival time. 
 #' Estimation of its mean squared error, computation of prediction intervals and
