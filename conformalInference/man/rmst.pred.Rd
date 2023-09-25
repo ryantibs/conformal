@@ -2,11 +2,7 @@
 % Please edit documentation in R/rmst.pred.R
 \name{rmst.pred}
 \alias{rmst.pred}
-\title{Evaluating predictions of a Restricted Mean Survival Time estimator
-  
-Evaluation of a learning algorithm for the restricted mean survival time. 
-Estimation of its mean squared error, computation of prediction intervals and
-evaluation of (local and global) variable importance.}
+\title{Evaluating predictions of a Restricted Mean Survival Time estimator}
 \usage{
 rmst.pred(
   x,
@@ -144,11 +140,9 @@ A list with the following components: x, split, mse, out.roo.surv,
   roo.surv, loco.roo.surv and loco.surv.
 }
 \description{
-Evaluating predictions of a Restricted Mean Survival Time estimator
-  
 Evaluation of a learning algorithm for the restricted mean survival time. 
-Estimation of its mean squared error, computation of prediction intervals and
-evaluation of (local and global) variable importance.
+Estimation of its mean squared error, computation of prediction intervals, 
+and evaluation of (local and global) variable importance.
 }
 \details{
 Analysis framework of one or more restricted mean survival time

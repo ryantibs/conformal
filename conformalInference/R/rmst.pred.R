@@ -1,8 +1,8 @@
 #' Evaluating predictions of a Restricted Mean Survival Time estimator
-#'   
+#' 
 #' Evaluation of a learning algorithm for the restricted mean survival time. 
-#' Estimation of its mean squared error, computation of prediction intervals and
-#' evaluation of (local and global) variable importance.
+#' Estimation of its mean squared error, computation of prediction intervals, 
+#' and evaluation of (local and global) variable importance.
 #'
 #' @param x Matrix of variables, of dimension (say) n x p.
 #' @param t Vector of responses (observed times), of length (say) n.
