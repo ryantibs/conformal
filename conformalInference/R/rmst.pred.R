@@ -94,6 +94,9 @@
 #'   observed censored times is corrected by using censoring weights. 
 #'   Convergence guarantees for global variable importance currently hold only 
 #'   if the Kaplan-Meier estimator is used to compute censoring weights.
+#'   
+#' @seealso \code{\link{roo.surv}}, \code{\link{loco.roo.surv}}, 
+#'   \code{\link{loco.surv}}
 #'
 #' @references See "Distribution-Free Predictive Inference for Regression" by 
 #'   Lei, G'Sell, Rinaldo, Tibshirani, Wasserman (2018) as a reference for 

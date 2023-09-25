@@ -159,3 +159,7 @@ See "Distribution-Free Predictive Inference for Regression" by
   Event Predictions using the Restricted Mean Survival Time" by Cwiling, 
   Perduca, Bouaziz (2023) for the extension to right-censored data.
 }
+\seealso{
+\code{\link{roo.surv}}, \code{\link{loco.roo.surv}}, 
+  \code{\link{loco.surv}}
+}
