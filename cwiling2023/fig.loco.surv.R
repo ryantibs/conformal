@@ -2,7 +2,9 @@
 # LIBRARIES #
 #############
 
-setwd("~/GitHub/RMST_predictor")
+library(devtools)
+install_github(repo="ariane-cwi/conformal", subdir="conformalInference")
+
 libraries_sources = function(){
   library(survival)
   library(FastPseudo)
@@ -13,22 +15,14 @@ libraries_sources = function(){
   library(gridExtra)
   library(haven)
   library(devtools)
-  library(MIMICbook)
   library(knitr)
   library(Hmisc)
   library(parallel)
-  source("RMSTpredictor/IPCW.R")
-  source("RMSTpredictor/check.surv.R")
-  source("RMSTpredictor/split.surv.R")
-  source("RMSTpredictor/roo.surv.R")
-  source("RMSTpredictor/loco.roo.surv.R")
-  source("RMSTpredictor/loco.surv.R")
-  source("RMSTpredictor/rmst.pred.R")
-  source("RMSTpredictor/glmnet.surv.R")
-  source("RMSTpredictor/common.R")
+  library(conformalInference)
 }
 libraries_sources()
 
+setwd("~/GitHub/conformal/cwiling2023")
 
 ########################
 # SIMULATION FUNCTIONS #
@@ -195,18 +189,9 @@ parallelisation_init = function(){
     library(gridExtra)
     library(haven)
     library(devtools)
-    library(MIMICbook)
     library(knitr)
     library(Hmisc)
-    source("~/A Thèse/Code/IPCW.R")
-    source("~/GitHub/RMST_predictor/RMSTpredictor/check.surv.R")
-    source("~/GitHub/RMST_predictor/RMSTpredictor/split.surv.R")
-    source("~/GitHub/RMST_predictor/RMSTpredictor/roo.surv.R")
-    source("~/GitHub/RMST_predictor/RMSTpredictor/loco.roo.surv.R")
-    source("~/GitHub/RMST_predictor/RMSTpredictor/loco.surv.R")
-    source("~/GitHub/RMST_predictor/RMSTpredictor/rmst.pred.R")
-    source("~/GitHub/RMST_predictor/RMSTpredictor/glmnet.surv.R")
-    source("~/GitHub/RMST_predictor/RMSTpredictor/common.R")
+    library(conformalInference)
   }))
   clusterExport(cl=cl,c("simulate.A","simulate.B","simulate.C",
                         "integral","train.fun","predict.fun"))
@@ -220,7 +205,7 @@ parallelisation_init = function(){
 mse = function(n,n0,models,cens.model="km"){
   # Data simulation
   df = simulate(n+n0)
-  df$w = IPCW(df$tobs,df$delta,df$x,tau,cens.model)
+  df$w = ipcw(df$tobs,df$delta,df$x,tau,cens.model)
   #Training set
   i1 = sample(1:(n+n0),n,replace=F)
   df1 = list(t=df$t[i1],c=df$c[i1],tobs=df$tobs[i1],delta=df$delta[i1],

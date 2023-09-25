@@ -1,11 +1,9 @@
-#' Estimation of the restricted mean survival time, estimation of the mean
-#' squared error, computation of prediction intervals and evaluation of (local
-#' and global) variable importance.
-#' 
-#' The bias of computing residuals on observed censored times is corrected by
-#' using censoring weights. Convergence guarantees for global variable 
-#' importance currently hold only if the Kaplan-Meier estimator is used to  
-#' compute censoring weights.
+#' Training Evaluating Time to 
+#'   Event Predictions using the Restricted Mean Survival Time
+#'   
+#' Evaluation of a learning algorithm for the restricted mean survival time. 
+#' Estimation of its mean squared error, computation of prediction intervals and
+#' evaluation of (local and global) variable importance.
 #'
 #' @param x Matrix of variables, of dimension (say) n x p.
 #' @param t Vector of responses (observed times), of length (say) n.
@@ -93,7 +91,10 @@
 #'
 #' @details Analysis framework of one or more restricted mean survival time
 #'   estimation model(s). Details are given in the descriptions of functions
-#'   roo.surv, loco.roo.surv and loco.surv.
+#'   roo.surv, loco.roo.surv and loco.surv. The bias of computing residuals on 
+#'   observed censored times is corrected by using censoring weights. 
+#'   Convergence guarantees for global variable importance currently hold only 
+#'   if the Kaplan-Meier estimator is used to compute censoring weights.
 #'
 #' @references See "Distribution-Free Predictive Inference for Regression" by 
 #'   Lei, G'Sell, Rinaldo, Tibshirani, Wasserman (2018) as a reference for 

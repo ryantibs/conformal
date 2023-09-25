@@ -165,12 +165,10 @@ conformal.pred.split = function(x, y, x0, train.fun, predict.fun, alpha=0.1,
 
 ###############################################################################
 
-#' Extension to right-censored data.
-#' 
 #' Split conformal prediction intervals for right-censored data.
 #' 
-#' Compute prediction intervals for predictions of the restricted time-to-event
-#' using IPCW split conformal inference.
+#' Compute prediction intervals for restricted time-to-events based on right-
+#' censored data using IPCW split conformal inference.
 #'
 #' @param x Matrix of features, of dimension (say) n x p.
 #' @param t Vector of responses (observed times), of length (say) n.

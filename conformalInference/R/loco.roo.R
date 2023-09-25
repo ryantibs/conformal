@@ -196,7 +196,7 @@ conformal.diff.int = function(mu1, mu2, lo, up) {
 
 ###############################################################################
 
-#' Extension to right-censored data.
+#' Variable importance via excess test error extended to right-censored data.
 #' 
 #' Compute prediction intervals for the excess test error due to dropping a
 #'   variable, measured in-sample and having asymptotically valid in-sample 
