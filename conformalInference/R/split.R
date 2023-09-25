@@ -75,7 +75,7 @@
 #'   G'Sell, Rinaldo, Tibshirani, Wasserman (2018) for another description; and
 #'   "Conformal Prediction Under Covariate Shift" by Barber, Candes, Ramdas,
 #'   Tibshirani (2019) for the weighted extension.
-#' @export conformal.pred.split
+#' @export 
 
 conformal.pred.split = function(x, y, x0, train.fun, predict.fun, alpha=0.1,
   rho=0.5, w=NULL, mad.train.fun=NULL, mad.predict.fun=NULL, split=NULL,
@@ -244,7 +244,7 @@ conformal.pred.split = function(x, y, x0, train.fun, predict.fun, alpha=0.1,
 #'   Framework for Evaluating Time to Event Predictions using the Restricted 
 #'   Mean Survival Time" by Cwiling, Perduca, Bouaziz (2023) for the extension
 #'   to right-censored data.
-#' @export conformal.pred.split.surv
+#' @export 
 
 conformal.pred.split.surv = function(x, t, d, tau, x0, train.fun, predict.fun, 
   w=NULL, cens.model="km", alpha=0.1, rho=0.5, mad.train.fun=NULL, 

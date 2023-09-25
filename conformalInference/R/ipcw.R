@@ -12,7 +12,7 @@
 #'
 #' @return A vector of length n containing the censoring weights.
 #'
-#' @export ipcw
+#' @export 
 
 ipcw = function(t,d,x,tau,cens.model = "km"){
   if(!is.null(x)){  x = as.matrix(x)  }
