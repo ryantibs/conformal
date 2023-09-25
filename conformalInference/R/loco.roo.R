@@ -196,7 +196,8 @@ conformal.diff.int = function(mu1, mu2, lo, up) {
 
 ###############################################################################
 
-#' Variable importance via excess test error extended to right-censored data
+#' Variable importance (local) via excess test error, extended to right-
+#' censored data
 #' 
 #' Compute prediction intervals for the excess test error due to dropping a
 #'   variable, measured in-sample and having asymptotically valid in-sample 
@@ -267,10 +268,9 @@ conformal.diff.int = function(mu1, mu2, lo, up) {
 #' @return A list with the following components: lo, up, vars, split,
 #'   out.roo. The third component is a list of variables that were tested (i.e.,
 #'   dropped one at a time, to compute excess error). The first two are arrays
-#    of dimension n x length(vars) x m.
-#'   The indices used for the half of the data-split are
-#'   returned in split. Finally, for convenience, the output from running
-#'   conformal.pred.roo.surv is stored in out.roo.
+#'   of dimension n x length(vars) x m. The indices used for the half of the 
+#'   data-split are returned in split. Finally, for convenience, the output 
+#'   from running conformal.pred.roo.surv is stored in out.roo.
 #'
 #' @references "Distribution-Free Predictive Inference for Regression" by Lei,
 #'   G'Sell, Rinaldo, Tibshirani, Wasserman (2018). See also "A Comprehensive 

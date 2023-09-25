@@ -2,8 +2,8 @@
 % Please edit documentation in R/loco.R
 \name{loco.surv}
 \alias{loco.surv}
-\title{Variable importance via median excess test error extended to right-censored
-data}
+\title{Variable importance (global) via median excess test error extended to right-
+censored data}
 \usage{
 loco.surv(
   x,

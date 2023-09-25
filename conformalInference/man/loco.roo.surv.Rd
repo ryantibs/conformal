@@ -2,7 +2,8 @@
 % Please edit documentation in R/loco.roo.R
 \name{loco.roo.surv}
 \alias{loco.roo.surv}
-\title{Variable importance via excess test error extended to right-censored data}
+\title{Variable importance (local) via excess test error, extended to right-
+censored data}
 \usage{
 loco.roo.surv(
   x,
@@ -104,9 +105,9 @@ out.roo.surv, and the split and seed arguments will be (silently) ignored.}
 A list with the following components: lo, up, vars, split,
   out.roo. The third component is a list of variables that were tested (i.e.,
   dropped one at a time, to compute excess error). The first two are arrays
-  The indices used for the half of the data-split are
-  returned in split. Finally, for convenience, the output from running
-  conformal.pred.roo.surv is stored in out.roo.
+  of dimension n x length(vars) x m. The indices used for the half of the 
+  data-split are returned in split. Finally, for convenience, the output 
+  from running conformal.pred.roo.surv is stored in out.roo.
 }
 \description{
 Compute prediction intervals for the excess test error due to dropping a
