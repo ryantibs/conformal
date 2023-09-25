@@ -2,7 +2,7 @@
 % Please edit documentation in R/split.R
 \name{conformal.pred.split.surv}
 \alias{conformal.pred.split.surv}
-\title{Extension to right-censored data.}
+\title{Split conformal prediction intervals for right-censored data.}
 \usage{
 conformal.pred.split.surv(
   x,
@@ -106,11 +106,8 @@ A list with the following components: pred, lo, up, fit, split. pred
   data-split.
 }
 \description{
-Split conformal prediction intervals for right-censored data.
-}
-\details{
-Compute prediction intervals for predictions of the restricted time-to-event
-using IPCW split conformal inference.
+Compute prediction intervals for restricted time-to-events based on right-
+censored data using IPCW split conformal inference.
 }
 \references{
 "Distribution-Free Predictive Inference for Regression" by Lei,

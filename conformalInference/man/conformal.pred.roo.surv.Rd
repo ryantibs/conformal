@@ -2,7 +2,7 @@
 % Please edit documentation in R/roo.R
 \name{conformal.pred.roo.surv}
 \alias{conformal.pred.roo.surv}
-\title{Extension to right-censored data.}
+\title{In-sample split conformal prediction intervals for right-censored data.}
 \usage{
 conformal.pred.roo.surv(
   x,
@@ -100,12 +100,9 @@ A list with the following components: pred, lo, up, fit, split,
   fit.all is an n x m matrix whose rows store the fitted values from out.all.
 }
 \description{
-In-sample IPCW split conformal prediction intervals.
-}
-\details{
-Compute prediction intervals for predictions of the restricted time-to-event, 
-having asymptotically valid in-sample coverage, using rank-one-out (ROO) 
-split conformal inference.
+Compute prediction intervals for for restricted time-to-events based on right-
+censored data, having asymptotically valid in-sample coverage, using rank-
+one-out (ROO) split conformal inference.
 }
 \references{
 "Distribution-Free Predictive Inference for Regression" by Lei,

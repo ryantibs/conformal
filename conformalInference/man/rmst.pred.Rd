@@ -2,9 +2,12 @@
 % Please edit documentation in R/rmst.pred.R
 \name{rmst.pred}
 \alias{rmst.pred}
-\title{Estimation of the restricted mean survival time, estimation of the mean
-squared error, computation of prediction intervals and evaluation of (local
-and global) variable importance.}
+\title{Training Evaluating Time to 
+  Event Predictions using the Restricted Mean Survival Time
+  
+Evaluation of a learning algorithm for the restricted mean survival time. 
+Estimation of its mean squared error, computation of prediction intervals and
+evaluation of (local and global) variable importance.}
 \usage{
 rmst.pred(
   x,
@@ -142,15 +145,20 @@ A list with the following components: x, split, mse, out.roo.surv,
   roo.surv, loco.roo.surv and loco.surv.
 }
 \description{
-The bias of computing residuals on observed censored times is corrected by
-using censoring weights. Convergence guarantees for global variable 
-importance currently hold only if the Kaplan-Meier estimator is used to  
-compute censoring weights.
+Training Evaluating Time to 
+  Event Predictions using the Restricted Mean Survival Time
+  
+Evaluation of a learning algorithm for the restricted mean survival time. 
+Estimation of its mean squared error, computation of prediction intervals and
+evaluation of (local and global) variable importance.
 }
 \details{
 Analysis framework of one or more restricted mean survival time
   estimation model(s). Details are given in the descriptions of functions
-  roo.surv, loco.roo.surv and loco.surv.
+  roo.surv, loco.roo.surv and loco.surv. The bias of computing residuals on 
+  observed censored times is corrected by using censoring weights. 
+  Convergence guarantees for global variable importance currently hold only 
+  if the Kaplan-Meier estimator is used to compute censoring weights.
 }
 \references{
 See "Distribution-Free Predictive Inference for Regression" by 

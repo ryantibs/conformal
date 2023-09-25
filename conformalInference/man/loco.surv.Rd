@@ -2,7 +2,8 @@
 % Please edit documentation in R/loco.R
 \name{loco.surv}
 \alias{loco.surv}
-\title{Extension to right-censored data.}
+\title{Variable importance via median excess test error extended to right-censored
+data}
 \usage{
 loco.surv(
   x,
@@ -87,13 +88,11 @@ A list with the following components: inf.sign, active, master,
   component signals whether a Bonferroni correction has been applied.
 }
 \description{
-Variable importance via median excess test error
-}
-\details{
 Compute confidence intervals for median excess test error due to 
   dropping a variable. Extension to estimators of the restricted mean
   survival time with right-censored data.
-
+}
+\details{
 The sign test adapted to right-censored data is asymptotically valid
   if the Kaplan-Meier model is used to estimate the censoring survival 
   function in the censoring weights, under the assumption of independent 

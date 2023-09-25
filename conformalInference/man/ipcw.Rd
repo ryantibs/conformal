@@ -2,9 +2,7 @@
 % Please edit documentation in R/ipcw.R
 \name{ipcw}
 \alias{ipcw}
-\title{Computation of Inverse Probability Censoring Weights. The censoring survival 
-function can either be estimated with Kaplan-Meier, Cox or Random Survival 
-Forests.}
+\title{Inverse Probability Censoring Weights.}
 \usage{
 ipcw(t, d, x, tau, cens.model = "km")
 }
