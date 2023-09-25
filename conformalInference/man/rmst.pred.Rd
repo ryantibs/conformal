@@ -2,8 +2,7 @@
 % Please edit documentation in R/rmst.pred.R
 \name{rmst.pred}
 \alias{rmst.pred}
-\title{Training Evaluating Time to Event Predictions using the Restricted Mean 
-Survival Time
+\title{Evaluating predictions of a Restricted Mean Survival Time estimator
   
 Evaluation of a learning algorithm for the restricted mean survival time. 
 Estimation of its mean squared error, computation of prediction intervals and
@@ -145,8 +144,7 @@ A list with the following components: x, split, mse, out.roo.surv,
   roo.surv, loco.roo.surv and loco.surv.
 }
 \description{
-Training Evaluating Time to Event Predictions using the Restricted Mean 
-Survival Time
+Evaluating predictions of a Restricted Mean Survival Time estimator
   
 Evaluation of a learning algorithm for the restricted mean survival time. 
 Estimation of its mean squared error, computation of prediction intervals and

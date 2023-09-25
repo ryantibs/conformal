@@ -2,7 +2,7 @@
 % Please edit documentation in R/loco.roo.R
 \name{loco.roo.surv}
 \alias{loco.roo.surv}
-\title{Variable importance via excess test error extended to right-censored data.}
+\title{Variable importance via excess test error extended to right-censored data}
 \usage{
 loco.roo.surv(
   x,

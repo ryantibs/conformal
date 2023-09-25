@@ -1,4 +1,4 @@
-#' Inverse Probability Censoring Weights.
+#' Inverse Probability Censoring Weights
 #' 
 #' Computation of Inverse Probability Censoring Weights. The censoring survival 
 #' function can either be estimated with Kaplan-Meier, Cox or Random Survival 

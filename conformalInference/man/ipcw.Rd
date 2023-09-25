@@ -2,7 +2,7 @@
 % Please edit documentation in R/ipcw.R
 \name{ipcw}
 \alias{ipcw}
-\title{Inverse Probability Censoring Weights.}
+\title{Inverse Probability Censoring Weights}
 \usage{
 ipcw(t, d, x, tau, cens.model = "km")
 }
