@@ -1,8 +1,9 @@
 #' Evaluating predictions of a Restricted Mean Survival Time estimator
 #' 
-#' Evaluation of a learning algorithm for the restricted mean survival time. 
-#' Estimation of its mean squared error, computation of prediction intervals, 
-#' and evaluation of (local and global) variable importance.
+#' Evaluation of a learning algorithm for the restricted mean survival time
+#' trained on right-censored data. Estimation of its mean squared error, 
+#' computation of prediction intervals, and evaluation of (local and global) 
+#' variable importance.
 #'
 #' @param x Matrix of variables, of dimension (say) n x p.
 #' @param t Vector of responses (observed times), of length (say) n.
@@ -125,11 +126,6 @@ rmst.pred = function(x, t, d, tau,  train.fun, predict.fun, w=NULL,
                   alpha=alpha,train.fun=train.fun,predict.fun=predict.fun,
                   mad.train.fun=mad.train.fun,mad.predict.fun=mad.predict.fun)
   
-  if (is.null(n.folds) || !is.numeric(n.folds) || length(n.folds) > 1 ||  
-      n.folds < 1 || n.folds > n || n.folds != round(n.folds)) {
-      stop("n.folds must be an integer between 1 and n")
-  }
-  
   # List of elements to return
   out = list(m=NULL,x=x,split=NULL,mse=NULL,out.roo.surv=NULL,
              out.loco.roo.surv=NULL, out.loco.surv=NULL)
@@ -155,7 +151,8 @@ rmst.pred = function(x, t, d, tau,  train.fun, predict.fun, w=NULL,
     if (verbose) {
       cat(sprintf(paste("%sComputing mean squared error ...\n"),txt))
     }
-    mse = wrss(x,t,d,tau,train.fun,predict.fun,n.folds=n.folds,w=w)
+    mse = wrss(x,t,d,tau,train.fun,predict.fun,w=w,cens.model=cens.model,
+               CV=CV,n.folds=n.folds)
     out$mse = mse
     out$m = ifelse(is.null(nrow(mse)),length(mse),ncol(mse))
   }
@@ -249,7 +246,7 @@ print.rmst.pred = function(x,elements=c("all"),digits=3,
   
   if(("mse" %in% elements || "all" %in% elements) && !is.null(x$mse)){
     if(n.folds==1){
-      cat("\n*Estimation of the mean squared error on the training set.\n")
+      cat("\n*Estimation of the mean squared error.\n")
       mse.disp = paste(round(x$mse,digits=digits))
     }else{
       cat(paste("\n*Estimation of the mean squared error on",nrow(x$mse),"folds:",
@@ -411,39 +408,107 @@ plot.rmst.pred = function(x,elements=c("all"), model.names=NULL, varsL=0, ...) {
   
 }
 
+#' Mean Squared Error of a Restricted Mean Survival Time estimator
+#' 
+#' Estimation of the mean squared error of a learning algorithm for the 
+#' restricted mean survival time trained on right-censored data. 
+#'
+#' @param x Matrix of variables, of dimension (say) n x p.
+#' @param t Vector of responses (observed times), of length (say) n.
+#' @param d Vector of responses (censoring indicator), of length (say) n.
+#' @param tau Horizon of time.
+#' @param train.fun A function to perform model training, i.e., to produce an
+#'   estimator of E(min(T*,tau)|X), the conditional expectation of the true 
+#'   event time T* given features X. Its input arguments should be x: matrix of 
+#'   features, t: vector of observed times, d: vector of censoring indicators
+#'   and tau: horizon of time. train.fun can be a function performing model 
+#'   training for several (say m) learning models.
+#' @param predict.fun A function to perform prediction for the (mean of the)
+#'   responses at new feature values. Its input arguments should be out: output
+#'   produced by train.fun, and newx: feature values at which we want to make
+#'   predictions.
+#' @param w Censoring weights. This should be a vector of length n. Default is 
+#'   NULL, in which case censoring weights are computed using the censoring 
+#'   model specified by the parameter cens.model, or by default with the 
+#'   Kaplan-Meier model. 
+#' @param cens.model Model used to estimate the censoring survival function.
+#'   This should be equal to "km", "rsf" or "cox" (respectively Kaplan-Meier, 
+#'   Random Survival Forests or Cox). Default is "km".
+#' @param CV Boolean indicating whether or not to perform cross-validation.
+#'   Default is FALSE.
+#' @param n.folds The number of folds for the cross-validated estimation of the
+#'   mean squared error. The default number is 10 folds.
+#' @param split Indices that define the data-split to be used (i.e., the indices
+#'   define the training set) in case cross-validation is not performed. 
+#'   Default is NULL, in which case the split is chosen randomly.
+#' @param p Proportion of data to put in the test set in case cross-validation 
+#'   is not performed. If p=0 then the whole data set is used both as training 
+#'   set and test set.
+#' @param seed Integer to be passed to set.seed. Default is NULL, which 
+#'   effectively sets no seed.
+#'
+#' @return A matrix of dimension n.folds (1 if cross-validation is not 
+#'   performed) x m containing the estimation of the mean squared error using 
+#'   censoring weights on each fold and for each learning model. 
+#'
+#' @details The estimation of the mean squared error with the WRSS estimator
+#' can be performed in one of the following ways: 
+#' 
+#' - By cross-validation on a defined number of folds;
+#' - By dividing the data into a training set and a test set, on which to train
+#' the learning algorithm and compute the estimator of the mean squared error,
+#' respectively;
+#' - By using all data both as training set and test set.
+#' 
+#' The default method is the first one.
+#'
+#' @references See "A Comprehensive Framework for Evaluating Time to 
+#'   Event Predictions using the Restricted Mean Survival Time" by Cwiling, 
+#'   Perduca, Bouaziz (2023).
+#' @export wrss
 
-# Function to compute the WRSS estimator of the mean squared error.
-# If n.folds > 1 then the estimator is computed n.folds times using cross-
-# validation.
-wrss = function(x,t,d,tau,train.fun,predict.fun,n.folds=1,
-                w=NULL,t0=NULL,d0=NULL,x0=NULL,w0=NULL,cens.model="km"){
-  if((is.null(t0) && !is.null(x0)) || (!is.null(t0) && is.null(x0)) ||
-     (!is.null(t0) && is.null(d0) && is.null(w0)))
-    stop("t0 and x0 are requested to estimate the error. Additionally, 
-         d0 must be given if w0 is not.")
-  if(is.null(x0)){
-    n = length(t)
-    if(is.null(w)){w = ipcw(t,d,x,tau,cens.model)}
-    if(n.folds==1){
+wrss = function(x,t,d,tau,train.fun,predict.fun,w=NULL,cens.model="km",
+                CV=T,n.folds=10,split=NULL,p=0.1,seed=NULL){
+  check.args.surv(x=x,t=t,d=d,tau=tau,x0=x,w=w,cens.model=cens.model,
+                  alpha=0.1,train.fun=train.fun,predict.fun=predict.fun)
+  check.bool(CV)
+  if (is.null(n.folds) || !is.numeric(n.folds) || length(n.folds) > 1 ||  
+      n.folds < 1 || n.folds > n || n.folds != round(n.folds)) {
+    stop("n.folds must be an integer between 1 and n")
+  }
+  check.num.01(p)
+  
+  if (!is.null(seed)) set.seed(seed)
+  
+  if(is.null(w)){w = ipcw(t,d,x,tau,cens.model)}
+  
+  if(CV){
+    # Cross-validation
+    folds = sample(cut(1:n,breaks=n.folds,labels=FALSE))
+    folds = purrr::map(1:n.folds, ~ which(folds==.,arr.ind=TRUE))
+    trainings = purrr::map(folds, ~ train.fun(x[-.,],t[-.],d[-.],tau))
+    fits = purrr::map2(folds,trainings, ~ matrix(predict.fun(.y,x[.x,],tau),nrow=length(.x)))
+    mse = purrr::map2(folds,fits, ~ apply(w[.x]*(pmin(t[.x],tau) - .y)**2,2,sum)/length(w[.x]))
+    mse = matrix(unlist(mse),nrow=n.folds,byrow=T)
+  }else{
+    if(p==0){
       # Train and fit on full data set
       out.all = train.fun(x,t,d,tau) 
       fit.all = matrix(predict.fun(out.all,x,tau),nrow=n)
       mse = apply(w*(pmin(t,tau) - fit.all)**2,2,sum)/n
     }else{
-      # Cross-validation
-      folds = sample(cut(1:n,breaks=n.folds,labels=FALSE))
-      folds = purrr::map(1:n.folds, ~ which(folds==.,arr.ind=TRUE))
-      trainings = purrr::map(folds, ~ train.fun(x[-.,],t[-.],d[-.],tau))
-      fits = purrr::map2(folds,trainings, ~ matrix(predict.fun(.y,x[.x,],tau),nrow=length(.x)))
-      mse = purrr::map2(folds,fits, ~ apply(w[.x]*(pmin(t[.x],tau) - .y)**2,2,sum)/length(w[.x]))
-      mse = matrix(unlist(mse),nrow=n.folds,byrow=T)
+      # If the user passed indices for the split, use them
+      if (!is.null(split)) i1 = split
+      # Otherwise make a random split
+      else {
+        i1 = sample(1:n,floor(n*(1-p)))
+      }
+      i2 = (1:n)[-i1]
+      # Train on the first data set and fit on the second
+      out.all = train.fun(x[i1,,drop=F],t[i1],d[i1],tau) 
+      fit.all = matrix(predict.fun(out.all,x[i2,,drop=F],tau),nrow=length(i2))
+      mse = apply(w[i2]*(pmin(t[i2],tau) - fit.all)**2,2,sum)/length(i2)
     }
-  }else{
-    if(is.null(w0)){w0 = ipcw(t0,d0,x0,tau,cens.model)}
-    # Train on full data set and fit on new data set
-    out.all = train.fun(x,t,d,tau) 
-    fit.all = matrix(predict.fun(out.all,x0,tau),nrow=nrow(x0))
-    mse = apply(w0*(pmin(t0,tau) - fit.all)**2,2,sum)/length(w0)
   }
   return(mse)
 }

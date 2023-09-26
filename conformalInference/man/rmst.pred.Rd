@@ -140,9 +140,10 @@ A list with the following components: x, split, mse, out.roo.surv,
   roo.surv, loco.roo.surv and loco.surv.
 }
 \description{
-Evaluation of a learning algorithm for the restricted mean survival time. 
-Estimation of its mean squared error, computation of prediction intervals, 
-and evaluation of (local and global) variable importance.
+Evaluation of a learning algorithm for the restricted mean survival time
+trained on right-censored data. Estimation of its mean squared error, 
+computation of prediction intervals, and evaluation of (local and global) 
+variable importance.
 }
 \details{
 Analysis framework of one or more restricted mean survival time
