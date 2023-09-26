@@ -478,15 +478,17 @@ wrss = function(x,t,d,tau,train.fun,predict.fun,w=NULL,cens.model="km",
   check.args.surv(x=x,t=t,d=d,tau=tau,x0=x,w=w,cens.model=cens.model,
                   alpha=0.1,train.fun=train.fun,predict.fun=predict.fun)
   check.bool(CV)
+  
+  n = length(t)
   if (is.null(n.folds) || !is.numeric(n.folds) || length(n.folds) > 1 ||  
       n.folds < 2 || n.folds > n || n.folds != round(n.folds)) {
     stop("n.folds must be an integer between 2 and n")
   }
+  
   check.num.01(prop)
   
   if (!is.null(seed)) set.seed(seed)
   
-  n = length(t)
   if(is.null(w)){w = ipcw(t,d,x,tau,cens.model)}
   
   if(CV){
@@ -519,3 +521,4 @@ wrss = function(x,t,d,tau,train.fun,predict.fun,w=NULL,cens.model="km",
   }
   return(mse)
 }
+
