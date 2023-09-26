@@ -81,10 +81,12 @@ The estimation of the mean squared error with the WRSS estimator
 can be performed in one of the following ways: 
 
 - By cross-validation on a defined number of folds;
+
 - By dividing the data into a training set and a test set, on which to train
-the learning algorithm and compute the estimator of the mean squared error,
-respectively;
-- By using all data both as training set and test set.
+  the learning algorithm and compute the estimator of the mean squared error,
+  respectively;
+
+- By using all data both as a training set and a test set.
 
 The default method is the first one.
 }

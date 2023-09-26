@@ -15,6 +15,7 @@ rmst.pred(
   cens.model = "km",
   CV = T,
   n.folds = 10,
+  p = 0.1,
   active.fun = NULL,
   alpha = 0.1,
   rho = 0.5,
@@ -63,13 +64,14 @@ This should be equal to "km", "rsf" or "cox" (respectively Kaplan-Meier,
 Random Survival Forests or Cox). Default is "km".}
 
 \item{CV}{Boolean indicating whether or not to perform cross-validation for
-the estimation of the mean squared error. Default is TRUE. If set to FALSE,
-the data are divided randomly into a train set (90% of the data) to train 
-the regression model, and a test set (10% of the data) to compute the
-estimator of the mean squared error.}
+the estimation of the mean squared error. Default is TRUE.}
 
 \item{n.folds}{The number of folds for the cross-validated estimation of the
 mean squared error. The default number is 10 folds.}
+
+\item{p}{Proportion of data to put in the test set in case cross-validation 
+is not performed. If p=0 then the whole data set is used both as training 
+set and test set.}
 
 \item{active.fun}{A function which takes the output of train.fun, and reports
 which features are active for each fitted model contained in this output.
@@ -153,7 +155,7 @@ variable importance.
 \details{
 Analysis framework of one or more restricted mean survival time
   estimation model(s). Details are given in the descriptions of functions
-  conformal.pred.roo.surv, loco.roo.surv and loco.surv. The bias of 
+  wrss, conformal.pred.roo.surv, loco.roo.surv and loco.surv. The bias of 
   computing residuals on observed censored times is corrected by using 
   censoring weights. Convergence guarantees for global variable importance 
   currently hold only if the Kaplan-Meier estimator is used to compute 
@@ -167,6 +169,6 @@ See "Distribution-Free Predictive Inference for Regression" by
   Perduca, Bouaziz (2023) for the extension to right-censored data.
 }
 \seealso{
-\code{\link{conformal.pred.roo.surv}}, \code{\link{loco.roo.surv}}, 
-  \code{\link{loco.surv}}
+\code{\link{wrss}}, \code{\link{conformal.pred.roo.surv}}, 
+  \code{\link{loco.roo.surv}}, \code{\link{loco.surv}}
 }

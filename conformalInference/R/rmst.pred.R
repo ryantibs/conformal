@@ -27,12 +27,12 @@
 #'   This should be equal to "km", "rsf" or "cox" (respectively Kaplan-Meier, 
 #'   Random Survival Forests or Cox). Default is "km".
 #' @param CV Boolean indicating whether or not to perform cross-validation for
-#'   the estimation of the mean squared error. Default is TRUE. If set to FALSE,
-#'   the data are divided randomly into a train set (90% of the data) to train 
-#'   the regression model, and a test set (10% of the data) to compute the
-#'   estimator of the mean squared error.
+#'   the estimation of the mean squared error. Default is TRUE.
 #' @param n.folds The number of folds for the cross-validated estimation of the
 #'   mean squared error. The default number is 10 folds.
+#' @param p Proportion of data to put in the test set in case cross-validation 
+#'   is not performed. If p=0 then the whole data set is used both as training 
+#'   set and test set.
 #' @param active.fun A function which takes the output of train.fun, and reports
 #'   which features are active for each fitted model contained in this output.
 #'   Its only input argument should be out: output produced by train.fun.
@@ -94,14 +94,14 @@
 #'
 #' @details Analysis framework of one or more restricted mean survival time
 #'   estimation model(s). Details are given in the descriptions of functions
-#'   conformal.pred.roo.surv, loco.roo.surv and loco.surv. The bias of 
+#'   wrss, conformal.pred.roo.surv, loco.roo.surv and loco.surv. The bias of 
 #'   computing residuals on observed censored times is corrected by using 
 #'   censoring weights. Convergence guarantees for global variable importance 
 #'   currently hold only if the Kaplan-Meier estimator is used to compute 
 #'   censoring weights.
 #'   
-#' @seealso \code{\link{conformal.pred.roo.surv}}, \code{\link{loco.roo.surv}}, 
-#'   \code{\link{loco.surv}}
+#' @seealso \code{\link{wrss}}, \code{\link{conformal.pred.roo.surv}}, 
+#'   \code{\link{loco.roo.surv}}, \code{\link{loco.surv}}
 #'
 #' @references See "Distribution-Free Predictive Inference for Regression" by 
 #'   Lei, G'Sell, Rinaldo, Tibshirani, Wasserman (2018) as a reference for 
@@ -111,7 +111,7 @@
 #' @export rmst.pred
 
 rmst.pred = function(x, t, d, tau,  train.fun, predict.fun, w=NULL, 
-  cens.model="km", CV=T, n.folds=10, active.fun=NULL, alpha=0.1, rho=0.5, 
+  cens.model="km", CV=T, n.folds=10, p=0.1, active.fun=NULL, alpha=0.1, rho=0.5, 
   vars=0, bonf.correct=FALSE, mad.train.fun=NULL, mad.predict.fun=NULL, 
   split=NULL, seed=NULL, out.roo.surv=NULL, verbose=FALSE,
   error=T,roo=T,vimpL=T,vimpG=T) {
@@ -155,7 +155,7 @@ rmst.pred = function(x, t, d, tau,  train.fun, predict.fun, w=NULL,
       cat(sprintf(paste("%sComputing mean squared error ...\n"),txt))
     }
     mse = wrss(x,t,d,tau,train.fun,predict.fun,w=w,cens.model=cens.model,
-               CV=CV,n.folds=n.folds)
+               CV=CV,n.folds=n.folds,p=p)
     out$mse = mse
     out$m = ifelse(is.null(nrow(mse)),length(mse),ncol(mse))
   }
@@ -454,15 +454,18 @@ plot.rmst.pred = function(x,elements=c("all"), model.names=NULL, varsL=0, ...) {
 #'   performed) x m containing the estimation of the mean squared error using 
 #'   censoring weights on each fold and for each learning model. 
 #'
-#' @details The estimation of the mean squared error with the WRSS estimator
+#' @details 
+#' The estimation of the mean squared error with the WRSS estimator
 #' can be performed in one of the following ways: 
 #' 
 #' - By cross-validation on a defined number of folds;
+#'
 #' - By dividing the data into a training set and a test set, on which to train
-#' the learning algorithm and compute the estimator of the mean squared error,
-#' respectively;
-#' - By using all data both as training set and test set.
-#' 
+#'   the learning algorithm and compute the estimator of the mean squared error,
+#'   respectively;
+#'
+#' - By using all data both as a training set and a test set.
+#'
 #' The default method is the first one.
 #'
 #' @references See "A Comprehensive Framework for Evaluating Time to 
@@ -476,8 +479,8 @@ wrss = function(x,t,d,tau,train.fun,predict.fun,w=NULL,cens.model="km",
                   alpha=0.1,train.fun=train.fun,predict.fun=predict.fun)
   check.bool(CV)
   if (is.null(n.folds) || !is.numeric(n.folds) || length(n.folds) > 1 ||  
-      n.folds < 1 || n.folds > n || n.folds != round(n.folds)) {
-    stop("n.folds must be an integer between 1 and n")
+      n.folds < 2 || n.folds > n || n.folds != round(n.folds)) {
+    stop("n.folds must be an integer between 2 and n")
   }
   check.num.01(p)
   
