@@ -366,6 +366,11 @@ conformal.pred.roo.surv = function(x, t, d, tau, train.fun, predict.fun,
         }
       }
     }
+    
+    if(length(alpha)==1){
+      lo = lo[,,1]
+      up = up[,,1]
+    }
   }
   
   return(list(pred=pred,lo=lo,up=up,fit=fit,split=inds[[1]],

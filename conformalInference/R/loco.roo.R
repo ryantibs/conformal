@@ -320,8 +320,8 @@ loco.roo.surv = function(x, t, d, tau, train.fun, predict.fun, w=NULL,
     out.roo.surv = conformal.pred.roo.surv(x,t,d,tau,train.fun,predict.fun,alpha=alpha,
                                            mad.train.fun=mad.train.fun,mad.predict.fun=mad.predict.fun, split=inds[[1]],
                                            w=w, cens.model=cens.model,verbose=ifelse(verbose,paste0(txt,"\t"),FALSE))
-    out.roo.surv$lo = out.roo.surv$lo[,,1]
-    out.roo.surv$up = out.roo.surv$up[,,1]
+    # out.roo.surv$lo = out.roo.surv$lo[,,1]
+    # out.roo.surv$up = out.roo.surv$up[,,1]
   }
   # These have already been computed
   else {
