@@ -486,6 +486,7 @@ wrss = function(x,t,d,tau,train.fun,predict.fun,w=NULL,cens.model="km",
   
   if (!is.null(seed)) set.seed(seed)
   
+  n = length(t)
   if(is.null(w)){w = ipcw(t,d,x,tau,cens.model)}
   
   if(CV){
