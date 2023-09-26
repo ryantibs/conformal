@@ -13,6 +13,7 @@ rmst.pred(
   predict.fun,
   w = NULL,
   cens.model = "km",
+  CV = T,
   n.folds = 10,
   active.fun = NULL,
   alpha = 0.1,
@@ -61,10 +62,14 @@ Kaplan-Meier model.}
 This should be equal to "km", "rsf" or "cox" (respectively Kaplan-Meier, 
 Random Survival Forests or Cox). Default is "km".}
 
+\item{CV}{Boolean indicating whether or not to perform cross-validation for
+the estimation of the mean squared error. Default is TRUE. If set to FALSE,
+the data are divided randomly into a train set (90% of the data) to train 
+the regression model, and a test set (10% of the data) to compute the
+estimator of the mean squared error.}
+
 \item{n.folds}{The number of folds for the cross-validated estimation of the
-mean squared error. If n.folds = 1 then the whole data set is used both to
-train the estimator and to compute the mean squared error. The default 
-number is 10 folds.}
+mean squared error. The default number is 10 folds.}
 
 \item{active.fun}{A function which takes the output of train.fun, and reports
 which features are active for each fitted model contained in this output.

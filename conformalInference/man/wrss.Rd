@@ -51,7 +51,7 @@ This should be equal to "km", "rsf" or "cox" (respectively Kaplan-Meier,
 Random Survival Forests or Cox). Default is "km".}
 
 \item{CV}{Boolean indicating whether or not to perform cross-validation.
-Default is FALSE.}
+Default is TRUE.}
 
 \item{n.folds}{The number of folds for the cross-validated estimation of the
 mean squared error. The default number is 10 folds.}
