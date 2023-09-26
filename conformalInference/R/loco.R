@@ -563,8 +563,8 @@ my.surv.sign.test = function(t, d, w, z, tau, alpha, k, bonf.correct=TRUE){
   
   V = mean(df.sort$squared.diff)/(1-S.tau)**2
   
-  tn2 <- sqrt(n/V)*(mean(df.sort$phi.w)/(1-S.tau) - 0.5)
-  pval <- 1-pnorm(tn2)
+  tn2 = sqrt(n/V)*(mean(df.sort$phi.w)/(1-S.tau) - 0.5)
+  pval = 1-pnorm(tn2)
   
   # Apply Bonferroni correction for k tests
   if (bonf.correct) {
