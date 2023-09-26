@@ -30,9 +30,9 @@
 #'   the estimation of the mean squared error. Default is TRUE.
 #' @param n.folds The number of folds for the cross-validated estimation of the
 #'   mean squared error. The default number is 10 folds.
-#' @param p Proportion of data to put in the test set in case cross-validation 
-#'   is not performed. If p=0 then the whole data set is used both as training 
-#'   set and test set.
+#' @param prop Proportion of data to put in the test set in case cross-
+#'   validation is not performed. If prop=0 then the whole data set is used 
+#'   both as training set and test set.
 #' @param active.fun A function which takes the output of train.fun, and reports
 #'   which features are active for each fitted model contained in this output.
 #'   Its only input argument should be out: output produced by train.fun.
@@ -111,8 +111,8 @@
 #' @export rmst.pred
 
 rmst.pred = function(x, t, d, tau,  train.fun, predict.fun, w=NULL, 
-  cens.model="km", CV=T, n.folds=10, p=0.1, active.fun=NULL, alpha=0.1, rho=0.5, 
-  vars=0, bonf.correct=FALSE, mad.train.fun=NULL, mad.predict.fun=NULL, 
+  cens.model="km", CV=T, n.folds=10, prop=0.1, active.fun=NULL, alpha=0.1,  
+  rho=0.5, vars=0, bonf.correct=FALSE, mad.train.fun=NULL, mad.predict.fun=NULL, 
   split=NULL, seed=NULL, out.roo.surv=NULL, verbose=FALSE,
   error=T,roo=T,vimpL=T,vimpG=T) {
 
@@ -155,7 +155,7 @@ rmst.pred = function(x, t, d, tau,  train.fun, predict.fun, w=NULL,
       cat(sprintf(paste("%sComputing mean squared error ...\n"),txt))
     }
     mse = wrss(x,t,d,tau,train.fun,predict.fun,w=w,cens.model=cens.model,
-               CV=CV,n.folds=n.folds,p=p)
+               CV=CV,n.folds=n.folds,prop=prop)
     out$mse = mse
     out$m = ifelse(is.null(nrow(mse)),length(mse),ncol(mse))
   }
@@ -444,9 +444,9 @@ plot.rmst.pred = function(x,elements=c("all"), model.names=NULL, varsL=0, ...) {
 #' @param split Indices that define the data-split to be used (i.e., the indices
 #'   define the training set) in case cross-validation is not performed. 
 #'   Default is NULL, in which case the split is chosen randomly.
-#' @param p Proportion of data to put in the test set in case cross-validation 
-#'   is not performed. If p=0 then the whole data set is used both as training 
-#'   set and test set.
+#' @param prop Proportion of data to put in the test set in case cross-
+#'   validation is not performed. If prop=0 then the whole data set is used 
+#'   both as training set and test set.
 #' @param seed Integer to be passed to set.seed. Default is NULL, which 
 #'   effectively sets no seed.
 #'
@@ -474,7 +474,7 @@ plot.rmst.pred = function(x,elements=c("all"), model.names=NULL, varsL=0, ...) {
 #' @export wrss
 
 wrss = function(x,t,d,tau,train.fun,predict.fun,w=NULL,cens.model="km",
-                CV=T,n.folds=10,split=NULL,p=0.1,seed=NULL){
+                CV=T,n.folds=10,split=NULL,prop=0.1,seed=NULL){
   check.args.surv(x=x,t=t,d=d,tau=tau,x0=x,w=w,cens.model=cens.model,
                   alpha=0.1,train.fun=train.fun,predict.fun=predict.fun)
   check.bool(CV)
@@ -482,7 +482,7 @@ wrss = function(x,t,d,tau,train.fun,predict.fun,w=NULL,cens.model="km",
       n.folds < 2 || n.folds > n || n.folds != round(n.folds)) {
     stop("n.folds must be an integer between 2 and n")
   }
-  check.num.01(p)
+  check.num.01(prop)
   
   if (!is.null(seed)) set.seed(seed)
   
@@ -507,7 +507,7 @@ wrss = function(x,t,d,tau,train.fun,predict.fun,w=NULL,cens.model="km",
       if (!is.null(split)) i1 = split
       # Otherwise make a random split
       else {
-        i1 = sample(1:n,floor(n*(1-p)))
+        i1 = sample(1:n,floor(n*(1-prop)))
       }
       i2 = (1:n)[-i1]
       # Train on the first data set and fit on the second

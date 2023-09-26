@@ -15,7 +15,7 @@ rmst.pred(
   cens.model = "km",
   CV = T,
   n.folds = 10,
-  p = 0.1,
+  prop = 0.1,
   active.fun = NULL,
   alpha = 0.1,
   rho = 0.5,
@@ -69,9 +69,9 @@ the estimation of the mean squared error. Default is TRUE.}
 \item{n.folds}{The number of folds for the cross-validated estimation of the
 mean squared error. The default number is 10 folds.}
 
-\item{p}{Proportion of data to put in the test set in case cross-validation 
-is not performed. If p=0 then the whole data set is used both as training 
-set and test set.}
+\item{prop}{Proportion of data to put in the test set in case cross-
+validation is not performed. If prop=0 then the whole data set is used 
+both as training set and test set.}
 
 \item{active.fun}{A function which takes the output of train.fun, and reports
 which features are active for each fitted model contained in this output.

@@ -16,7 +16,7 @@ wrss(
   CV = T,
   n.folds = 10,
   split = NULL,
-  p = 0.1,
+  prop = 0.1,
   seed = NULL
 )
 }
@@ -60,9 +60,9 @@ mean squared error. The default number is 10 folds.}
 define the training set) in case cross-validation is not performed. 
 Default is NULL, in which case the split is chosen randomly.}
 
-\item{p}{Proportion of data to put in the test set in case cross-validation 
-is not performed. If p=0 then the whole data set is used both as training 
-set and test set.}
+\item{prop}{Proportion of data to put in the test set in case cross-
+validation is not performed. If prop=0 then the whole data set is used 
+both as training set and test set.}
 
 \item{seed}{Integer to be passed to set.seed. Default is NULL, which 
 effectively sets no seed.}
