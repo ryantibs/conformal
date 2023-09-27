@@ -2,9 +2,6 @@
 # LIBRARIES #
 #############
 
-library(devtools)
-install_github(repo="ariane-cwi/conformal", subdir="conformalInference")
-
 libraries_sources = function(){
   library(survival)
   library(FastPseudo)
