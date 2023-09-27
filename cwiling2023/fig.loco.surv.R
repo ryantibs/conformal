@@ -22,8 +22,6 @@ libraries_sources = function(){
 }
 libraries_sources()
 
-setwd("~/GitHub/conformal/cwiling2023")
-
 ########################
 # SIMULATION FUNCTIONS #
 ########################
