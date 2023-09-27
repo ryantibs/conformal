@@ -772,12 +772,18 @@ multiple.C = array(unlist(multiple.C), dim = c(length(vars.active),m,N))
 
 stopCluster(cl)
 
-save(multiple.C, file="fig/multiple.C.Rdata")
-
-
 # Romano & DiCiccio 2019 procedure 2
 # twice the median p-value or twice the average p-value serves as a valid 
 # p-value for the overall test.
+
+signif.code = function(v) {
+  code = rep("",length(v))
+  code[v < 0.1] = "."
+  code[v < 0.05] = "*"
+  code[v < 0.01] = "**"
+  code[v < 0.001] = "***"
+  return(code)
+}
 
 pval.twice.med = round(apply(multiple.C,MARGIN=2,
                              function(x){apply(x,1,function(y){pmin(2*median(y),1)})}),3)
@@ -785,7 +791,7 @@ pval.twice.med = round(apply(multiple.C,MARGIN=2,
 tab.pval.twice.med = paste0("X",vars.active)
 for(l in 1:m){
   tab = round(pval.twice.med[,l],digits=3)
-  code = get.signif.code(pval.twice.med[,l])
+  code = signif.code(pval.twice.med[,l])
   tab = cbind(tab,code)
   colnames(tab) = c("P-value",models.names[l])
   tab.pval.twice.med = cbind(tab.pval.twice.med,tab)
@@ -892,7 +898,7 @@ pval.twice.med.br = round(apply(multiple.brcancer,MARGIN=2,
 tab.pval.twice.med.br = colnames(x.brcancer)
 for(l in 1:m){
   tab = round(pval.twice.med.br[,l],digits=3)
-  code = get.signif.code(pval.twice.med.br[,l])
+  code = signif.code(pval.twice.med.br[,l])
   tab = cbind(tab,code)
   colnames(tab) = c("P-value",models.names[l])
   tab.pval.twice.med.br = cbind(tab.pval.twice.med.br,tab)
