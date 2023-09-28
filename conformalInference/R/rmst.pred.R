@@ -326,12 +326,12 @@ print.rmst.pred = function(x,elements=c("all"),digits=3,
 #' Plot function for rmst.pred object.
 #'
 #' @param x The rmst.pred object.
-#' @param elements Selection among "mse", "range", "vimpL", "vimpG" or "all"
-#'   describing which elements of the analysis to show. If "mse" then the 
-#'   results on the estimation of the mean squared error are displayed; if 
-#'   "vimpL" then results of local variable importance are displayed; if "vimpG"
-#'   then results of global variable importance are displayed. If "all" then the
-#'   results from all elements are displayed. Default is "all". 
+#' @param elements Selection among "mse", "vimpL", "vimpG" or "all"describing 
+#'   which elements of the analysis to show. If "mse" then the results on the 
+#'   estimation of the mean squared error are displayed; if "vimpL" then results
+#'   of local variable importance are displayed; if "vimpG" then results of 
+#'   global variable importance are displayed. If "all" then the results from 
+#'   all elements are displayed. Default is "all". 
 #' @param model.names Names given to the different learning models given to
 #'   train.fun. Default is NULL. 
 #' @param varsL A list specifying the variables (indices between 1 and p)
@@ -350,10 +350,10 @@ plot.rmst.pred = function(x,elements=c("all"), model.names=NULL, varsL=0, ...) {
   if(is.null(model.names)){model.names = paste("Model",1:m)}
   if(!is.character(model.names) || length(model.names)!=m) 
     stop("model.names must be a vector of strings of size m")
-  if(!("mse" %in% elements) && !("range" %in% elements) && 
+  if(!("mse" %in% elements) && 
      !("vimpL" %in% elements) && !("vimpG" %in% elements) 
      && !("all" %in% elements))
-    stop("elements must contain at least mse, range, vimpL, vimpG or all")
+    stop("elements must contain at least mse, vimpL, vimpG or all")
   
   if(("mse" %in% elements || "all" %in% elements) && !is.null(x$mse)){
     V = nrow(x$mse)

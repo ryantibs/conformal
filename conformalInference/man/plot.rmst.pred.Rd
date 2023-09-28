@@ -9,12 +9,12 @@
 \arguments{
 \item{x}{The rmst.pred object.}
 
-\item{elements}{Selection among "mse", "range", "vimpL", "vimpG" or "all"
-describing which elements of the analysis to show. If "mse" then the 
-results on the estimation of the mean squared error are displayed; if 
-"vimpL" then results of local variable importance are displayed; if "vimpG"
-then results of global variable importance are displayed. If "all" then the
-results from all elements are displayed. Default is "all".}
+\item{elements}{Selection among "mse", "vimpL", "vimpG" or "all"describing 
+which elements of the analysis to show. If "mse" then the results on the 
+estimation of the mean squared error are displayed; if "vimpL" then results
+of local variable importance are displayed; if "vimpG" then results of 
+global variable importance are displayed. If "all" then the results from 
+all elements are displayed. Default is "all".}
 
 \item{model.names}{Names given to the different learning models given to
 train.fun. Default is NULL.}
