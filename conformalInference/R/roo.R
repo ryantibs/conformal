@@ -276,7 +276,7 @@ conformal.pred.roo.surv = function(x, t, d, tau, train.fun, predict.fun,
                   mad.train.fun=mad.train.fun,mad.predict.fun=mad.predict.fun)
   
   # Check alpha
-  if (is.null(alpha) || !is.numeric(alpha) || alpha<0 || alpha>1)
+  if (is.null(alpha) || !is.numeric(alpha) || sum(alpha<0) > 0 || sum(alpha>1)>0)
     stop("alpha must be a vector of numbers between 0 and 1")
   alpha = unique(alpha)
   
