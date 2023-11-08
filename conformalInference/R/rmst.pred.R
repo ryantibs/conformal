@@ -500,7 +500,7 @@ wrss = function(x,t,d,tau,train.fun,predict.fun,w=NULL,cens.model="km",
     mse = purrr::map2(folds,fits, ~ apply(w[.x]*(pmin(t[.x],tau) - .y)**2,2,sum)/length(w[.x]))
     mse = matrix(unlist(mse),nrow=n.folds,byrow=T)
   }else{
-    if(p==0){
+    if(prop==0){
       # Train and fit on full data set
       out.all = train.fun(x,t,d,tau) 
       fit.all = matrix(predict.fun(out.all,x,tau),nrow=n)
