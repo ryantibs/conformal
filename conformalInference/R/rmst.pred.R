@@ -336,16 +336,12 @@ print.rmst.pred = function(x,elements=c("all"),digits=3,
 #'   global variable importance are displayed. If "all" then the results from 
 #'   all elements are displayed. Default is "all". 
 #' @param model.names Names given to the different learning models given to
-#'   train.fun. Default is NULL. 
-#' @param varsL A list specifying the variables (indices between 1 and p)
-#'   for which local variable importance should be plotted. Alternatively, if
-#'   set equal to 0, the default, then local variable importance is plotted for
-#'   all variables.
+#'   train.fun. Default is NULL.
 #' @param ... Other arguments (currently not used).
 #'
 #' @export 
 
-plot.rmst.pred = function(x,elements=c("all"), model.names=NULL, varsL=0, ...) {
+plot.rmst.pred = function(x,elements=c("all"), model.names=NULL, ...) {
   
   n.folds = ifelse(is.null(nrow(x$mse)),1,nrow(x$mse))
   if(is.null(x$m)) stop("Nothing to plot")
@@ -376,12 +372,12 @@ plot.rmst.pred = function(x,elements=c("all"), model.names=NULL, varsL=0, ...) {
   }
   
   if(("vimpL" %in% elements || "all" %in% elements) && !is.null(x$out.loco.roo.surv)){
-    if (length(varsL) == 1 && varsL == 0){varsL = x$out.loco.roo.surv$vars}
+    varsL = x$out.loco.roo.surv$vars
     for (i in 1:m){
-      for (j in varsL){
+      for (j in 1:length(varsL)){
         plot(x$x[,j],x$x[,j],ylim=range(c(x$out.loco.roo.surv$lo,
              x$out.loco.roo.surv$up)),xlab="Location",ylab="Interval",
-             main=paste(model.names[i], "- Var.",j),col=NA)
+             main=paste(model.names[i], "- Var.",varsL[j]),col=NA)
         cols = ifelse(x$out.loco.roo.surv$lo[,j,i] <= 0, 1, 3)
         segments(x$x[,j],x$out.loco.roo.surv$lo[,j,i],
                  x$x[,j],x$out.loco.roo.surv$up[,j,i],

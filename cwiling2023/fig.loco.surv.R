@@ -19,7 +19,6 @@ libraries_sources = function(){
 }
 libraries_sources()
 
-
 ########################
 # SIMULATION FUNCTIONS #
 ########################
@@ -829,7 +828,7 @@ predict.fun.6 = function(out,x0,tau){predict.fun(out,x0,tau,pred.models=models)}
 out.brcancer = 
   rmst.pred(x.brcancer, tobs.brcancer, delta.brcancer, tau.brcancer, 
             train.fun.6, predict.fun.6, n.folds=20, cens.model="km", 
-            alpha=0.1, varsL=0, varsG=0, verbose=TRUE, seed=20,
+            alpha=0.1, varsL=c(2,4,5,6,7), varsG=0, verbose=TRUE, seed=20,
             error=T,roo=T,vimpL=T,vimpG=T,rho=0.5)
 
 ### MSE ###
@@ -844,8 +843,7 @@ graphics.off()
 
 pdf(file="fig/vimpL_brcancer.pdf",w=9,h=6)
 par(mfrow=c(m,5))
-plot(out.brcancer, model.names = models.names, elements = c("vimpL"),
-     varsL=c(2,4,5,6,7))
+plot(out.brcancer, model.names = models.names, elements = c("vimpL"))
 graphics.off()
 
 ### Global variable importance ###
