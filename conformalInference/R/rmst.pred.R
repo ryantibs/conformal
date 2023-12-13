@@ -38,9 +38,12 @@
 #'   Its only input argument should be out: output produced by train.fun.
 #' @param alpha Miscoverage level for the prediction intervals, i.e., intervals
 #'   with coverage 1-alpha are formed. Default for alpha is 0.1.
-#' @param vars A list specifying the variables (indices between 1 and p)
-#'   for which variable importance should be investigated. Alternatively, if
-#'   set equal to 0, the default, then all variables are investigated.
+#' @param varsL A list specifying the variables (indices between 1 and p)
+#'   for which local variable importance should be investigated. Alternatively,
+#'   if set equal to 0, the default, then all variables are investigated.
+#' @param varsG A list specifying the variables (indices between 1 and p)
+#'   for which global variable importance should be investigated. Alternatively,
+#'   if set equal to 0, the default, then all variables are investigated.
 #' @param bonf.correct Should a Bonferroni correction be applied to the p-values
 #'   and confidence intervals? Default is FALSE.
 #' @param mad.train.fun A function to perform training on the observed absolute 
@@ -112,8 +115,8 @@
 
 rmst.pred = function(x, t, d, tau,  train.fun, predict.fun, w=NULL, 
   cens.model="km", CV=T, n.folds=10, prop=0.1, active.fun=NULL, alpha=0.1,  
-  rho=0.5, vars=0, bonf.correct=FALSE, mad.train.fun=NULL, mad.predict.fun=NULL, 
-  split=NULL, seed=NULL, out.roo.surv=NULL, verbose=FALSE,
+  rho=0.5, varsL=0, varsG=0, bonf.correct=FALSE, mad.train.fun=NULL, 
+  mad.predict.fun=NULL, split=NULL, seed=NULL, out.roo.surv=NULL, verbose=FALSE,
   error=T,roo=T,vimpL=T,vimpG=T) {
 
   # Set up data
@@ -193,7 +196,7 @@ rmst.pred = function(x, t, d, tau,  train.fun, predict.fun, w=NULL,
       cat(sprintf(paste("%sComputing local variable importance ...\n"),txt))
     }
     out.loco.roo.surv = loco.roo.surv(x, t, d, tau, train.fun, predict.fun, 
-                vars=vars, alpha=alpha, out.roo.surv=out.roo.surv, verbose=F)
+                vars=varsL, alpha=alpha, out.roo.surv=out.roo.surv, verbose=F)
     out$out.loco.roo.surv=out.loco.roo.surv
     out$m = ncol(out.loco.roo.surv$out.roo.surv$pred)
   }
@@ -204,7 +207,7 @@ rmst.pred = function(x, t, d, tau,  train.fun, predict.fun, w=NULL,
       cat(sprintf(paste("%sComputing global variable importance ...\n"),txt))
     }
     out.loco.surv = loco.surv(x, t, d, tau, train.fun, predict.fun, 
-                              active.fun=active.fun, vars=vars, alpha=alpha, bonf.correct=bonf.correct, 
+                              active.fun=active.fun, vars=varsG, alpha=alpha, bonf.correct=bonf.correct, 
                               split=split, verbose=F)
     out$out.loco.surv=out.loco.surv
     out$m = length(out.loco.surv$active)

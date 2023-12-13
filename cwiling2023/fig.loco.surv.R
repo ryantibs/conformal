@@ -19,6 +19,7 @@ libraries_sources = function(){
 }
 libraries_sources()
 
+
 ########################
 # SIMULATION FUNCTIONS #
 ########################
@@ -571,7 +572,7 @@ sink()
 set.seed(3)
 D2 = simulate(n)
 out.D1 = rmst.pred(rbind(D1$x,D2$x), c(D1$tobs,D2$tobs), c(D1$delta,D2$delta), 
-                   tau, train.fun.3, predict.fun.3, split=1:n, vars=0,
+                   tau, train.fun.3, predict.fun.3, split=1:n, varsL=0, varsG=0,
                    rho=0.5, bonf.correct=FALSE, seed=NULL, verbose=TRUE,
                    error=F, roo=F,vimpL=T, vimpG=T)
 
@@ -642,7 +643,7 @@ df = simulate(n,seed=40)
 
 V = 10
 out.fmw.B = rmst.pred(df$x, df$tobs, df$delta, tau, train.fun.4, predict.fun.4, 
-                      n.folds=V, cens.model="km", alpha=0.1, vars=0, 
+                      n.folds=V, cens.model="km", alpha=0.1, varsL=0, varsG=O, 
                       seed=60, verbose=TRUE, rho=0.5)
 
 ### MSE ###
@@ -695,7 +696,7 @@ df = simulate(n,seed=40)
 
 V = 10
 out.fmw.C = rmst.pred(df$x, df$tobs, df$delta, tau, train.fun.4.2, predict.fun.4.2, 
-                      n.folds=V, cens.model="km", alpha=0.1, vars=0, 
+                      n.folds=V, cens.model="km", alpha=0.1, varsG=0, 
                       seed=0, verbose=TRUE, rho=0.5, vimpL = F)
 
 ### MSE ###
@@ -722,7 +723,7 @@ graphics.off()
 
 ## Re-computation of global vimp with another seed
 out.fmw.C2 = rmst.pred(df$x, df$tobs, df$delta, tau, train.fun.4.2, predict.fun.4.2, 
-                       n.folds=V, cens.model="km", alpha=0.1, vars=0, 
+                       n.folds=V, cens.model="km", alpha=0.1, varsG=0, 
                        seed=10, verbose=TRUE, rho=0.5, vimpL = F, error = F, roo=F)
 
 pdf(file="fig/vimpGC2.pdf",w=9,h=2.25)
@@ -828,7 +829,7 @@ predict.fun.6 = function(out,x0,tau){predict.fun(out,x0,tau,pred.models=models)}
 out.brcancer = 
   rmst.pred(x.brcancer, tobs.brcancer, delta.brcancer, tau.brcancer, 
             train.fun.6, predict.fun.6, n.folds=20, cens.model="km", 
-            alpha=0.1, vars=0, verbose=TRUE, seed=20,
+            alpha=0.1, varsL=0, varsG=0, verbose=TRUE, seed=20,
             error=T,roo=T,vimpL=T,vimpG=T,rho=0.5)
 
 ### MSE ###
