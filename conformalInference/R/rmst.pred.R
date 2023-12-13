@@ -375,12 +375,12 @@ plot.rmst.pred = function(x,elements=c("all"), model.names=NULL, ...) {
     varsL = x$out.loco.roo.surv$vars
     for (i in 1:m){
       for (j in 1:length(varsL)){
-        plot(x$x[,j],x$x[,j],ylim=range(c(x$out.loco.roo.surv$lo,
+        plot(x$x[,varsL[j]],x$x[,varsL[j]],ylim=range(c(x$out.loco.roo.surv$lo,
              x$out.loco.roo.surv$up)),xlab="Location",ylab="Interval",
              main=paste(model.names[i], "- Var.",varsL[j]),col=NA)
         cols = ifelse(x$out.loco.roo.surv$lo[,j,i] <= 0, 1, 3)
-        segments(x$x[,j],x$out.loco.roo.surv$lo[,j,i],
-                 x$x[,j],x$out.loco.roo.surv$up[,j,i],
+        segments(x$x[,varsL[j]],x$out.loco.roo.surv$lo[,j,i],
+                 x$x[,varsL[j]],x$out.loco.roo.surv$up[,j,i],
                  col=cols,lwd=1)
         abline(h=0, lty=2, lwd=2, col=2)
       }
