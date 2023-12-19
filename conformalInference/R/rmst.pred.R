@@ -222,12 +222,13 @@ rmst.pred = function(x, t, d, tau,  train.fun, predict.fun, w=NULL,
 #' Print function for rmst.pred object.
 #'
 #' @param x The rmst.pred object.
-#' @param elements Selection among "mse", "range", "vimp", or "all", describing  
-#'   which elements of the analysis to show. If "mse", then the results on the 
-#'   estimation of the mean squared error are displayed; if "range", then
-#'   information on the range of the prediction intervals are displayed; if 
-#'   "vimp", then results of global variable importance are displayed. If
-#'   "all", then the results from all elements are displayed. Default is "all".
+#' @param elements Selection among "mse", "intervals", "vimp", or "all",   
+#'   describing which elements of the analysis to show. If "mse", then the  
+#'   results on the estimation of the mean squared error are displayed; if 
+#'   "intervals", then information on the length of the prediction intervals are 
+#'   displayed; if  "vimp", then results of global variable importance are 
+#'   displayed. If "all", then the results from all elements are displayed. 
+#'   Default is "all".
 #' @param digits Number of digits to display. Default is 3.
 #' @param model.names Names given to the different learning models given to
 #'   train.fun. Default is NULL.
@@ -246,9 +247,9 @@ print.rmst.pred = function(x,elements=c("all"),digits=3,
   if(is.null(model.names)){model.names = paste("Model",1:m)}
   if(!is.character(model.names) || length(model.names)!=m) 
     stop("model.names must be a vector of strings of size m")
-  if(!("mse" %in% elements) && !("range" %in% elements) && 
+  if(!("mse" %in% elements) && !("intervals" %in% elements) && 
      !("vimp" %in% elements) && !("all" %in% elements))
-    stop("elements must contain at least mse, range, vimp or all")
+    stop("elements must contain at least mse, intervals, vimp or all")
   
   if(("mse" %in% elements || "all" %in% elements) && !is.null(x$mse)){
     if(n.folds==1){
@@ -265,14 +266,14 @@ print.rmst.pred = function(x,elements=c("all"),digits=3,
   }
   
   
-  if(("range" %in% elements || "all" %in% elements) && !is.null(x$out.roo.surv)){
+  if(("intervals" %in% elements || "all" %in% elements) && !is.null(x$out.roo.surv)){
     d = x$out.roo.surv$up - x$out.roo.surv$lo
     
     if(sum(apply(d,2,function(s)length(unique(s)))) == m){
-      cat("\n*Range of the prediction intervals (centered on the predictions).\n")
+      cat("\n*Length of the prediction intervals (centered on the predictions).\n")
       d.disp = paste(round(apply(d,2,mean),digits=digits))
     }else{
-      cat("\n*Mean and quantiles of the range of the prediction intervals",
+      cat("\n*Mean and quantiles of the length of the prediction intervals",
           "\n  (centered on the predictions) displayed as follows:",
           "\n  Mean [0.1-quantile, 0.9-quantile]\n")
       
@@ -304,8 +305,8 @@ print.rmst.pred = function(x,elements=c("all"),digits=3,
       cat(sprintf("\n %s \n", mse.disp[i]))
     }
     
-    if(("range" %in% elements || "all" %in% elements) && !is.null(x$out.roo.surv)){
-      cat("\nRange of the prediction interval around the prediction:\n")
+    if(("length" %in% elements || "all" %in% elements) && !is.null(x$out.roo.surv)){
+      cat("\nLength of the prediction interval around the prediction:\n")
       cat(sprintf("\n %s \n", d.disp[i]))
     }
     
