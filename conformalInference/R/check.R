@@ -27,7 +27,8 @@ check.args.surv = function(x=NULL, t=NULL, d=NULL, tau=NULL, x0=NULL, w=NULL,
                            cens.model=NULL, alpha=NULL, train.fun=NULL, predict.fun=NULL,
                            mad.train.fun=NULL, mad.predict.fun=NULL, special.fun=NULL) {
 
-  if (is.null(x) || !is.numeric(x)) stop("x must be a numeric matrix")
+  # if (is.null(x) || !is.numeric(x)) stop("x must be a numeric matrix")
+  if (is.null(x)) stop("x must be a matrix")
   if (is.null(t) || !is.numeric(t)) stop("t must be a numeric vector")
   if (nrow(x) != length(t)) stop("nrow(x) and length(t) must match")
   if (is.null(d) || !is.numeric(d)) stop("d must be a binary (0/1) vector")
