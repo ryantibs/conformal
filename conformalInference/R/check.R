@@ -43,7 +43,7 @@ check.args.surv = function(x=NULL, t=NULL, d=NULL, tau=NULL, x0=NULL, w=NULL,
   check.num.01(alpha)
   # check.args(x, t, x0, alpha, train.fun,
   #   predict.fun, mad.train.fun, mad.predict.fun, special.fun)
-  check.args(matrix(1,nrow(x),ncol(x)), t, x0, alpha, train.fun,
+  check.args(matrix(1,nrow(x),ncol(x)), t, matrix(1,nrow(x),ncol(x)), alpha, train.fun,
              predict.fun, mad.train.fun, mad.predict.fun, special.fun)
 }
 
