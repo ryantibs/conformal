@@ -74,9 +74,9 @@
 #' @export loco.roo
 
 loco.roo = function(x, y, train.fun, predict.fun, vars=0,
-  alpha=0.1, mad.train.fun=NULL, mad.predict.fun=NULL, split=NULL,
-  seed=NULL, out.roo=NULL, verbose=FALSE) {
-
+                    alpha=0.1, mad.train.fun=NULL, mad.predict.fun=NULL, split=NULL,
+                    seed=NULL, out.roo=NULL, verbose=FALSE) {
+  
   # Set up data
   x = as.matrix(x)
   y = as.numeric(y)
@@ -94,7 +94,7 @@ loco.roo = function(x, y, train.fun, predict.fun, vars=0,
     txt = verbose
     verbose = TRUE
   }
-
+  
   inds = vector(mode="list",length=2)
   
   # Compute in-sample rank-one-out intervals ourselves
@@ -103,15 +103,15 @@ loco.roo = function(x, y, train.fun, predict.fun, vars=0,
     if (!is.null(split)) inds[[1]] = split
     # Otherwise make a random split
     else inds[[1]] = sample(1:n,floor(n/2))
-  
+    
     if (verbose) {
       cat(sprintf(paste("%sComputing in-sample rank-one-out conformal",
                         "prediction intervals ...\n"),txt))
     }
-
+    
     out.roo = conformal.pred.roo(x,y,train.fun,predict.fun,alpha=alpha,
-      mad.train.fun=mad.train.fun,mad.predict.fun=mad.predict.fun,
-      split=inds[[1]],verbose=ifelse(verbose,paste0(txt,"\t"),FALSE))
+                                 mad.train.fun=mad.train.fun,mad.predict.fun=mad.predict.fun,
+                                 split=inds[[1]],verbose=ifelse(verbose,paste0(txt,"\t"),FALSE))
   }
   # These have already been computed
   else {
@@ -123,7 +123,7 @@ loco.roo = function(x, y, train.fun, predict.fun, vars=0,
     }
     inds[[1]] = out.roo$split
   }
-
+  
   inds[[2]] = (1:n)[-inds[[1]]]
   pred = out.roo$pred
   m = ncol(pred)
@@ -144,7 +144,7 @@ loco.roo = function(x, y, train.fun, predict.fun, vars=0,
   for (k in 1:2) {
     i1 = inds[[k]]; n1 = length(i1)
     i2 = inds[[3-k]]; n2 = length(i2)
-
+    
     cat(sprintf("%sHandling %s part of the data-split ...\n",
                 txt,ifelse(k==1,"first","second")))
     
@@ -154,23 +154,23 @@ loco.roo = function(x, y, train.fun, predict.fun, vars=0,
                     txt,vars[j],j,nv))
         flush.console()
       }
-
+      
       # Train on the first part, without variable 
       out.j = train.fun(x[i1,-vars[j],drop=F],y[i1])
-
+      
       # Get predictions on the other, without variable
       pred.j = matrix(predict.fun(out.j,x[i2,-vars[j],drop=F]),nrow=n2)
       
       # Get the conformal intervals for differences in the residuals
       a = conformal.diff.int(pred[i2,,drop=F],pred.j,
-        out.roo$lo[i2,,drop=F],out.roo$up[i2,,drop=F])
+                             out.roo$lo[i2,,drop=F],out.roo$up[i2,,drop=F])
       lo[i2,j,] = a$lo
       up[i2,j,] = a$up 
     }
     
     if (verbose) cat("\n")
   }
-
+  
   return(list(lo=lo,up=up,vars=vars,split=inds[[1]],out.roo=out.roo))
 }
 
@@ -180,12 +180,12 @@ conformal.diff.int = function(mu1, mu2, lo, up) {
   n = nrow(mu1)
   m = ncol(mu1)
   v.lo = v.up = matrix(0,n,m)
-
+  
   # Cases where mu1 is larger
   oo = mu2 <= mu1
   v.lo[oo] = trunc(lo,mu2,mu1)[oo]
   v.up[oo] = trunc(up,mu2,mu1)[oo]
-
+  
   # Cases where mu2 is larger
   oo = mu1 <= mu2
   v.lo[oo] = -trunc(up,mu1,mu2)[oo]
@@ -284,7 +284,7 @@ loco.roo.surv = function(x, t, d, tau, train.fun, predict.fun, w=NULL,
                          split=NULL, seed=NULL, out.roo.surv=NULL, verbose=FALSE) {
   
   # Set up data
-  x = as.matrix(x)
+  # x = as.matrix(x)
   t = as.numeric(t)
   d = as.numeric(d)
   if(!is.null(w)) w = as.numeric(w)

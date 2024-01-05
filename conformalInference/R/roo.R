@@ -82,9 +82,9 @@
 #' @export conformal.pred.roo
 
 conformal.pred.roo = function(x, y, train.fun, predict.fun, alpha=0.1,
-  mad.train.fun=NULL, mad.predict.fun=NULL, split=NULL, seed=NULL,
-  verbose=FALSE) {
-
+                              mad.train.fun=NULL, mad.predict.fun=NULL, split=NULL, seed=NULL,
+                              verbose=FALSE) {
+  
   # Set up data
   x = as.matrix(x)
   y = as.numeric(y)
@@ -95,7 +95,7 @@ conformal.pred.roo = function(x, y, train.fun, predict.fun, alpha=0.1,
   check.args(x=x,y=y,x0=x,alpha=alpha,train.fun=train.fun,
              predict.fun=predict.fun,mad.train.fun=mad.train.fun,
              mad.predict.fun=mad.predict.fun)
-
+  
   # Users may pass in a string for the verbose argument
   if (verbose == TRUE) txt = ""
   if (verbose != TRUE && verbose != FALSE) {
@@ -125,24 +125,24 @@ conformal.pred.roo = function(x, y, train.fun, predict.fun, alpha=0.1,
     cat(sprintf("%sSplitting data into parts of size %i and %i ...\n",txt,
                 floor(n/2),ceiling(n/2)))
   }
-
+  
   # Train one split, and get residuals on the other
   for (k in 1:2) {
     i1 = inds[[k]]; n1 = length(i1)
     i2 = inds[[3-k]]; n2 = length(i2)
-
+    
     if (verbose) {
       cat(sprintf("%sTraining on %s part ...\n",txt,
                   ifelse(k==1,"first","second")))
     }
-
+    
     # Train on first part
     out = train.fun(x[i1,,drop=F],y[i1])
     yhat1 = matrix(predict.fun(out,x[i1,,drop=F]),nrow=n1)
     yhat2 = matrix(predict.fun(out,x[i2,,drop=F]),nrow=n2)
     fit[i1,] = yhat1
     pred[i2,] = yhat2
-
+    
     if (verbose) {
       cat(sprintf("%sComputing residuals and quantiles on %s part ...\n",
                   txt,ifelse(k==1,"first","second")))
@@ -259,11 +259,11 @@ conformal.pred.roo = function(x, y, train.fun, predict.fun, alpha=0.1,
 
 
 conformal.pred.roo.surv = function(x, t, d, tau, train.fun, predict.fun,
-  w=NULL,cens.model="km", alpha=0.1, mad.train.fun=NULL, mad.predict.fun=NULL, 
-  split=NULL, seed=NULL, verbose=FALSE) {
+                                   w=NULL,cens.model="km", alpha=0.1, mad.train.fun=NULL, mad.predict.fun=NULL, 
+                                   split=NULL, seed=NULL, verbose=FALSE) {
   
   # Set up data
-  x = as.matrix(x)
+  # x = as.matrix(x)
   t = as.numeric(t)
   d = as.numeric(d)
   if(!is.null(w)) w = as.numeric(w)

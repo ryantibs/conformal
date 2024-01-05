@@ -249,7 +249,7 @@ conformal.pred.split.surv = function(x, t, d, tau, x0, train.fun, predict.fun,
   mad.predict.fun=NULL, split=NULL, seed=NULL, verbose=FALSE) {
   
   # Set up data
-  x = as.matrix(x)
+  # x = as.matrix(x)
   t = as.numeric(t)
   d = as.numeric(d)
   if(!is.null(w)) w = as.numeric(w)

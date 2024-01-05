@@ -114,13 +114,13 @@
 #' @export rmst.pred
 
 rmst.pred = function(x, t, d, tau,  train.fun, predict.fun, w=NULL, 
-  cens.model="km", CV=T, n.folds=10, prop=0.1, active.fun=NULL, alpha=0.1,  
-  rho=0.5, varsL=0, varsG=0, bonf.correct=FALSE, mad.train.fun=NULL, 
-  mad.predict.fun=NULL, split=NULL, seed=NULL, out.roo.surv=NULL, verbose=FALSE,
-  error=T,roo=T,vimpL=T,vimpG=T) {
-
+                     cens.model="km", CV=T, n.folds=10, prop=0.1, active.fun=NULL, alpha=0.1,  
+                     rho=0.5, varsL=0, varsG=0, bonf.correct=FALSE, mad.train.fun=NULL, 
+                     mad.predict.fun=NULL, split=NULL, seed=NULL, out.roo.surv=NULL, verbose=FALSE,
+                     error=T,roo=T,vimpL=T,vimpG=T) {
+  
   # Set up data
-  x = as.matrix(x)
+  # x = as.matrix(x)
   t = as.numeric(t)
   d = as.numeric(d)
   if(!is.null(w)) w = as.numeric(w)
@@ -196,7 +196,7 @@ rmst.pred = function(x, t, d, tau,  train.fun, predict.fun, w=NULL,
       cat(sprintf(paste("%sComputing local variable importance ...\n"),txt))
     }
     out.loco.roo.surv = loco.roo.surv(x, t, d, tau, train.fun, predict.fun, 
-                vars=varsL, alpha=alpha, out.roo.surv=out.roo.surv, verbose=F)
+                                      vars=varsL, alpha=alpha, out.roo.surv=out.roo.surv, verbose=F)
     out$out.loco.roo.surv=out.loco.roo.surv
     out$m = ncol(out.loco.roo.surv$out.roo.surv$pred)
   }
@@ -213,7 +213,7 @@ rmst.pred = function(x, t, d, tau,  train.fun, predict.fun, w=NULL,
     out$m = length(out.loco.surv$active)
   }
   
-          
+  
   class(out) = "rmst.pred"
   return(out)
 }
@@ -260,8 +260,8 @@ print.rmst.pred = function(x,elements=c("all"),digits=3,
                 "\n  Mean and quantiles are computed and displayed as follows:",
                 "\n  Mean [0.1-quantile, 0.9-quantile]\n"))
       mse.disp = paste(round(apply(x$mse,2,mean),digits=digits),"[",
-        round(apply(x$mse,2,function(s)quantile(s,0.1)),digits=digits),",",
-        round(apply(x$mse,2,function(s)quantile(s,0.9)),digits=digits),"]")
+                       round(apply(x$mse,2,function(s)quantile(s,0.1)),digits=digits),",",
+                       round(apply(x$mse,2,function(s)quantile(s,0.9)),digits=digits),"]")
     }
   }
   
@@ -278,8 +278,8 @@ print.rmst.pred = function(x,elements=c("all"),digits=3,
           "\n  Mean [0.1-quantile, 0.9-quantile]\n")
       
       d.disp = paste(round(apply(d,2,mean),digits=digits),"[",
-        round(apply(d,2,function(s)quantile(s,0.1)),digits=digits),",",
-        round(apply(d,2,function(s)quantile(s,0.9)),digits=digits),"]")
+                     round(apply(d,2,function(s)quantile(s,0.1)),digits=digits),",",
+                     round(apply(d,2,function(s)quantile(s,0.9)),digits=digits),"]")
     }
   }
   
@@ -377,7 +377,7 @@ plot.rmst.pred = function(x,elements=c("all"), model.names=NULL, ...) {
     for (i in 1:m){
       for (j in 1:length(varsL)){
         plot(x$x[,varsL[j]],x$x[,varsL[j]],ylim=range(c(x$out.loco.roo.surv$lo,
-             x$out.loco.roo.surv$up)),xlab="Location",ylab="Interval",
+                                                        x$out.loco.roo.surv$up)),xlab="Location",ylab="Interval",
              main=paste(model.names[i], "- Var.",varsL[j]),col=NA)
         cols = ifelse(x$out.loco.roo.surv$lo[,j,i] <= 0, 1, 3)
         segments(x$x[,varsL[j]],x$out.loco.roo.surv$lo[,j,i],
@@ -405,7 +405,7 @@ plot.rmst.pred = function(x,elements=c("all"), model.names=NULL, ...) {
                1:p, x$out.loco.surv$inf.sign[[i]][,3],
                col="red", lwd=2)
       points(1:p,(x$out.loco.surv$inf.sign[[i]][,3]+x$out.loco.surv$inf.sign[[i]][,2])/2,
-           col="red",pch=23)
+             col="red",pch=23)
     }
   }
   

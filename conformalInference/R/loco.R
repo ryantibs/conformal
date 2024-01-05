@@ -70,8 +70,8 @@
 #' @export loco
 
 loco = function(x, y, train.fun, predict.fun, active.fun, alpha=0.1,
-  bonf.correct=TRUE, split=NULL, seed=NULL, verbose=FALSE) {
-
+                bonf.correct=TRUE, split=NULL, seed=NULL, verbose=FALSE) {
+  
   # Set up data
   x = as.matrix(x)
   y = as.numeric(y)
@@ -81,7 +81,7 @@ loco = function(x, y, train.fun, predict.fun, active.fun, alpha=0.1,
   # Check input arguments
   check.args(x=x,y=y,x0=x,alpha=alpha,train.fun=train.fun,
              predict.fun=predict.fun)
-
+  
   # Users may pass in a string for the verbose argument
   if (verbose == TRUE) txt = ""
   if (verbose != TRUE && verbose != FALSE) {
@@ -120,7 +120,7 @@ loco = function(x, y, train.fun, predict.fun, active.fun, alpha=0.1,
   # Get residuals on second
   res = abs(y[i2] - matrix(predict.fun(out,x[i2,,drop=F]),nrow=n2))
   res.drop = vector(mode="list",length=J)
-
+  
   # Re-fit after dropping each feature in the master list
   for (j in Seq(1,J)) {
     if (verbose) {
@@ -128,16 +128,16 @@ loco = function(x, y, train.fun, predict.fun, active.fun, alpha=0.1,
                         "considered) ..."),txt,master[j],j,J))
       flush.console()
     }
-
+    
     # Train on the first part, without variable 
     out.j = train.fun(x[i1,-master[j],drop=F],y[i1])
-
+    
     # Get predictions on the other, without variable
     res.drop[[j]] = abs(y[i2] - matrix(predict.fun(out.j,x[i2,-master[j],
-              drop=F]),nrow=n2))  
+                                                           drop=F]),nrow=n2))  
   }
   if (verbose) cat("\n")
-
+  
   # Compute p-values and confidence intervals at each tuning step
   inf.z = inf.sign = inf.wilcox = vector(mode="list",length=m)
   
@@ -150,7 +150,7 @@ loco = function(x, y, train.fun, predict.fun, active.fun, alpha=0.1,
       }
       else cat(sprintf("%sPerforming LOCO analysis ...",txt))
     }
-
+    
     k = length(active[[l]])
     inf.z[[l]] = inf.sign[[l]] = inf.wilcox[[l]] = matrix(0,k,3)
     for (j in Seq(1,k)) {
@@ -167,9 +167,9 @@ loco = function(x, y, train.fun, predict.fun, active.fun, alpha=0.1,
       colnames(inf.wilcox[[l]]) = c("P-value", "LowConfPt", "UpConfPt")
   }
   if (verbose) cat("\n")
-
+  
   out = list(inf.z=inf.z,inf.sign=inf.sign,inf.wilcox=inf.wilcox,
-    active=active, master=master, bonf.correct=bonf.correct)
+             active=active, master=master, bonf.correct=bonf.correct)
   class(out) = "loco"
   return(out)
 }
@@ -191,7 +191,7 @@ loco = function(x, y, train.fun, predict.fun, active.fun, alpha=0.1,
 
 print.loco = function(x, test=c("wilcox","sign","z","all"), digits=3, ...) {
   test = match.arg(test)
-
+  
   cat(paste("\nDisplaying results of LOCO analysis. Notes:\n",
             "\n- P-values are from a one-sided test of the target parameter",
             "\n  (mean or median excess test error) being equal to zero versus",
@@ -229,7 +229,7 @@ print.loco = function(x, test=c("wilcox","sign","z","all"), digits=3, ...) {
     
     if (test=="wilcox" || test=="all") {
       cat("\nWilcoxon test results:\n\n")
-       tab = round(x$inf.wilcox[[i]],digits=digits)
+      tab = round(x$inf.wilcox[[i]],digits=digits)
       code = get.signif.code(x$inf.wilcox[[i]][,1])
       tab = cbind(rownames(tab),tab,code)
       colnames(tab)[1] = "Var"
@@ -237,7 +237,7 @@ print.loco = function(x, test=c("wilcox","sign","z","all"), digits=3, ...) {
       rownames(tab) = rep("",nrow(tab))
       print(tab,quote=FALSE)
     }
-
+    
     cat("\nSignificance codes: 0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1\n")
   }
 }
@@ -248,7 +248,7 @@ my.z.test = function(z, alpha, k, bonf.correct=TRUE){
   s = sd(z)
   m = mean(z)
   pval = 1-pnorm(m/s*sqrt(n))
-
+  
   # Apply Bonferroni correction for k tests
   if (bonf.correct) {
     pval = min(k*pval,1)
@@ -266,7 +266,7 @@ my.sign.test = function(z, alpha, k, bonf.correct=TRUE){
   n = length(z)
   s = sum(z>0)
   pval = 1-pbinom(s-1,n,0.5)
-
+  
   # Apply Bonferroni correction for k tests
   if (bonf.correct) {
     pval = min(k*pval,1)
@@ -283,7 +283,7 @@ my.sign.test = function(z, alpha, k, bonf.correct=TRUE){
 # Median inference: one-sided p-value but a two-sided confidence interval
 my.wilcox.test = function(z, alpha, k, bonf.correct=TRUE){
   pval = wilcox.test(z, alternative="greater", exact=TRUE)$p.value
-
+  
   # Apply Bonferroni correction for k tests
   if (bonf.correct) {
     pval = min(k*pval,1)
@@ -381,7 +381,7 @@ loco.surv = function(x, t, d, tau, train.fun, predict.fun, w=NULL,
                      seed=NULL, verbose=FALSE) {
   
   # Set up data
-  x = as.matrix(x)
+  # x = as.matrix(x)
   t = as.numeric(t)
   d = as.numeric(d)
   if(!is.null(w)) w = as.numeric(w)
