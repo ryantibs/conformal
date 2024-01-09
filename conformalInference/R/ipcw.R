@@ -17,7 +17,7 @@
 #' @export ipcw
 
 ipcw = function(t,d,x,tau,cens.model = "km"){
-  if(!is.null(x)){  x = as.matrix(x)  }
+  # if(!is.null(x)){  x = as.matrix(x)  }
   if(!cens.model %in% c("km","cox","rsf")) stop("cens.model must be either km, 
                                                 cox or rsf")
   
