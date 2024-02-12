@@ -614,6 +614,14 @@ for(i in 1:m){
 }
 graphics.off()
 
+# Rejection rate at level 5%
+pvalues.reject = data.frame(t(apply(pvalues < 0.05,MARGIN = c(1,2),mean)))
+colnames(pvalues.reject) = models.names
+
+sink(file = "fig/reject_rate.txt", type = "output")
+print(pvalues.reject)
+sink()
+
 ##########################
 # 4/ RMST.PRED FRAMEWORK #
 ##########################
@@ -816,6 +824,13 @@ tau.brcancer = quantile(tobs.brcancer,0.9,names=F)
 x.brcancer = brcancer %>% select(-rectime,-censrec)
 p = dim(x.brcancer)[2]
 
+## Impact of covariates on censoring
+cens_cox = coxph(Surv(tobs.brcancer,1-delta.brcancer)~.,data=x.brcancer)
+cens_cox
+cens_rsf = rfsrc(Surv(tobs.brcancer,cens.brcancer)~.,data=data.frame(tobs.brcancer,cens.brcancer=1-delta.brcancer,x.brcancer),
+                 importance=T,seed=-1)
+cens_rsf$importance
+##
 
 #####
 models = c("km","cox","rsf","lm")
