@@ -15,11 +15,18 @@ The folder "lei2018" contains R code to reproduce all examples in the paper
 by Lei, G'Sell, Rinaldo, Tibshirani, Wasserman (2018).  The folder
 "tibshirani2019" contains R code to reproduce all examples in the paper
 [Conformal Prediction Under Covariate Shift](http://www.stat.cmu.edu/~ryantibs/papers/weightedcp.pdf)
-by Tibshirani, Barber, Candes, Ramdas (2019).  This code all relies on the
+by Tibshirani, Barber, Candes, Ramdas (2019). The folder "cwiling2023"
+contains R code to reproduce all examples in the paper
+[A Comprehensive Framework for Evaluating Time to Event 
+Predictions using the Restricted Mean Survival Time](https://arxiv.org/pdf/2306.16075.pdf)
+by Cwiling, Perduca, Bouaziz (2023). This code all relies on the
 "conformalInference" R package.
 
 Relevant work (in reverse chronological order):
 
+- [A Comprehensive Framework for Evaluating Time to Event 
+  Predictions using the Restricted Mean Survival Time](https://arxiv.org/pdf/2306.16075.pdf)
+  by Ariane Cwiling, Vittorio Perduca, Olivier Bouaziz, arXiv preprint, 2023.
 - [Conformal Prediction Under Covariate Shift](http://www.stat.cmu.edu/~ryantibs/papers/weightedcp.pdf)
   by Ryan Tibshirani, Rina Barber, Emmanuel Candes, Aaditya Ramdas, Advances in
   Neural Information Processing Systems, 2019.

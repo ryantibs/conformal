@@ -70,8 +70,8 @@
 #' @export loco
 
 loco = function(x, y, train.fun, predict.fun, active.fun, alpha=0.1,
-  bonf.correct=TRUE, split=NULL, seed=NULL, verbose=FALSE) {
-
+                bonf.correct=TRUE, split=NULL, seed=NULL, verbose=FALSE) {
+  
   # Set up data
   x = as.matrix(x)
   y = as.numeric(y)
@@ -81,7 +81,7 @@ loco = function(x, y, train.fun, predict.fun, active.fun, alpha=0.1,
   # Check input arguments
   check.args(x=x,y=y,x0=x,alpha=alpha,train.fun=train.fun,
              predict.fun=predict.fun)
-
+  
   # Users may pass in a string for the verbose argument
   if (verbose == TRUE) txt = ""
   if (verbose != TRUE && verbose != FALSE) {
@@ -120,7 +120,7 @@ loco = function(x, y, train.fun, predict.fun, active.fun, alpha=0.1,
   # Get residuals on second
   res = abs(y[i2] - matrix(predict.fun(out,x[i2,,drop=F]),nrow=n2))
   res.drop = vector(mode="list",length=J)
-
+  
   # Re-fit after dropping each feature in the master list
   for (j in Seq(1,J)) {
     if (verbose) {
@@ -128,16 +128,16 @@ loco = function(x, y, train.fun, predict.fun, active.fun, alpha=0.1,
                         "considered) ..."),txt,master[j],j,J))
       flush.console()
     }
-
+    
     # Train on the first part, without variable 
     out.j = train.fun(x[i1,-master[j],drop=F],y[i1])
-
+    
     # Get predictions on the other, without variable
     res.drop[[j]] = abs(y[i2] - matrix(predict.fun(out.j,x[i2,-master[j],
-              drop=F]),nrow=n2))  
+                                                           drop=F]),nrow=n2))  
   }
   if (verbose) cat("\n")
-
+  
   # Compute p-values and confidence intervals at each tuning step
   inf.z = inf.sign = inf.wilcox = vector(mode="list",length=m)
   
@@ -150,7 +150,7 @@ loco = function(x, y, train.fun, predict.fun, active.fun, alpha=0.1,
       }
       else cat(sprintf("%sPerforming LOCO analysis ...",txt))
     }
-
+    
     k = length(active[[l]])
     inf.z[[l]] = inf.sign[[l]] = inf.wilcox[[l]] = matrix(0,k,3)
     for (j in Seq(1,k)) {
@@ -167,9 +167,9 @@ loco = function(x, y, train.fun, predict.fun, active.fun, alpha=0.1,
       colnames(inf.wilcox[[l]]) = c("P-value", "LowConfPt", "UpConfPt")
   }
   if (verbose) cat("\n")
-
+  
   out = list(inf.z=inf.z,inf.sign=inf.sign,inf.wilcox=inf.wilcox,
-    active=active, master=master, bonf.correct=bonf.correct)
+             active=active, master=master, bonf.correct=bonf.correct)
   class(out) = "loco"
   return(out)
 }
@@ -191,7 +191,7 @@ loco = function(x, y, train.fun, predict.fun, active.fun, alpha=0.1,
 
 print.loco = function(x, test=c("wilcox","sign","z","all"), digits=3, ...) {
   test = match.arg(test)
-
+  
   cat(paste("\nDisplaying results of LOCO analysis. Notes:\n",
             "\n- P-values are from a one-sided test of the target parameter",
             "\n  (mean or median excess test error) being equal to zero versus",
@@ -229,7 +229,7 @@ print.loco = function(x, test=c("wilcox","sign","z","all"), digits=3, ...) {
     
     if (test=="wilcox" || test=="all") {
       cat("\nWilcoxon test results:\n\n")
-       tab = round(x$inf.wilcox[[i]],digits=digits)
+      tab = round(x$inf.wilcox[[i]],digits=digits)
       code = get.signif.code(x$inf.wilcox[[i]][,1])
       tab = cbind(rownames(tab),tab,code)
       colnames(tab)[1] = "Var"
@@ -237,7 +237,7 @@ print.loco = function(x, test=c("wilcox","sign","z","all"), digits=3, ...) {
       rownames(tab) = rep("",nrow(tab))
       print(tab,quote=FALSE)
     }
-
+    
     cat("\nSignificance codes: 0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1\n")
   }
 }
@@ -248,7 +248,7 @@ my.z.test = function(z, alpha, k, bonf.correct=TRUE){
   s = sd(z)
   m = mean(z)
   pval = 1-pnorm(m/s*sqrt(n))
-
+  
   # Apply Bonferroni correction for k tests
   if (bonf.correct) {
     pval = min(k*pval,1)
@@ -266,7 +266,7 @@ my.sign.test = function(z, alpha, k, bonf.correct=TRUE){
   n = length(z)
   s = sum(z>0)
   pval = 1-pbinom(s-1,n,0.5)
-
+  
   # Apply Bonferroni correction for k tests
   if (bonf.correct) {
     pval = min(k*pval,1)
@@ -283,7 +283,7 @@ my.sign.test = function(z, alpha, k, bonf.correct=TRUE){
 # Median inference: one-sided p-value but a two-sided confidence interval
 my.wilcox.test = function(z, alpha, k, bonf.correct=TRUE){
   pval = wilcox.test(z, alternative="greater", exact=TRUE)$p.value
-
+  
   # Apply Bonferroni correction for k tests
   if (bonf.correct) {
     pval = min(k*pval,1)
@@ -306,4 +306,274 @@ get.signif.code = function(v) {
   return(code)
 }
 
+###############################################################################
 
+#' Variable importance (global) via median excess test error extended to right-
+#' censored data
+#'
+#' Compute confidence intervals for median excess test error due to 
+#'   dropping a variable. Extension to estimators of the restricted mean
+#'   survival time with right-censored data.
+#'
+#' @param x Matrix of features, of dimension (say) n x p.
+#' @param t Vector of responses (observed times), of length (say) n.
+#' @param d Vector of responses (censoring indicator), of length (say) n.
+#' @param tau Horizon of time.
+#' @param train.fun A function to perform model training, i.e., to produce an
+#'   estimator of E(min(T*,tau)|X), the conditional expectation of the true 
+#'   event time T* given features X. Its input arguments should be x: matrix of 
+#'   features, t: vector of observed times, d: vector of censoring indicators
+#'   and tau: horizon of time. train.fun can be a function performing model 
+#'   training for several (say m) regression models.
+#' @param predict.fun A function to perform prediction for the (mean of the)
+#'   responses at new feature values. Its input arguments should be out: output
+#'   produced by train.fun, and newx: feature values at which we want to make
+#'   predictions.
+#' @param w Censoring weights. This should be a vector of length n. 
+#'   Default is NULL, in which case censoring weights are computed using the 
+#'   Kaplan-Meier model. 
+#' @param active.fun A function which takes the output of train.fun, and reports
+#'   which features are active for each fitted model contained in this output.
+#'   Its only input argument should be out: output produced by train.fun.
+#' @param vars A list specifying the variables (indices between 1 and p)
+#'   for which variable importance should be investigated. Alternatively, if
+#'   set equal to 0, the default, then all variables are investigated. If both 
+#'   vars and active.fun are passed, the latter takes priority and the former
+#'   is ignored.
+#' @param alpha Miscoverage level for the confidence intervals, i.e., intervals
+#'   with coverage 1-alpha are formed. Default for alpha is 0.1.
+#' @param bonf.correct Should a Bonferroni correction be applied to the p-values
+#'   and confidence intervals? Default is FALSE.
+#' @param split Indices that define the data-split to be used (i.e., the indices
+#'   define the first half of the data-split, on which the model is trained).
+#'   Default is NULL, in which case the split is chosen randomly.
+#' @param seed Integer to be passed to set.seed before defining the random 
+#'   data-split to be used. Default is NULL, which effectively sets no seed.
+#'   If both split and seed are passed, the former takes priority and the latter
+#'   is ignored.
+#' @param verbose Should intermediate progress be printed out? Default is FALSE.
+#'
+#' @return A list with the following components: inf.sign, active, master, 
+#'   bonf.correct. The first is a list, containing the results of LOCO inference
+#'   with the sign text adapted to right-censored data. This list has one 
+#'   element per regression model the training and prediction functions, 
+#'   train.fun and predict.fun. The inherent to second returned component active
+#'   is a list, with one element per tuning step, that reports which features 
+#'   are active (or at least investigated) in  the corresponding fitted model.
+#'   The third returned component master collects all active (or investigated) 
+#'   features across all regression models, for easy reference. The last
+#'   component signals whether a Bonferroni correction has been applied.
+#'
+#' @details The sign test adapted to right-censored data is asymptotically valid
+#'   if the Kaplan-Meier model is used to estimate the censoring survival 
+#'   function in the censoring weights, under the assumption of independent 
+#'   censoring.
+#'
+#' @references "Distribution-Free Predictive Inference for Regression" by Lei,
+#'   G'Sell, Rinaldo, Tibshirani, Wasserman (2018). See also "A Comprehensive 
+#'   Framework for Evaluating Time to Event Predictions using the Restricted 
+#'   Mean Survival Time" by Cwiling, Perduca, Bouaziz (2023) for the extension
+#'   to right-censored data.
+#' @export loco.surv
+
+loco.surv = function(x, t, d, tau, train.fun, predict.fun, w=NULL,
+                     active.fun=NULL, vars=0, alpha=0.1, rho=0.5, bonf.correct=FALSE, split=NULL, 
+                     seed=NULL, verbose=FALSE) {
+  
+  # Set up data
+  # x = as.matrix(x)
+  t = as.numeric(t)
+  d = as.numeric(d)
+  if(!is.null(w)) w = as.numeric(w)
+  n = nrow(x)
+  p = ncol(x)
+  
+  # Check input arguments
+  check.args.surv(x=x,t=t,d=d,tau=tau,x0=x,w=w,cens.model="km",
+                  alpha=alpha,train.fun=train.fun,predict.fun=predict.fun)
+  
+  # Users may pass in a string for the verbose argument
+  if (verbose == TRUE) txt = ""
+  if (verbose != TRUE && verbose != FALSE) {
+    txt = verbose
+    verbose = TRUE
+  }
+  
+  # If the user passed indices for the split, use them
+  if (!is.null(split)) i1 = split
+  # Otherwise make a random split
+  else {
+    if (!is.null(seed)) set.seed(seed)
+    i1 = sample(1:n,floor(n*rho))
+  }
+  i2 = (1:n)[-i1]
+  n1 = length(i1)
+  n2 = length(i2)
+  
+  if (verbose) {
+    cat(sprintf("%sSplitting data into parts of size %i and %i ...\n",
+                txt,n1,n2))
+    cat(sprintf("%sInitial training on first part ...\n",txt))
+  }
+  
+  # Censoring weights
+  if(is.null(w)){
+    if (verbose) cat(sprintf("%sComputing censoring weights ...\n",txt))
+    w = ipcw(t,d,x,tau,cens.model="km")
+  }
+  
+  # Train on first part
+  out = train.fun(x[i1,,drop=F],t[i1],d[i1],tau)
+  
+  # Which variables to try dropping?
+  if(is.null(active.fun)){
+    if (length(vars) == 1 && vars == 0) vars = 1:p
+    else {
+      if (is.null(vars) || !is.numeric(vars) || min(vars) < 1 || 
+          max(vars) > p || vars != round(vars)) {
+        stop("vars must be a list of integers between 1 and p")
+      }
+      vars = unique(vars)
+    }
+    active = purrr::map(1:length(out), ~ vars)
+  }else{
+    active = active.fun(out)
+  }
+  
+  master = unique(unlist(active))
+  m = length(active)
+  J = length(master)
+  
+  that2 = matrix(predict.fun(out,x[i2,,drop=F],tau),nrow=n2)
+  
+  if (verbose) {
+    cat(sprintf("%sInitial residuals on second part ...\n",txt))
+  }
+  
+  # Get residuals on second
+  res = abs(pmin(t[i2],tau) - that2)
+  res.drop = vector(mode="list",length=J)
+  
+  
+  # Re-fit after dropping each feature in the master list
+  for (j in Seq(1,J)) {
+    if (verbose) {
+      cat(sprintf(paste("\r%sRe-fitting after dropping feature %i (%i of %i",
+                        "considered) ..."),txt,master[j],j,J))
+      flush.console()
+    }
+    
+    # Train on the first part, without variable 
+    out.j = train.fun(x[i1,-master[j],drop=F],t[i1],d[i1],tau)
+    
+    # Get predictions on the other, without variable
+    pred.j = matrix(predict.fun(out.j,x[i2,-master[j],drop=F],tau),nrow=n2)
+    res.drop[[j]] = abs(pmin(t[i2],tau) - pred.j)  
+  }
+  if (verbose) cat("\n")
+  
+  # Compute p-values and confidence intervals at each tuning step
+  inf.sign = vector(mode="list",length=m)
+  
+  for (l in 1:m) {
+    if (verbose) {
+      if (m>1) {
+        cat(sprintf(paste("\r%sPerforming LOCO analysis at tuning step %i",
+                          "(of %i) ..."),txt,l,m))
+        flush.console()
+      }
+      else cat(sprintf("%sPerforming LOCO analysis ...",txt))
+    }
+    
+    k = length(active[[l]])
+    inf.sign[[l]] = matrix(0,k,3)
+    for (j in Seq(1,k)) {
+      j.master = which(master == active[[l]][j])
+      z = res.drop[[j.master]][,l] - res[,l]
+      inf.sign[[l]][j,] = my.surv.sign.test(t[i2],d[i2],w[i2],z,
+                                            tau,alpha,k,bonf.correct)
+    }
+    
+    rownames(inf.sign[[l]]) = active[[l]]
+    colnames(inf.sign[[l]]) = c("P-value", "LowConfPt", "UpConfPt")
+  }
+  if (verbose) cat("\n")
+  
+  out = list(inf.sign=inf.sign, 
+             active=active, master=master, bonf.correct=bonf.correct)
+  class(out) = "loco.surv"
+  return(out)
+}
+
+
+#' Print function for loco.surv object.
+#'
+#' @param x The loco.surv object.
+#' @param digits Number of digits to display. Default is 3. 
+#' @param ... Other arguments (currently not used).
+#'
+#' @export 
+
+print.loco.surv = function(x, digits=3, ...) {
+  
+  cat(paste("\nDisplaying results of LOCO analysis. Notes:\n",
+            "\n- P-values are from a one-sided test of the target parameter",
+            "\n  (mean or median excess test error) being equal to zero versus",
+            "\n  greater than zero.",
+            "\n- Confidence intervals are from inverting the two-sided version",
+            "\n  of this test.",
+            "\n- Bonferonni correction:",
+            ifelse(x$bonf.correct, "yes.", "no."), "\n"))
+  
+  m = length(x$inf.sign)
+  for (i in 1:m) {
+    if (m>1) cat(sprintf("\n------- Tuning step %i -------\n",i))
+    
+    cat("\nSign test results:\n\n")
+    tab = round(x$inf.sign[[i]],digits=digits)
+    code = get.signif.code(x$inf.sign[[i]][,1])
+    tab = cbind(rownames(tab),tab,code)
+    colnames(tab)[1] = "Var"
+    colnames(tab)[5] = ""
+    rownames(tab) = rep("",nrow(tab))
+    print(tab,quote=FALSE)
+    
+    cat("\nSignificance codes: 0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1\n")
+  }
+}
+
+
+
+# Median inference: one-sided p-value but a two-sided confidence interval, 
+# for right-censored data
+my.surv.sign.test = function(t, d, w, z, tau, alpha, k, bonf.correct=TRUE){
+  n = length(t)
+  phi = (z>0)*1 + (z==0)*rbinom(n,1,0.5) 
+  w[t > tau] = 0
+  
+  fit = survfit(Surv(t, d) ~ 1, data=data.frame(t,d))
+  S.tau = fit$surv[max(which(fit$time<=tau))]
+  
+  df.sort = arrange(data.frame(t, d, w, phi),t) %>%
+    mutate(Y.Ti = (n-1:n+1)/n,
+           phi.w = phi*w,
+           phi.bar = rev(cumsum(rev(phi.w)))/n,
+           squared.diff = (phi.w - d*phi.bar/Y.Ti - (t<=tau)*d*S.tau/(1-S.tau)*mean(phi*w)/Y.Ti)**2
+    )
+  
+  V = mean(df.sort$squared.diff)/(1-S.tau)**2
+  
+  tn2 = sqrt(n/V)*(mean(df.sort$phi.w)/(1-S.tau) - 0.5)
+  pval = 1-pnorm(tn2)
+  
+  # Apply Bonferroni correction for k tests
+  if (bonf.correct) {
+    pval = min(k*pval,1)
+    alpha = alpha/k
+  }
+  
+  left = mean(df.sort$phi.w)/(1-S.tau) - sqrt(V/n)*qnorm(1-alpha/2)
+  right = mean(df.sort$phi.w)/(1-S.tau) + sqrt(V/n)*qnorm(1-alpha/2)
+  
+  return(c(pval,left,right))
+}

@@ -1,0 +1,172 @@
+
+*Estimation of the mean squared error on 10 folds: 
+  Mean and quantiles are computed and displayed as follows: 
+  Mean [0.1-quantile, 0.9-quantile]
+
+*Mean and quantiles of the range of the prediction intervals 
+  (centered on the predictions) displayed as follows: 
+  Mean [0.1-quantile, 0.9-quantile]
+
+*Displaying results of LOCO analysis. Notes:
+ 
+ - P-values are from a one-sided test of the target parameter 
+  (mean or median excess test error) being equal to zero versus 
+  greater than zero. 
+ - Confidence intervals are from inverting the two-sided version 
+  of this test. 
+ - Bonferonni correction: no. 
+
+------- KM -------
+
+Mean squared error estimation:
+
+ 0.409 [ 0.328 , 0.534 ] 
+
+Range of the prediction interval around the prediction:
+
+ 1.756 [ 1.719 , 1.795 ] 
+
+Sign test results:
+
+ Var P-value LowConfPt UpConfPt   
+ 1   0.729   0.424     0.535      
+ 2   0.777   0.419     0.53       
+ 3   0.55    0.441     0.551      
+ 4   0.993   0.364     0.473      
+ 5   0.956   0.388     0.498      
+ 6   0.588   0.437     0.548      
+ 7   0.236   0.469     0.579      
+ 8   0.267   0.466     0.576      
+ 9   0.003   0.536     0.644    **
+ 10  0.105   0.487     0.597      
+ 11  0.97    0.382     0.492      
+ 12  0.737   0.424     0.534      
+ 13  0.141   0.481     0.591      
+ 14  0.367   0.456     0.566      
+ 15  0.246   0.468     0.578      
+
+Significance codes: 0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+
+------- Cox -------
+
+Mean squared error estimation:
+
+ 0.182 [ 0.144 , 0.225 ] 
+
+Range of the prediction interval around the prediction:
+
+ 1.466 [ 1.34 , 1.593 ] 
+
+Sign test results:
+
+ Var P-value LowConfPt UpConfPt    
+ 1   0.798   0.417     0.527       
+ 2   0.418   0.452     0.562       
+ 3   0.465   0.448     0.558       
+ 4   0.959   0.387     0.497       
+ 5   0.099   0.488     0.598    .  
+ 6   0       0.59      0.697    ***
+ 7   0.041   0.503     0.612    *  
+ 8   0.699   0.427     0.538       
+ 9   0.159   0.478     0.588       
+ 10  0.245   0.468     0.578       
+ 11  1       0.332     0.44        
+ 12  0.616   0.435     0.545       
+ 13  0.787   0.418     0.528       
+ 14  0.784   0.418     0.529       
+ 15  0.66    0.431     0.541       
+
+Significance codes: 0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+
+------- RSF -------
+
+Mean squared error estimation:
+
+ 0.184 [ 0.133 , 0.251 ] 
+
+Range of the prediction interval around the prediction:
+
+ 1.535 [ 1.375 , 1.699 ] 
+
+Sign test results:
+
+ Var P-value LowConfPt UpConfPt    
+ 1   0.946   0.391     0.501       
+ 2   0       0.571     0.676    ***
+ 3   0.567   0.439     0.549       
+ 4   0.809   0.416     0.526       
+ 5   0.058   0.498     0.607    .  
+ 6   0       0.556     0.664    ***
+ 7   0.384   0.455     0.565       
+ 8   0.871   0.407     0.517       
+ 9   0.19    0.474     0.584       
+ 10  0.922   0.398     0.508       
+ 11  0.593   0.437     0.547       
+ 12  0.084   0.491     0.6      .  
+ 13  0.505   0.444     0.555       
+ 14  0.716   0.426     0.536       
+ 15  0.765   0.421     0.531       
+
+Significance codes: 0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+
+------- P.obs.+LM -------
+
+Mean squared error estimation:
+
+ 0.19 [ 0.149 , 0.231 ] 
+
+Range of the prediction interval around the prediction:
+
+ 1.513 [ 1.409 , 1.617 ] 
+
+Sign test results:
+
+ Var P-value LowConfPt UpConfPt    
+ 1   0.734   0.424     0.534       
+ 2   0.334   0.459     0.57        
+ 3   0.991   0.367     0.476       
+ 4   0.991   0.367     0.476       
+ 5   0.176   0.476     0.586       
+ 6   0       0.606     0.712    ***
+ 7   0.162   0.478     0.588       
+ 8   0.56    0.44      0.55        
+ 9   0.144   0.481     0.59        
+ 10  0.168   0.477     0.586       
+ 11  0.999   0.338     0.447       
+ 12  0.754   0.422     0.532       
+ 13  0.942   0.392     0.502       
+ 14  0.888   0.404     0.514       
+ 15  0.459   0.448     0.558       
+
+Significance codes: 0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+
+------- Oracle -------
+
+Mean squared error estimation:
+
+ 0.115 [ 0.085 , 0.16 ] 
+
+Range of the prediction interval around the prediction:
+
+ 1.284 [ 1.276 , 1.295 ] 
+
+Sign test results:
+
+ Var P-value LowConfPt UpConfPt    
+ 1   0.144   0.48      0.591       
+ 2   0.277   0.465     0.575       
+ 3   0.757   0.422     0.532       
+ 4   0.074   0.493     0.603    .  
+ 5   0.67    0.43      0.54        
+ 6   0.001   0.553     0.66     ***
+ 7   0.73    0.424     0.535       
+ 8   0.932   0.395     0.505       
+ 9   0.206   0.472     0.582       
+ 10  0.965   0.385     0.494       
+ 11  0.86    0.409     0.519       
+ 12  0.997   0.354     0.463       
+ 13  0.997   0.353     0.462       
+ 14  0.98    0.377     0.487       
+ 15  1       0.331     0.439       
+
+Significance codes: 0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
