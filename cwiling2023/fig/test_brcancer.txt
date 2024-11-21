@@ -1,0 +1,113 @@
+
+*Estimation of the mean squared error on 20 folds: 
+  Mean and quantiles are computed and displayed as follows: 
+  Mean [0.1-quantile, 0.9-quantile]
+
+*Mean and quantiles of the range of the prediction intervals 
+  (centered on the predictions) displayed as follows: 
+  Mean [0.1-quantile, 0.9-quantile]
+
+*Displaying results of LOCO analysis. Notes:
+ 
+ - P-values are from a one-sided test of the target parameter 
+  (mean or median excess test error) being equal to zero versus 
+  greater than zero. 
+ - Confidence intervals are from inverting the two-sided version 
+  of this test. 
+ - Bonferonni correction: no. 
+
+------- KM -------
+
+Mean squared error estimation:
+
+ 461766.728 [ 312824.468 , 601867.97 ] 
+
+Range of the prediction interval around the prediction:
+
+ 2039.571 [ 1978.347 , 2099.472 ] 
+
+Sign test results:
+
+ Var    P-value LowConfPt UpConfPt 
+ hormon 0.234   0.46      0.602    
+ x1     0.943   0.362     0.503    
+ x2     0.912   0.371     0.512    
+ x3     0.244   0.459     0.601    
+ x5     0.255   0.457     0.6      
+ x6     0.798   0.394     0.535    
+ x7     0.744   0.4       0.543    
+ x4a    0.929   0.367     0.507    
+
+Significance codes: 0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+
+------- Cox -------
+
+Mean squared error estimation:
+
+ 375818.596 [ 241892.718 , 466251.302 ] 
+
+Range of the prediction interval around the prediction:
+
+ 1878.598 [ 1789.41 , 1965.899 ] 
+
+Sign test results:
+
+ Var    P-value LowConfPt UpConfPt    
+ hormon 0.044   0.503     0.646    *  
+ x1     0.523   0.426     0.569       
+ x2     0.324   0.45      0.589       
+ x3     0.996   0.316     0.456       
+ x5     0.934   0.365     0.506       
+ x6     0       0.659     0.801    ***
+ x7     0.997   0.314     0.454       
+ x4a    0       0.682     0.815    ***
+
+Significance codes: 0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+
+------- RSF -------
+
+Mean squared error estimation:
+
+ 366277.443 [ 248253.151 , 535131.028 ] 
+
+Range of the prediction interval around the prediction:
+
+ 1823.3 [ 1742.652 , 1902.719 ] 
+
+Sign test results:
+
+ Var    P-value LowConfPt UpConfPt  
+ hormon 0.617   0.416     0.558     
+ x1     0.322   0.448     0.592     
+ x2     0.7     0.407     0.548     
+ x3     0.972   0.348     0.489     
+ x5     0.236   0.461     0.601     
+ x6     0.023   0.515     0.656    *
+ x7     0.411   0.438     0.582     
+ x4a    0.478   0.432     0.573     
+
+Significance codes: 0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+
+------- P.obs.+LM -------
+
+Mean squared error estimation:
+
+ 373701.461 [ 253038.889 , 475629.95 ] 
+
+Range of the prediction interval around the prediction:
+
+ 1918.779 [ 1832.49 , 2005.545 ] 
+
+Sign test results:
+
+ Var    P-value LowConfPt UpConfPt    
+ hormon 0.046   0.502     0.645    *  
+ x1     0.116   0.481     0.619       
+ x2     0.203   0.466     0.604       
+ x3     0.943   0.362     0.503       
+ x5     0.994   0.326     0.464       
+ x6     0       0.638     0.781    ***
+ x7     1       0.292     0.43        
+ x4a    0       0.71      0.84     ***
+
+Significance codes: 0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1

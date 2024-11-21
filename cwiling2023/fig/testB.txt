@@ -1,0 +1,93 @@
+
+*Estimation of the mean squared error on 10 folds: 
+  Mean and quantiles are computed and displayed as follows: 
+  Mean [0.1-quantile, 0.9-quantile]
+
+*Mean and quantiles of the range of the prediction intervals 
+  (centered on the predictions) displayed as follows: 
+  Mean [0.1-quantile, 0.9-quantile]
+
+*Displaying results of LOCO analysis. Notes:
+ 
+ - P-values are from a one-sided test of the target parameter 
+  (mean or median excess test error) being equal to zero versus 
+  greater than zero. 
+ - Confidence intervals are from inverting the two-sided version 
+  of this test. 
+ - Bonferonni correction: no. 
+
+------- KM -------
+
+Mean squared error estimation:
+
+ 1.685 [ 1.552 , 1.776 ] 
+
+Range of the prediction interval around the prediction:
+
+ 3.242 [ 3.204 , 3.28 ] 
+
+Sign test results:
+
+ Var P-value LowConfPt UpConfPt  
+ 1   0.195   0.487     0.542     
+ 2   0.047   0.501     0.556    *
+ 3   0.773   0.46      0.515     
+
+Significance codes: 0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+
+------- Cox -------
+
+Mean squared error estimation:
+
+ 0.062 [ 0.049 , 0.076 ] 
+
+Range of the prediction interval around the prediction:
+
+ 0.794 [ 0.76 , 0.828 ] 
+
+Sign test results:
+
+ Var P-value LowConfPt UpConfPt    
+ 1   0       0.86      0.899    ***
+ 2   0       0.776     0.822    ***
+ 3   0.986   0.436     0.491       
+
+Significance codes: 0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+
+------- RSF -------
+
+Mean squared error estimation:
+
+ 0.07 [ 0.055 , 0.087 ] 
+
+Range of the prediction interval around the prediction:
+
+ 0.89 [ 0.871 , 0.907 ] 
+
+Sign test results:
+
+ Var P-value LowConfPt UpConfPt    
+ 1   0       0.881     0.917    ***
+ 2   0       0.785     0.829    ***
+ 3   1       0.411     0.465       
+
+Significance codes: 0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+
+------- P.obs.+LM -------
+
+Mean squared error estimation:
+
+ 0.177 [ 0.167 , 0.185 ] 
+
+Range of the prediction interval around the prediction:
+
+ 1.394 [ 1.389 , 1.399 ] 
+
+Sign test results:
+
+ Var P-value LowConfPt UpConfPt    
+ 1   0       0.828     0.87     ***
+ 2   0       0.692     0.741    ***
+ 3   0.683   0.464     0.52        
+
+Significance codes: 0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
