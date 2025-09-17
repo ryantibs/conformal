@@ -74,7 +74,7 @@ elastic.funs = function(gamma=0.5, standardize=TRUE, intercept=TRUE, lambda=NULL
     stop("nlambda must be an integer between 1 and 100")
   }
   if (!is.null(lambda) && (!is.numeric(lambda) || min(lambda)<=0 ||
-                           (order(lambda) != length(lambda):1))) {
+                           any(order(lambda) != length(lambda):1))) {
     stop("lambda must be a decreasing sequence of positive numbers")
   }
   check.pos.num(lambda.min.ratio)
